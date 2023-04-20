@@ -1,227 +1,235 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 
 db = SQLAlchemy()
 
-
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-    email = Column(String(250), nullable=False)
-    password = Column(String(250), nullable=False)
-    birthdate = Column(String(250), nullable=True)
-    address = Column(String(250), nullable=True)
-    first_name = Column(String(250), nullable=True)
-    last_name = Column(String(250), nullable=True)
-    weight = Column(String(250), nullable=True)
-    
-    # role = relationship('User_Role', backref='user', lazy=True)
-    # trainee = relationship('Trainee', backref='user', lazy=True)
-    # trainer = relationship('Trainer', backref='user', lazy=True)
-    # gender = relationship('Gender', backref='user', lazy=True)
-
-    def to_dict(self):
-        return {}
-
-class Gender(Base):
-    __tablename__ = 'gender'
-    id = Column(Integer, primary_key=True)
-    female = Column(String(250), nullable=True) #3
-    male = Column(String(250), nullable=True)
-    non_binary = Column(String(250), nullable=True)
-    intersex = Column(String(250), nullable=True)
-    transgender = Column(String(250), nullable=True)
-
-    # user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(250), nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+    birthdate = db.Column(db.String(250), nullable=True)
+    address = db.Column(db.String(250), nullable=True)
+    first_name = db.Column(db.String(250), nullable=True)
+    last_name = db.Column(db.String(250), nullable=True)
+    weight = db.Column(db.String(250), nullable=True)
+    height = db.Column(db.String(250), nullable=True)
+    latitude = db.Column(db.String(250), nullable=True)
+    longitude = db.Column(db.String(250), nullable=True)
+    user_role = db.relationship('UserRole', backref='user', lazy=True)
+    # trainee = db.relationship('Trainee', backref='user', lazy=True)
+    # trainer = db.relationship('Trainer', backref='user', lazy=True)
+    gender = db.relationship('Gender', backref='user', lazy=True)
+    gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=False)
 
 
-class User_Role(Base):
-    __tablename__ = 'user_role'
-    id = Column(Integer, primary_key=True)
-    trainee = Column(Integer,default=False, nullable=False) #Boolean?
-    trainer = Column(Integer,default=False, nullable=False) #Boolean?
-    both = Column(Integer,default=False, nullable=False) #Boolean?
-
-    trainee = relationship('Trainee', backref='user_role', lazy=True)
-    trainer = relationship('Trainer', backref='user_role', lazy=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-
-
-class Trainee(Base):
-    __tablename__ = 'trainee'
-    id = Column(Integer, primary_key=True)
-    body_type = relationship('Body_Type', backref='trainee', lazy=True)
-    goal = relationship('Goal', backref='trainee', lazy=True)
-    bank_account = Column(String(250), nullable=True)
-
-    user_role_id = Column(Integer, ForeignKey('user_role.id'), nullable=False)
-
-
-class Body_Type(Base):
-    __tablename__ = 'body_type'
-    id = Column(Integer, primary_key=True)
-    endomorph = Column(String(250), nullable=True) #Boolean
-    mesomorph = Column(String(250), nullable=True) #Boolean
-    ectomorph = Column(String(250), nullable=True) #Boolean
-
-    trainee_id = Column(Integer, ForeignKey('trainee.id'), nullable=False)
-
-
-class Fitness_Experience(Base):
-    __tablename__ = 'fitness_experience'
-    id = Column(Integer, primary_key=True)
-    new_to_it = Column(String(250), nullable=True) #Boolean
-    getting_back = Column(String(250), nullable=True) #Boolean
-    currently_working_out = Column(String(250), nullable=True) #Boolean
-    fitness_enthusiast= Column(String(250), nullable=True) #Boolean
-
-class Goal(Base):
-    __tablename__ = 'goal'
-    id = Column(Integer, primary_key=True)
-    lose_weight = Column(String(250), nullable=True) #Boolean
-    get_toned = Column(String(250), nullable=True) #Boolean
-    increas_muscle_mass = Column(String(250), nullable=True) #Boolean
-    improve_health= Column(String(250), nullable=True) #Boolean
-    improve_as_athlete= Column(String(250), nullable=True) #Boolean
-    not_sure= Column(String(250), nullable=True) #Boolean
-
-    trainee_id = Column(Integer, ForeignKey('trainee.id'), nullable=False)
-
-class Personal_Success(Base):
-    __tablename__ = 'success'
-    id = Column(Integer, primary_key=True)
-    fit_old_clothes = Column(String(250), nullable=True) #Boolean
-    feel_stronger = Column(String(250), nullable=True) #Boolean
-    feel_energized = Column(String(250), nullable=True) #Boolean
-    improve_mental_health= Column(String(250), nullable=True) #Boolean
-    make_fitness_habit= Column(String(250), nullable=True) #Boolean
-    make_eating_healthy_habit= Column(String(250), nullable=True) #Boolean
-    learn_to_love_working_out= Column(String(250), nullable=True) #Boolean
-    none_of_the_above= Column(String(250), nullable=True) #Boolean
-
-class Personal_Adversity(Base):
-    __tablename__ = 'adversity'
-    id = Column(Integer, primary_key=True)
-    injury = Column(String(250), nullable=True) #Boolean
-    lack_accountability = Column(String(250), nullable=True) #Boolean
-    lack_motivation = Column(String(250), nullable=True) #Boolean
-    poor_results= Column(String(250), nullable=True) #Boolean
-    exercise_not_enjoyable= Column(String(250), nullable=True) #Boolean
-    too_busy= Column(String(250), nullable=True) #Boolean
-    none_of_the_above= Column(String(250), nullable=True) #Boolean
-
-
-
-class Trainer(Base):
-    __tablename__ = 'trainer'
-    id = Column(Integer, primary_key=True)
-    about = Column(String(250), nullable=True)
-    experience_level = Column(Integer, nullable=True)
-    bank_account = Column(String(250), nullable=True)
-
-    user_role_id = Column(Integer, ForeignKey('user_role.id'), nullable=False)
-
-class Specialty(Base):
-    __tablename__ = 'specialty'
-    id = Column(Integer, primary_key=True)
-    running_performance = Column(String(250), nullable=True)
-    functional_training = Column(String(250), nullable=True)
-    postpartum_training = Column(String(250), nullable=True)
-    weight_loss = Column(String(250), nullable=True)
-    strength_development = Column(String(250), nullable=True)
-    metabolic_conditioning = Column(String(250), nullable=True)
-    injury_reduction = Column(String(250), nullable=True)
-    sports_performance = Column(String(250), nullable=True)
-    flexibility = Column(String(250), nullable=True)
-    metabolic_conditioning = Column(String(250), nullable=True)
-
-class Specialty_Per_Trainer(Base):
-    __tablename__ = 'specialty_per_trainer'
-    id = Column(Integer, primary_key=True)
-    specialty_id = Column(Integer, ForeignKey('specialty.id'))
-    specialty = relationship(Specialty)
-    trainer_id = Column(Integer, ForeignKey('trainer.id'))
-    trainer = relationship(Trainer)
-
-
-class Coaching_Style(Base):
-    __tablename__ = 'coaching_style'
-    id = Column(Integer, primary_key=True)
-    supportive = Column(String(250), nullable=True)
-    laid_back = Column(String(250), nullable=True)
-    results_oriented = Column(String(250), nullable=True)
-    motivating = Column(String(250), nullable=True)
-    high_energy = Column(String(250), nullable=True)
-    results_oriented = Column(String(250), nullable=True)
-    calm = Column(String(250), nullable=True)
-
-class Coaching_Style_Per_Trainer(Base):
-    __tablename__ = 'coaching_style_per_trainer'
-    id = Column(Integer, primary_key=True)
-    coaching_style_id = Column(Integer, ForeignKey('coaching_style.id'))
-    coaching_style = relationship(Coaching_Style)
-    trainer_id = Column(Integer, ForeignKey('trainer.id'))
-    trainer = relationship(Trainer)
-
-class Indoor_Outdoor_Remote(Base):
-    __tablename__ = 'indoor_outdoor_remote'
-    id = Column(Integer, primary_key=True)
-    indoor = Column(String(250), nullable=True)
-    outdoor = Column(String(250), nullable=True)
-    remote = Column(String(250), nullable=True)
-    
-    activity = relationship('Activity', backref='indoor_outdoor_remote', lazy=True)
-
-class Activity(Base):
-    __tablename__ = 'activity'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=True)
-    indoor_outdoor_remote_id = Column(Integer, ForeignKey('indoor_outdoor_remote.id'),nullable=False)
-
-
-
-class Activity_Per_Trainer(Base):
-    __tablename__ = 'activity_per_trainer'
-    id = Column(Integer, primary_key=True)
-    description = Column(String(250), nullable=True)
-    duration = Column(String(250), nullable=True)
-    location_range = Column(String(250), nullable=True)
-    location_pinpoint = Column(String(250), nullable=True)
-    price = Column(String(250), nullable=True)
-    date = Column(String(250), nullable=True)
+class UserRole(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
    
-    activity_id = Column(Integer, ForeignKey('activity.id'))
-    activity = relationship(Activity)
-    trainer_id = Column(Integer, ForeignKey('trainer.id'))
-    trainer = relationship(Trainer)
-
-
-class Booked_Class(Base):
-    __tablename__ = 'booked_Class'
-    id = Column(Integer, primary_key=True)
-    date = Column(String(250), nullable=True)
-    location = Column(String(250), nullable=True)
-
-    activity_per_trainer_id = Column(Integer, ForeignKey('activity_per_trainer.id'))
-    activity_per_trainer = relationship(Activity_Per_Trainer)
-    trainer_id = Column(Integer, ForeignKey('trainer.id'))
-    trainer = relationship(Trainer)
-    trainee_id = Column(Integer, ForeignKey('trainee.id'))
-    trainee = relationship(Trainee)
+    trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
+    trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
 
 
 
-class Favorites(Base):
-    __tablename__ = 'favorites'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    # username = Column(String(250), nullable=False)
-    user_id = Column(String(250), ForeignKey('user.id'))
-    user = relationship(User)
-    fav_trainer_id = Column(Integer, ForeignKey('trainer.id'))
-    trainer = relationship(Trainer)
+class Gender(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+
+    # female = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # male = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # non_binary = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # intersex = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # transgender = db.Column(db.String(250), nullable=True) #Boolean!!!
+
+    
+
+
+class BodyType(db.Model): #ENUM !!!
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+    # endomorph = db.Column(db.String(250), nullable=True) #Boolean 
+    # mesomorph = db.Column(db.String(250), nullable=True) #Boolean
+    # ectomorph = db.Column(db.String(250), nullable=True) #Boolean
+
+class Trainee(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body_type = db.relationship('BodyType', backref='trainee', lazy=True) #ENUM !!! 
+    body_type_id = db.Column(db.Integer, db.ForeignKey('body_type.id'), nullable=False)
+
+    fitness_experience = db.relationship('FitnessExperience', backref='trainee', lazy=True) #ENUM !!! 
+    fitness_experience_id = db.Column(db.Integer, db.ForeignKey('fitness_experience.id'), nullable=False)
+
+    goal = db.relationship('Goal', backref='trainee', lazy=True) #ENUM !!! 
+    goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'), nullable=False)
+    bank_account = db.Column(db.String(250), nullable=True)
+    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+
+
+
+class FitnessExperience(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+
+    # new_to_it = db.Column(db.String(250), nullable=True) #Boolean
+    # getting_back = db.Column(db.String(250), nullable=True) #Boolean
+    # currently_working_out = db.Column(db.String(250), nullable=True) #Boolean
+    # fitness_enthusiast= db.Column(db.String(250), nullable=True) #Boolean
+
+class Goal(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+
+    # lose_weight = db.Column(db.String(250), nullable=True) #Boolean
+    # get_toned = db.Column(db.String(250), nullable=True) #Boolean
+    # increas_muscle_mass = db.Column(db.String(250), nullable=True) #Boolean
+    # improve_health= db.Column(db.String(250), nullable=True) #Boolean
+    # improve_as_athlete= db.Column(db.String(250), nullable=True) #Boolean
+    # not_sure= db.Column(db.String(250), nullable=True) #Boolean
+
+
+# class Personal_Success(db.Model): # IMPROVEMENTS PHASE!!!
+#     id = db.Column(db.Integer, primary_key=True)
+#     fit_old_clothes = db.Column(db.String(250), nullable=True) #Boolean
+#     feel_stronger = db.Column(db.String(250), nullable=True) #Boolean
+#     feel_energized = db.Column(db.String(250), nullable=True) #Boolean
+#     improve_mental_health= db.Column(db.String(250), nullable=True) #Boolean
+#     make_fitness_habit= db.Column(db.String(250), nullable=True) #Boolean
+#     make_eating_healthy_habit= db.Column(db.String(250), nullable=True) #Boolean
+#     learn_to_love_working_out= db.Column(db.String(250), nullable=True) #Boolean
+#     none_of_the_above= db.Column(db.String(250), nullable=True) #Boolean
+
+# class Personal_Adversity(db.Model): # IMPROVEMENTS PHASE!!!
+#     id = db.Column(db.Integer, primary_key=True)
+#     injury = db.Column(db.String(250), nullable=True) #Boolean
+#     lack_accountability = db.Column(db.String(250), nullable=True) #Boolean
+#     lack_motivation = db.Column(db.String(250), nullable=True) #Boolean
+#     poor_results= db.Column(db.String(250), nullable=True) #Boolean
+#     exercise_not_enjoyable= db.Column(db.String(250), nullable=True) #Boolean
+#     too_busy= db.Column(db.String(250), nullable=True) #Boolean
+#     none_of_the_above= db.Column(db.String(250), nullable=True) #Boolean
+
+
+
+class Trainer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    specialty = db.relationship('Specialty', backref='trainer', lazy=True) #ENUM !!! 
+    specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'), nullable=False)
+    
+    about = db.Column(db.String(250), nullable=True)
+    experience_level = db.Column(db.Integer, nullable=True)
+    bank_account = db.Column(db.String(250), nullable=True)
+
+    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
+
+class Specialty(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+    # running_performance = db.Column(db.String(250), nullable=True)
+    # functional_training = db.Column(db.String(250), nullable=True)
+    # postpartum_training = db.Column(db.String(250), nullable=True)
+    # weight_loss = db.Column(db.String(250), nullable=True)
+    # strength_development = db.Column(db.String(250), nullable=True)
+    # metabolic_conditioning = db.Column(db.String(250), nullable=True)
+    # injury_reduction = db.Column(db.String(250), nullable=True)
+    # sports_performance = db.Column(db.String(250), nullable=True)
+    # flexibility = db.Column(db.String(250), nullable=True)
+    # metabolic_conditioning = db.Column(db.String(250), nullable=True)
+
+class Specialty_Per_Trainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
+    id = db.Column(db.Integer, primary_key=True)
+    specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'))
+    specialty = db.relationship(Specialty)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+    trainer = db.relationship(Trainer)
+
+    
+
+
+class CoachingStyle(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+    # supportive = db.Column(db.String(250), nullable=True)
+    # laid_back = db.Column(db.String(250), nullable=True)
+    # results_oriented = db.Column(db.String(250), nullable=True)
+    # motivating = db.Column(db.String(250), nullable=True)
+    # high_energy = db.Column(db.String(250), nullable=True)
+    # results_oriented = db.Column(db.String(250), nullable=True)
+    # calm = db.Column(db.String(250), nullable=True)
+
+class CoachingStylePerTrainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
+    id = db.Column(db.Integer, primary_key=True)
+    coaching_style = db.relationship(CoachingStyle)
+    coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'))
+    trainer = db.relationship(Trainer)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+
+class IndoorOutdoorRemote(db.Model): #ENUM !!!
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+    # indoor = db.Column(db.String(250), nullable=True)
+    # outdoor = db.Column(db.String(250), nullable=True)
+    # remote = db.Column(db.String(250), nullable=True)
+    
+    activity = db.relationship('Activity', backref='indoor_outdoor_remote', lazy=True)
+    def __repr__(self):
+        return self.name
+
+class Activity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), nullable=True)
+    indoor_outdoor_remote_id = db.Column(db.Integer, db.ForeignKey('indoor_outdoor_remote.id'),nullable=False)
+
+
+
+class ActivityPerTrainer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(250), nullable=True)
+    duration = db.Column(db.String(250), nullable=True)
+    location_range = db.Column(db.String(250), nullable=True)
+    location_pinpoint = db.Column(db.String(250), nullable=True)
+    price = db.Column(db.String(250), nullable=True)
+    date = db.Column(db.String(250), nullable=True)
+   
+    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
+    activity = db.relationship(Activity)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+    trainer = db.relationship(Trainer)
+
+
+class BookedClass(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(250), nullable=True)
+    # location = db.Column(db.String(250), nullable=True) # WE can probably retrieve this from  activity_per_trariner
+
+    activity_per_trainer_id = db.Column(db.Integer, db.ForeignKey('activity_per_trainer.id'))
+    activity_per_trainer = db.relationship(ActivityPerTrainer)
+
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+    trainer = db.relationship(Trainer)
+
+    trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
+    trainee = db.relationship(Trainee)
+
+
+
+# class Favorites(db.Model): # For LAter !!
+#     # Here we define columns for the table person
+#     # Notice that each column is also a normal Python instance attribute.
+#     id = db.Column(db.Integer, primary_key=True)
+#     # username = db.Column(db.String(250), nullable=False)
+#     user_id = db.Column(db.String(250), db.ForeignKey('user.id'))
+#     user = db.relationship(User)
+#     fav_trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+#     trainer = db.relationship(Trainer)
   
 
-
-## Draw from SQLAlchemy base
-render_er(Base, 'diagram.png')
