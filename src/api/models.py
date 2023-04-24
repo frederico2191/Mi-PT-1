@@ -7,7 +7,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(250), nullable=False)
-    birthdate = db.Column(db.String(250), nullable=True)
+    birthdate = db.Column(db.DateTime, nullable=True)
     address = db.Column(db.String(250), nullable=True)
     first_name = db.Column(db.String(250), nullable=True)
     last_name = db.Column(db.String(250), nullable=True)
@@ -15,42 +15,28 @@ class User(db.Model):
     height = db.Column(db.String(250), nullable=True)
     latitude = db.Column(db.String(250), nullable=True)
     longitude = db.Column(db.String(250), nullable=True)
-    user_role = db.relationship('UserRole', backref='user', lazy=True)
+    paypal_link = db.Column(db.String(250), nullable=True)
+    
     # trainee = db.relationship('Trainee', backref='user', lazy=True)
+    # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'), nullable=False)
     # trainer = db.relationship('Trainer', backref='user', lazy=True)
     gender = db.relationship('Gender', backref='user', lazy=True)
     gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=False)
+    user_role = db.relationship('UserRole', backref='user', lazy=True)
+    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
 
+    # def __repr__(self):
+    #     return self.first_name
 
-class UserRole(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-   
-    trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
-    trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
+    def __repr__(self):
+        return f'<User {self.email}>'
 
-
-
-class Gender(db.Model): #ENUM
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250),nullable=False)
-
-
-    # female = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # male = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # non_binary = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # intersex = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # transgender = db.Column(db.String(250), nullable=True) #Boolean!!!
-
-    
-
-
-class BodyType(db.Model): #ENUM !!!
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250),nullable=False)
-    # endomorph = db.Column(db.String(250), nullable=True) #Boolean 
-    # mesomorph = db.Column(db.String(250), nullable=True) #Boolean
-    # ectomorph = db.Column(db.String(250), nullable=True) #Boolean
+    def serialize(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            # do not serialize the password, its a security breach
+        }
 
 class Trainee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,11 +48,44 @@ class Trainee(db.Model):
 
     goal = db.relationship('Goal', backref='trainee', lazy=True) #ENUM !!! 
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'), nullable=False)
-    bank_account = db.Column(db.String(250), nullable=True)
-    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    
+
+    # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
+    user = db.relationship('User', backref='trainee', lazy=True) #ENUM !!! 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+class UserRole(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=True)
+    # trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
+    # trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
+    def __repr__(self):
+        return self.name
 
 
+class Gender(db.Model): #ENUM
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+
+    # female = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # male = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # non_binary = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # intersex = db.Column(db.String(250), nullable=True) #Boolean!!!
+    # transgender = db.Column(db.String(250), nullable=True) #Boolean!!!
+
+    def __repr__(self):
+        return self.name
+
+
+class BodyType(db.Model): #ENUM !!!
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250),nullable=False)
+    # endomorph = db.Column(db.String(250), nullable=True) #Boolean 
+    # mesomorph = db.Column(db.String(250), nullable=True) #Boolean
+    # ectomorph = db.Column(db.String(250), nullable=True) #Boolean
+    def __repr__(self):
+        return self.name
 
 
 
@@ -74,6 +93,8 @@ class FitnessExperience(db.Model): #ENUM
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250),nullable=False)
 
+    def __repr__(self):
+        return self.name
 
     # new_to_it = db.Column(db.String(250), nullable=True) #Boolean
     # getting_back = db.Column(db.String(250), nullable=True) #Boolean
@@ -83,6 +104,9 @@ class FitnessExperience(db.Model): #ENUM
 class Goal(db.Model): #ENUM
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250),nullable=False)
+
+    def __repr__(self):
+        return self.name
 
 
     # lose_weight = db.Column(db.String(250), nullable=True) #Boolean
@@ -119,19 +143,28 @@ class Goal(db.Model): #ENUM
 class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
+    Approved = db.Column(db.Boolean(), nullable=True)
+
     specialty = db.relationship('Specialty', backref='trainer', lazy=True) #ENUM !!! 
     specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'), nullable=False)
+   
+    coaching_style = db.relationship('CoachingStyle', backref='trainer', lazy=True) #ENUM !!! 
+    coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'), nullable=False)
     
     about = db.Column(db.String(250), nullable=True)
     experience_level = db.Column(db.Integer, nullable=True)
     bank_account = db.Column(db.String(250), nullable=True)
 
-    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
+    user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+
+    # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
 
 class Specialty(db.Model): #ENUM
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250),nullable=False)
-
     # running_performance = db.Column(db.String(250), nullable=True)
     # functional_training = db.Column(db.String(250), nullable=True)
     # postpartum_training = db.Column(db.String(250), nullable=True)
@@ -143,6 +176,9 @@ class Specialty(db.Model): #ENUM
     # flexibility = db.Column(db.String(250), nullable=True)
     # metabolic_conditioning = db.Column(db.String(250), nullable=True)
 
+    def __repr__(self):
+        return self.name
+
 class Specialty_Per_Trainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
     id = db.Column(db.Integer, primary_key=True)
     specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'))
@@ -150,13 +186,9 @@ class Specialty_Per_Trainer(db.Model): #MUST BECOME ASSOCIATION TABLE
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainer = db.relationship(Trainer)
 
-    
-
-
 class CoachingStyle(db.Model): #ENUM
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250),nullable=False)
-
     # supportive = db.Column(db.String(250), nullable=True)
     # laid_back = db.Column(db.String(250), nullable=True)
     # results_oriented = db.Column(db.String(250), nullable=True)
@@ -164,13 +196,16 @@ class CoachingStyle(db.Model): #ENUM
     # high_energy = db.Column(db.String(250), nullable=True)
     # results_oriented = db.Column(db.String(250), nullable=True)
     # calm = db.Column(db.String(250), nullable=True)
+    def __repr__(self):
+        return self.name
 
 class CoachingStylePerTrainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
     id = db.Column(db.Integer, primary_key=True)
-    coaching_style = db.relationship(CoachingStyle)
     coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'))
-    trainer = db.relationship(Trainer)
+    coaching_style = db.relationship(CoachingStyle)
+
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+    trainer = db.relationship(Trainer)
 
 class IndoorOutdoorRemote(db.Model): #ENUM !!!
     id = db.Column(db.Integer, primary_key=True)
@@ -179,6 +214,8 @@ class IndoorOutdoorRemote(db.Model): #ENUM !!!
     # indoor = db.Column(db.String(250), nullable=True)
     # outdoor = db.Column(db.String(250), nullable=True)
     # remote = db.Column(db.String(250), nullable=True)
+    def __repr__(self):
+        return self.name
     
     activity = db.relationship('Activity', backref='indoor_outdoor_remote', lazy=True)
     def __repr__(self):
@@ -189,7 +226,8 @@ class Activity(db.Model):
     name = db.Column(db.String(250), nullable=True)
     indoor_outdoor_remote_id = db.Column(db.Integer, db.ForeignKey('indoor_outdoor_remote.id'),nullable=False)
 
-
+    def __repr__(self):
+        return self.name
 
 class ActivityPerTrainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
