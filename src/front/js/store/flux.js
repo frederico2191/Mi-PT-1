@@ -78,23 +78,45 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-
-      fetchUsers: () => {
-        fetch(
-          "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/users",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setStore({ users: parsedData });
-          })
-          .then(() => console.log(getStore(), "getStore"));
+      fetchUsers: async () => {
+        const store = getStore();
+        try {
+          const resp = await fetch(
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/users",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await resp.json();
+          console.log(data, "data after data");
+          setStore({ users: data });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on users fetch!!! It was caught by flux.js",
+            error
+          );
+        }
       },
+      // fetchUsers: () => {
+      //   fetch(
+      //     "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/users",
+      //     {
+      //       method: "GET",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //     }
+      //   )
+      //     .then((response) => response.json())
+      //     .then((data) => {
+      //       setStore({ users: parseddata });
+      //     })
+      //     .then(() => console.log(getStore(), "getStore"));
+      // },
 
       changeColor: (index, color) => {
         //get the store

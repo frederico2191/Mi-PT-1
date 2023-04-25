@@ -27,15 +27,21 @@ class User(db.Model):
 
     # def __repr__(self):
     #     return self.first_name
-
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.first_name}>'
 
     def serialize(self):
         return {
             "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            "birthdate": self.birthdate,
+            "address": self.address,
+            "weight": self.weight,
+            "height": self.height,
+            "latitude": self.latitude,
+            "paypal_link": self.paypal_link
         }
 
 class Trainee(db.Model):
@@ -143,7 +149,10 @@ class Goal(db.Model): #ENUM
 class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    Approved = db.Column(db.Boolean(), nullable=True)
+    approved = db.Column(db.Boolean(), nullable=True)
+    about = db.Column(db.String(250), nullable=True)
+    experience_level = db.Column(db.Integer, nullable=True)
+    bank_account = db.Column(db.String(250), nullable=True)
 
     specialty = db.relationship('Specialty', backref='trainer', lazy=True) #ENUM !!! 
     specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'), nullable=False)
@@ -151,14 +160,22 @@ class Trainer(db.Model):
     coaching_style = db.relationship('CoachingStyle', backref='trainer', lazy=True) #ENUM !!! 
     coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'), nullable=False)
     
-    about = db.Column(db.String(250), nullable=True)
-    experience_level = db.Column(db.Integer, nullable=True)
-    bank_account = db.Column(db.String(250), nullable=True)
 
     user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-
+    def serialize(self):
+        return {
+            "id": self.id,
+            "approved": self.approved,
+            "about": self.about,
+            "experience_level": self.experience_level,
+            "address": self.address,
+            "bank_account": self.weight,
+            "specialty": self.specialty,
+            "coaching_style": self.coaching_style,
+            "user_id": self.user_id
+        }
 
     # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
 

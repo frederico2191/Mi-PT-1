@@ -22,7 +22,7 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      state.actions.getMessage(), state.actions.fetchUsers();
+      state.actions.fetchUsers(), state.actions.getMessage();
     }, []);
 
     // The initial value for the context is not null anymore, but the current state of this component,

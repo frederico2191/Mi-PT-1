@@ -45,8 +45,8 @@ def get_hello():
 # @jwt_required()
 def get_users():
     users = User.query.all()
-    print(users, "We are the users cqueried")
-
-    return jsonify(users)
+    print(users, "we are usersss!!")
+    data = [user.serialize() for user in users]
+    return jsonify(data)
 
 
