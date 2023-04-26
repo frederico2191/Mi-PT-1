@@ -5,11 +5,12 @@ export const Register = () => {
   const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const token = sessionStorage.getItem();
 
   const handleRegister = async () => {
     // Call your API endpoint to check if the email and password match
     const response = await fetch(
-      "https://3001-frederico2191-mipt1-7or89d6p79g.ws-eu95.gitpod.io/api/token",
+      "https://3001-frederico2191-mipt1-3m8823gmubq.ws-eu95.gitpod.io/api/token",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -28,10 +29,18 @@ export const Register = () => {
           console.log("Registration failed");
         }
       })
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data)
+        sessionStorage.setItem("token", data.access_token)
+      }
       .catch((err) => console.erorr(err));
   };
   return (
+    if (sessionStorage != undefined && sessionStorage != ""){
+      <div>
+        <h1>You are logged in with {token}</h1>      
+      </div>
+    } else
     <div className="registerForm">
       <h1>Register</h1>
       <input
