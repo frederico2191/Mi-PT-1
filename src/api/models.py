@@ -21,9 +21,9 @@ class User(db.Model):
     # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'), nullable=False)
     # trainer = db.relationship('Trainer', backref='user', lazy=True)
     gender = db.relationship('Gender', backref='user', lazy=True)
-    gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=False)
+    gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=True)
     user_role = db.relationship('UserRole', backref='user', lazy=True)
-    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
+    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=True)
 
     # def __repr__(self):
     #     return self.first_name
@@ -56,7 +56,6 @@ class Trainee(db.Model):
     goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'), nullable=False)
     
     
-
     # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
     user = db.relationship('User', backref='trainee', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

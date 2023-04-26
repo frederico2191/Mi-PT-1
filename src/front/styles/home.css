@@ -5,3 +5,15 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+
+.scrollerTitles {
+  color: red;
+}
+
+.horizontal-scroller {
+  display: flex;
+  list-style: none;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  flex-direction: row;
+}

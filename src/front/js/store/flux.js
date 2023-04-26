@@ -4,6 +4,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       message: null,
       favorites: [],
       users: [],
+      trainers: [],
+      token: [],
       demo: [
         {
           title: "FIRST",
@@ -24,7 +26,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getMessage: async () => {
         const store = getStore();
-        console.log("I am the entire store", store);
         // const opts = {
         //   headers: {
         //     Authorization: "Bearer " + store.token,
@@ -101,22 +102,92 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      // fetchUsers: () => {
-      //   fetch(
-      //     "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/users",
-      //     {
-      //       method: "GET",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   )
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       setStore({ users: parseddata });
-      //     })
-      //     .then(() => console.log(getStore(), "getStore"));
-      // },
+
+      fetchTrainers: async () => {
+        const store = getStore();
+        try {
+          const resp = await fetch(
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/trainers",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await resp.json();
+          setStore({ trainers: data });
+
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on trainers fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+      register: async (email, password) => {
+        const store = getStore();
+        try {
+          console.log("in try");
+          const resp = await fetch(
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/register",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: email,
+                password: password,
+              }),
+            }
+          );
+          const data = await resp.json();
+          console.log(data, "new user registered after register fetch");
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on register fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+
+      login: async (email, password) => {
+        const opts = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        };
+        try {
+          const resp = await fetch(
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/token",
+            opts
+          );
+          if (!resp.ok) throw Error("There was a problem in the login request");
+
+          if (resp.status === 401) {
+            throw "Invalid credentials";
+          } else if (resp.status === 400) {
+            throw "Invalid email or password format";
+          }
+          const data = await resp.json();
+          sessionStorage.setItem("token", data.access_token);
+          setStore({ token: data.access_token });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
 
       changeColor: (index, color) => {
         //get the store
