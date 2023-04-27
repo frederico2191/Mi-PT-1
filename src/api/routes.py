@@ -34,19 +34,21 @@ def create_token():
     if email != db_email.email:
         return jsonify({"msg": "Please Register First"}), 401
     
+
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
 
 
-@api.route('/token', methods=['POST'])
-def login_user():
-    body= request.json
-    user = User.query.filter_by(email = body["email"], password = body["password"]).first()
-    if user:
-        return jsonify()
+# @api.route('/token', methods=['POST'])
+# def login_user():
+#     body= request.json
+#     user = User.query.filter_by(email = body["email"], password = body["password"]).first()
+#     if user:
+#         return jsonify()
     
 
-    return jsonify(access_token=access_token)
+#     return jsonify(access_token=access_token)
+
 
 
 @api.route('/hello_user', methods=['GET'])
@@ -86,5 +88,6 @@ def register():
     data = [user.serialize() for user in trainers]
     print("I am the data after serialization for trainer",data)
     return jsonify(data)
+
 
 
