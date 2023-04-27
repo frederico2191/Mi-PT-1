@@ -29,8 +29,9 @@ class User(db.Model):
         return f'<User {self.first_name}>'
 
     def serialize(self):
-        # trainer = Trainer.query.filter_by(user_id = self.id)
-        # activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = trainer.serialize().id)
+        trainer = Trainer.query.filter_by(user_id = self.id).first()
+        serializedTrainer = trainer.serialize() if trainer else None
+        activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = serializedTrainer["id"]) if serializedTrainer else []
 
         return {
             "id": self.id,
@@ -43,9 +44,8 @@ class User(db.Model):
             "height": self.height,
             "latitude": self.latitude,
             "paypal_link": self.paypal_link,
-            "user_role": self.user_role.name if self.user_role else "unknown"
-            # "activities": [activity.activity.serialize() for activity in activity_per_trainer]
-
+            "user_role": self.user_role.name if self.user_role else "unknown",
+            "activities": [activity.activity.serialize() for activity in activity_per_trainer]
         }
 
 class Trainee(db.Model):
@@ -156,6 +156,7 @@ class Trainer(db.Model):
     about = db.Column(db.String(250), nullable=True)
     experience_level = db.Column(db.Integer, nullable=True)
     bank_account = db.Column(db.String(250), nullable=True)
+    address = db.Column(db.String(250), nullable=True)
 
     specialty = db.relationship('Specialty', backref='trainer', lazy=True) #ENUM !!! 
     specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'), nullable=False)
@@ -174,7 +175,7 @@ class Trainer(db.Model):
             "about": self.about,
             "experience_level": self.experience_level,
             "address": self.address,
-            "bank_account": self.weight,
+            "bank_account": self.bank_account,
             "specialty": self.specialty,
             "coaching_style": self.coaching_style,
             "user_id": self.user_id
