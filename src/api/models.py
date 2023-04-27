@@ -25,12 +25,13 @@ class User(db.Model):
     user_role = db.relationship('UserRole', backref='user', lazy=True)
     user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=True)
 
-    # def __repr__(self):
-    #     return self.first_name
     def __repr__(self):
         return f'<User {self.first_name}>'
 
     def serialize(self):
+        # trainer = Trainer.query.filter_by(user_id = self.id)
+        # activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = trainer.serialize().id)
+
         return {
             "id": self.id,
             "first_name": self.first_name,
@@ -41,7 +42,10 @@ class User(db.Model):
             "weight": self.weight,
             "height": self.height,
             "latitude": self.latitude,
-            "paypal_link": self.paypal_link
+            "paypal_link": self.paypal_link,
+            "user_role": self.user_role.name if self.user_role else "unknown"
+            # "activities": [activity.activity.serialize() for activity in activity_per_trainer]
+
         }
 
 class Trainee(db.Model):
@@ -67,6 +71,8 @@ class UserRole(db.Model):
     # trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
     def __repr__(self):
         return self.name
+    
+
 
 
 class Gender(db.Model): #ENUM
@@ -142,8 +148,6 @@ class Goal(db.Model): #ENUM
 #     exercise_not_enjoyable= db.Column(db.String(250), nullable=True) #Boolean
 #     too_busy= db.Column(db.String(250), nullable=True) #Boolean
 #     none_of_the_above= db.Column(db.String(250), nullable=True) #Boolean
-
-
 
 class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -244,6 +248,9 @@ class Activity(db.Model):
 
     def __repr__(self):
         return self.name
+    
+    def serialize(self):
+        return {"name": self.name}
 
 class ActivityPerTrainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)

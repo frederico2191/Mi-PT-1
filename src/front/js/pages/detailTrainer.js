@@ -4,7 +4,7 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import Card from "../component/Card";
 
-export const Detail = (props) => {
+export const DetailTrainer = (props) => {
   console.log("hello");
   const { store, actions } = useContext(Context);
   const params = useParams();
@@ -13,16 +13,17 @@ export const Detail = (props) => {
 
   useEffect(() => {
     actions.fetchTrainers();
+    console.log(store.trainers, "store trainers");
   }, []);
-  console.log(store, "storamos");
 
   return (
     <div>
-      <div className="list-group horizontal-scroller">
+      <div>
         {store.trainers.map((elm) => (
           <Card item={elm} key={elm.id}></Card>
         ))}
       </div>
+
       <Link to="/">
         <span className="btn btn-primary btn-lg" href="#" role="button">
           Back home

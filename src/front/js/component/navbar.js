@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 export const Navbar = () => {
+  const { store, actions } = useContext(Context);
+  console.log("The store inside of the navbar", store.token);
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary bg-dark">
       <div className="container-fluid">
@@ -77,6 +81,69 @@ export const Navbar = () => {
               Search
             </button>
           </form>
+        </div>
+        <div className="ml-auto">
+          {!store.token ? (
+            <div>
+              <Link to="/login">
+                <button className="btn btn-primary">Log In</button>
+              </Link>
+              <Link to="/register">
+                <button className="btn btn-primary">Register</button>
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <div
+                className="collapse navbar-collapse"
+                id="navbarSupportedContent"
+              >
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li className="nav-item dropdown">
+                    <a
+                      className="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {store.message}
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          My Profile
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Favorites
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Activity
+                        </a>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          <button
+                            onClick={() => actions.logout()}
+                            className="btn btn-primary"
+                          >
+                            LOG OUT
+                          </button>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>

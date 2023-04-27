@@ -22,7 +22,10 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      state.actions.fetchUsers(), state.actions.getMessage();
+      state.actions.fetchTrainers(),
+        state.actions.getMessage(),
+        state.actions.syncTokenFromLocalStore();
+      // state.actions.activity per trainer functino of fetch
     }, []);
 
     // The initial value for the context is not null anymore, but the current state of this component,

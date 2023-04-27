@@ -2,10 +2,10 @@ const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       message: null,
-      favorites: [],
       users: [],
       trainers: [],
-      token: [],
+      token: null,
+      GivenClass: null,
       demo: [
         {
           title: "FIRST",
@@ -24,26 +24,32 @@ const getState = ({ getStore, getActions, setStore }) => {
       exampleFunction: () => {
         getActions().changeColor(0, "green");
       },
+      syncTokenFromLocalStore: () => {
+        const token = localStorage.getItem("token");
+        console.log("I am the reloaded token", token);
+        const store = getStore();
+
+        if (store.token && store.token != "" && store.token != undefined) {
+          setStore({ token: token });
+        }
+      },
       getMessage: async () => {
         const store = getStore();
-        // const opts = {
-        //   headers: {
-        //     Authorization: "Bearer " + store.token,
-        //   },
-        // };
+        console.log(store.token, "I am store.token inside hello_user API ");
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + store.token,
+          },
+        };
         try {
+          // const resp = await fetch(
+          //   "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/hello_user",
+          //   opts
+          // );
           const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/hello_user",
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            process.env.BACKEND_URL + "/api/hello_user",
+            opts
           );
-          //   const resp = await fetch(
-          //     process.env.BACKEND_URL + "/api/hello",
-          //     opts
-          //   );
           const data = await resp.json();
           setStore({ message: data.message });
           return true;
@@ -54,36 +60,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      getFavorites: async () => {
+
+      fetchActivityPerTrainer: async (activity_per_trainer_id) => {
         const store = getStore();
         try {
           const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/favorites",
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          //   const resp = await fetch(
-          //     process.env.BACKEND_URL + "/api/hello",
-          //     opts
-          //   );
-          const data = await resp.json();
-          setStore({ favorites: data.favorites });
-          return true;
-        } catch (error) {
-          console.error(
-            "There was an error on favorites fetch!!! It was caught by flux.js",
-            error
-          );
-        }
-      },
-      fetchUsers: async () => {
-        const store = getStore();
-        try {
-          const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/users",
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/activity_per_trainer",
             {
               method: "GET",
               headers: {
@@ -93,7 +75,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           const data = await resp.json();
           console.log(data, "data after data");
-          setStore({ users: data });
+          setStore({ GivenClass: data });
           return true;
         } catch (error) {
           console.error(
@@ -170,23 +152,27 @@ const getState = ({ getStore, getActions, setStore }) => {
             "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/token",
             opts
           );
-          if (!resp.ok) throw Error("There was a problem in the login request");
+          // if (!resp.ok) throw Error("There was a problem in the login request");
 
-          if (resp.status === 401) {
-            throw "Invalid credentials";
-          } else if (resp.status === 400) {
-            throw "Invalid email or password format";
-          }
+          // if (resp.status === 401) {
+          //   throw "Invalid credentials";
+          // } else if (resp.status === 400) {
+          //   throw "Invalid email or password format";
+          // }
           const data = await resp.json();
-          sessionStorage.setItem("token", data.access_token);
+          localStorage.setItem("token", data.access_token);
           setStore({ token: data.access_token });
           return true;
         } catch (error) {
-          console.error(
-            "There was an error!!! It was caught by flux.js",
-            error
-          );
+          console.error("Invalid email or password format", error);
+          return false;
         }
+      },
+
+      logout: () => {
+        localStorage.removeItem("token");
+        console.log("logging out");
+        setStore({ token: null });
       },
 
       changeColor: (index, color) => {
@@ -202,6 +188,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         //reset the global store
         setStore({ demo: demo });
+      },
+      getFavorites: async () => {
+        const store = getStore();
+        try {
+          const resp = await fetch(
+            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/favorites",
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          //   const resp = await fetch(
+          //     process.env.BACKEND_URL + "/api/hello",
+          //     opts
+          //   );
+          const data = await resp.json();
+          setStore({ favorites: data.favorites });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on favorites fetch!!! It was caught by flux.js",
+            error
+          );
+        }
       },
     },
   };

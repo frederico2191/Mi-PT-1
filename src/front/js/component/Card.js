@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-// import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Context } from "../store/appContext";
 // import fallbackImage from "./fallback.png";
 
 const Card = ({ item }) => {
   const { actions, store } = useContext(Context);
-  const handleToggleFavorite = () => actions.toggleFavourite(item);
-  const isFavorite = store.favorites.find((el) => el.name === item.name);
+  const handleToggleFavorite = () => setIsFavorite(!isFavorite);
+  const [isFavorite, setIsFavorite] = useState(false);
+  // const isFavorite = store.favorites.find((el) => el.name === item.name);
   const addImageFallback = (event) => {
     event.currentTarget.src = fallbackImage;
   };
@@ -26,16 +27,24 @@ const Card = ({ item }) => {
           <h5 className="card-title"> address{item.address}</h5>
           <h5 className="card-title"> weight {item.weight}</h5>
           <div className="d-flex justify-content-between">
-            {
-              <Link to={`/register`}>
-                <button className="btn btn-outline-primary">Learn More</button>
+            {store.token && store.token != "" && store.token != undefined ? (
+              <Link to={`/`}>
+                <button className="btn btn-outline-primary">
+                  Check the class
+                </button>
               </Link>
-            }
+            ) : (
+              <Link to={`/register`}>
+                <button className="btn btn-outline-primary">
+                  Check it out
+                </button>
+              </Link>
+            )}
             <button
               className="btn btn-outline-warning"
               onClick={handleToggleFavorite}
             >
-              {/* {isFavorite ? <AiFillHeart /> : <AiOutlineHeart />} */}
+              {isFavorite ? <AiFillHeart /> : <AiOutlineHeart />}
             </button>
           </div>
         </div>

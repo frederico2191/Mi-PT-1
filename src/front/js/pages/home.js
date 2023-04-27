@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
@@ -6,11 +6,11 @@ import Card from "../component/Card";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
-  // useEffect(() => {
-  //   if (store.token && store.token != "" && store.token != undefined)
-  //     actions.getMessage();
-  // }, [store.token]);
-  console.log("I am the store message", store.message);
+  useEffect(() => {
+    if (store.token && store.token != "" && store.token != undefined)
+      actions.getMessage();
+  }, [store.token]);
+  console.log("I am the store.trainers", store.trainers);
 
   return (
     <div>
@@ -25,7 +25,7 @@ export const Home = () => {
       <div>
         <h1 className="scrollerTitles">Trainers</h1>
         <div className="list-group horizontal-scroller">
-          {store.users.map((elm) => (
+          {store.trainers.map((elm) => (
             <Card item={elm} key={elm.id}></Card>
           ))}
         </div>

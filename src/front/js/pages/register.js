@@ -14,12 +14,17 @@ export const Register = () => {
 
   const handleClick = () => {
     actions.register(email, password);
-    navigate("/login");
+    // navigate("/login")
+    if (store.token && store.token != "" && store.token != undefined) {
+      navigate("/login");
+    } else {
+      setEmail("");
+      setPassword("");
+      setTimeout(() => {
+        alert("unable to register user");
+      }, "100");
+    }
   };
-
-  if (store.token && store.token != "" && store.token != undefined) {
-    navigate("/");
-  }
 
   return (
     <div>
