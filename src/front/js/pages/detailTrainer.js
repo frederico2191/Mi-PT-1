@@ -7,28 +7,33 @@ import Card from "../component/Card";
 export const DetailTrainer = (props) => {
   console.log("hello");
   const { store, actions } = useContext(Context);
-  const params = useParams();
   const { pathname } = useLocation();
-  const [type, id] = pathname.split("/");
+  const [, type, id] = pathname.split("/");
 
   useEffect(() => {
-    actions.fetchTrainers();
-    console.log(store.trainers, "store trainers");
+    actions.getGivenTrainer({ id });
+    console.log(store.givenTrainer, "givenTrainer of Detailtrainer page !!!");
   }, []);
 
   return (
     <div>
-      <div>
-        {store.trainers.map((elm) => (
-          <Card item={elm} key={elm.id}></Card>
-        ))}
-      </div>
-
-      <Link to="/">
-        <span className="btn btn-primary btn-lg" href="#" role="button">
-          Back home
-        </span>
-      </Link>
+      {store.givenTrainer ? (
+        <div>
+          <h1>After me is the information fetched and stored in Store.</h1>
+          <h1>{store.givenTrainer.about}</h1>
+          <h1>{store.givenTrainer.address}</h1>
+          <h1>{store.givenTrainer.approved}</h1>
+          <h1>{store.givenTrainer.coaching_style}</h1>
+          <h1>{store.givenTrainer.experience_level}</h1>
+          <h1>{store.givenTrainer.specialty}</h1>
+        </div>
+      ) : (
+        <Link to="/">
+          <span className="btn btn-primary btn-lg" href="#" role="button">
+            Back home
+          </span>
+        </Link>
+      )}
     </div>
   );
   {

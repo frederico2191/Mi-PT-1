@@ -3,14 +3,18 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Card from "../component/Card";
+import CardClass from "../component/CardClass";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
+
   useEffect(() => {
     if (store.token && store.token != "" && store.token != undefined)
       actions.getMessage();
+    actions.getAllClasses();
+    console.log("I am the store.allClasses", store.allClasses);
   }, [store.token]);
-  console.log("I am the store.trainers", store.trainers);
+  console.log("I am the store.givenClasses 1", store.givenClass);
 
   return (
     <div>
@@ -27,6 +31,12 @@ export const Home = () => {
         <div className="list-group horizontal-scroller">
           {store.trainers.map((elm) => (
             <Card item={elm} key={elm.id}></Card>
+          ))}
+        </div>
+        <h1 className="scrollerTitles">Given Classes</h1>
+        <div className="list-group horizontal-scroller">
+          {store.allClasses.map((elm) => (
+            <CardClass key={elm.id} givenClass={elm}></CardClass>
           ))}
         </div>
       </div>

@@ -5,7 +5,9 @@ const getState = ({ getStore, getActions, setStore }) => {
       users: [],
       trainers: [],
       token: null,
-      GivenClass: null,
+      givenClass: null,
+      givenTrainer: [],
+      allClasses: [],
       demo: [
         {
           title: "FIRST",
@@ -20,32 +22,23 @@ const getState = ({ getStore, getActions, setStore }) => {
       ],
     },
     actions: {
-      // Use getActions to call a function within a fuction
-      exampleFunction: () => {
-        getActions().changeColor(0, "green");
-      },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
-        console.log("I am the reloaded token", token);
         const store = getStore();
-
-        if (store.token && store.token != "" && store.token != undefined) {
-          setStore({ token: token });
-        }
+        setStore({ token: token });
+        // if (store.token && store.token != "" && store.token != undefined) {
+        //   setStore({ token: token });
+        // }
       },
       getMessage: async () => {
         const store = getStore();
         console.log(store.token, "I am store.token inside hello_user API ");
         const opts = {
           headers: {
-            Authorization: "Bearer " + store.token,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         };
         try {
-          // const resp = await fetch(
-          //   "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/hello_user",
-          //   opts
-          // );
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/hello_user",
             opts
@@ -65,7 +58,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore();
         try {
           const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/activity_per_trainer",
+            process.env.BACKEND_URL + "/api/activity_per_trainer",
             {
               method: "GET",
               headers: {
@@ -74,12 +67,11 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(data, "data after data");
-          setStore({ GivenClass: data });
+          setStore({ givenClass: data });
           return true;
         } catch (error) {
           console.error(
-            "There was an error on users fetch!!! It was caught by flux.js",
+            "There was an error on activity per trainer fetch!!! It was caught by flux.js",
             error
           );
         }
@@ -88,15 +80,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchTrainers: async () => {
         const store = getStore();
         try {
-          const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/trainers",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          const resp = await fetch(process.env.BACKEND_URL + "/api/trainers", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
           const data = await resp.json();
           setStore({ trainers: data });
 
@@ -108,23 +97,111 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
+      getAllClasses: async () => {
+        const store = getStore();
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/activity_per_trainer",
+            opts
+          );
+          const data = await resp.json();
+          setStore({ allClasses: data });
+
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on getAllClasses fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+
+      fetchDetail: ({ type, id }) => {
+        console.log(type, id, "TYPE AND ID INSIDE");
+        fetch(`https://www.swapi.tech/api/${type}/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setStore({ detail: data.result.properties });
+          })
+          .then(() => console.log(getStore(), "getStore"));
+      },
+
+      getGivenTrainer: async ({ id }) => {
+        const store = getStore();
+        console.log(id, "trainerId INSIDE FLUX!!!!!");
+
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/trainer/" + id,
+            opts
+          );
+
+          const data = await resp.json();
+          setStore({ givenTrainer: data });
+
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on getGivenTrainer fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+      getGivenClass: async ({ id }) => {
+        const store = getStore();
+        console.log(id, "trainerId INSIDE FLUX!!!!!");
+
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/activity_per_trainer/" + id,
+            opts
+          );
+          const data = await resp.json();
+          console.log("DATA!!!", data);
+          setStore({ givenClass: data });
+
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on a givenClass fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
       register: async (email, password) => {
         const store = getStore();
         try {
           console.log("in try");
-          const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/register",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: email,
-                password: password,
-              }),
-            }
-          );
+          const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          });
           const data = await resp.json();
           console.log(data, "new user registered after register fetch");
           return true;
@@ -149,16 +226,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/token",
+            process.env.BACKEND_URL + "/api/token",
             opts
           );
-          // if (!resp.ok) throw Error("There was a problem in the login request");
-
-          // if (resp.status === 401) {
-          //   throw "Invalid credentials";
-          // } else if (resp.status === 400) {
-          //   throw "Invalid email or password format";
-          // }
           const data = await resp.json();
           localStorage.setItem("token", data.access_token);
           setStore({ token: data.access_token });
@@ -189,31 +259,32 @@ const getState = ({ getStore, getActions, setStore }) => {
         //reset the global store
         setStore({ demo: demo });
       },
-      getFavorites: async () => {
-        const store = getStore();
-        try {
-          const resp = await fetch(
-            "https://3001-frederico2191-mipt1-dy65wpjy9p3.ws-eu95.gitpod.io/api/favorites",
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          //   const resp = await fetch(
-          //     process.env.BACKEND_URL + "/api/hello",
-          //     opts
-          //   );
-          const data = await resp.json();
-          setStore({ favorites: data.favorites });
-          return true;
-        } catch (error) {
-          console.error(
-            "There was an error on favorites fetch!!! It was caught by flux.js",
-            error
-          );
-        }
-      },
+      // getFavorites: async () => {
+      //   const store = getStore();
+      //   try {
+      //     const resp = await fetch(
+      //       process.env.BACKEND_URL + "/api/favorites",
+
+      //       {
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //         },
+      //       }
+      //     );
+      //     //   const resp = await fetch(
+      //     //     process.env.BACKEND_URL + "/api/hello",
+      //     //     opts
+      //     //   );
+      //     const data = await resp.json();
+      //     setStore({ favorites: data.favorites });
+      //     return true;
+      //   } catch (error) {
+      //     console.error(
+      //       "There was an error on favorites fetch!!! It was caught by flux.js",
+      //       error
+      //     );
+      //   }
+      // },
     },
   };
 };

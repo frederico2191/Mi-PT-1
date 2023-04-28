@@ -26,7 +26,7 @@ class User(db.Model):
     user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=True)
 
     def __repr__(self):
-        return f'<User {self.first_name}>'
+        return self.first_name
 
     def serialize(self):
         trainer = Trainer.query.filter_by(user_id = self.id).first()
@@ -168,6 +168,9 @@ class Trainer(db.Model):
     user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    # def __repr__(self):
+    #     return self.id
+
     def serialize(self):
         return {
             "id": self.id,
@@ -176,8 +179,8 @@ class Trainer(db.Model):
             "experience_level": self.experience_level,
             "address": self.address,
             "bank_account": self.bank_account,
-            "specialty": self.specialty,
-            "coaching_style": self.coaching_style,
+            "specialty": self.specialty.name,
+            "coaching_style": self.coaching_style.name,
             "user_id": self.user_id
         }
 
@@ -266,6 +269,18 @@ class ActivityPerTrainer(db.Model):
     activity = db.relationship(Activity)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainer = db.relationship(Trainer)
+
+    # def __repr__(self):
+    #     return self.id
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "duration": self.duration,
+            "date": self.date,
+            "price": self.price,
+        }
 
 
 class BookedClass(db.Model):

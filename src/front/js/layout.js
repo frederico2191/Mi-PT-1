@@ -10,6 +10,7 @@ import { DetailTrainer } from "./pages/detailTrainer";
 import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import { DetailClass } from "./pages/detailClass";
 
 //create your first component
 const Layout = () => {
@@ -29,7 +30,11 @@ const Layout = () => {
             <Route element={<Home />} path="/" />
             <Route element={<Register />} path="/register" />
             <Route element={<Login />} path="/login" />
-            <Route path="/trainers" element={<DetailTrainer />} />
+            <Route path="/trainer/:trainer_id" element={<DetailTrainer />} />
+            <Route
+              path="/activity_per_trainer/:activity_per_trainer_id"
+              element={<DetailClass />}
+            />
             <Route element={<h1>Not found!</h1>} />
           </Routes>
           <Footer />

@@ -2,9 +2,8 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Context } from "../store/appContext";
-// import fallbackImage from "./fallback.png";
 
-const Card = ({ item }) => {
+const CardClass = () => {
   const { actions, store } = useContext(Context);
   const handleToggleFavorite = () => setIsFavorite(!isFavorite);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -12,6 +11,7 @@ const Card = ({ item }) => {
   const addImageFallback = (event) => {
     event.currentTarget.src = fallbackImage;
   };
+  console.log("GIVEN CLASS INSDIDE THE CARDCLASS COMPONENT:", store.givenClass);
   // const handleProfileClick = () => {
   //   actions.getGivenTrainer(item.id);
   //   console.log(
@@ -19,32 +19,26 @@ const Card = ({ item }) => {
   //     "givenTrainer of CARD component being called and moving to detailTRainer Page !!!"
   //   );
   // };
-
   return (
-    <div /**className={className}*/>
+    <div>
       <div className="card" style={{ width: "18rem" }}>
         <img className="card-img-top" onError={addImageFallback}></img>
         <div className="card-body">
-          <h5 className="card-title"> id {item.id}</h5>
-          <h5 className="card-title"> specialty {item.specialty}</h5>
-          <h5 className="card-title"> coaching_style {item.coaching_style}</h5>
-          <h5 className="card-title"> about {item.about}</h5>
-          <h5 className="card-title"> approved {item.approved}</h5>
-          <h5 className="card-title"> address{item.address}</h5>
+          <h5 className="card-title"> id {store.givenClass?.id}</h5>
           <h5 className="card-title">
             {" "}
-            experience_level {item.experience_level}
+            description {store.givenClass?.description}
           </h5>
+          <h5 className="card-title"> duration {store.givenClass?.duration}</h5>
+          {/* <h5 className="card-title"> location_range {store.givenClass?.location_range}</h5>
+        <h5 className="card-title"> location_pinpoint {store.givenClass?.location_pinpoint}</h5> */}
+          <h5 className="card-title"> price {store.givenClass?.price}</h5>
+          <h5 className="card-title"> date {store.givenClass?.date}</h5>
+          <Link to={`/activity_per_trainer/${store.givenClass?.id}`}>
+            <button className="btn btn-outline-primary">Check the class</button>
+          </Link>
 
-          {/* <h5 className="card-title"> first_name {item.id}</h5>
-          <h5 className="card-title"> description {item.description}</h5>
-          <h5 className="card-title"> duration {item.duration}</h5>
-          <h5 className="card-title"> location_range {item.location_range}</h5>
-          <h5 className="card-title"> location_pinpoint {item.location_pinpoint}</h5>
-          <h5 className="card-title"> price {item.price}</h5>
-          <h5 className="card-title"> date {item.date}</h5> */}
-
-          <div className="d-flex justify-content-between">
+          {/* <div className="d-flex justify-content-between">
             {store.token && store.token != "" && store.token != undefined ? (
               <div>
                 <Link to={`/activity_per_trainer/id`}>
@@ -74,11 +68,11 @@ const Card = ({ item }) => {
             >
               {isFavorite ? <AiFillHeart /> : <AiOutlineHeart />}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
   );
 };
 
-export default Card;
+export default CardClass;
