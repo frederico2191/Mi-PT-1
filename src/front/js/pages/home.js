@@ -12,7 +12,6 @@ export const Home = () => {
     if (store.token && store.token != "" && store.token != undefined)
       actions.getMessage();
     actions.getAllClasses();
-    console.log("I am the store.allClasses", store.allClasses);
   }, [store.token]);
   console.log("I am the store.givenClasses 1", store.givenClass);
 
@@ -35,9 +34,10 @@ export const Home = () => {
         </div>
         <h1 className="scrollerTitles">Given Classes</h1>
         <div className="list-group horizontal-scroller">
-          {store.allClasses.map((elm) => (
+          <CardClass />
+          {/* {store.allClasses.map((elm) => (
             <CardClass key={elm.id} givenClass={elm}></CardClass>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

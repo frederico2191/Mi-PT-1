@@ -19,9 +19,13 @@ export const DetailClass = () => {
     <div>
       <div>
         <h1>After me is the information fetched and stored in Store.</h1>
-        <p>{store.givenClass?.description}</p>
-        <CardClass />
+        <p>description{store.givenClass?.description}</p>
+        <p>duration{store.givenClass?.duration}</p>
+        <p>id{store.givenClass?.id}</p>
+        <p>price{store.givenClass?.price}</p>
       </div>
+      <button className="btn btn-outline-primary">Book this Class</button>
+      <div></div>
       <Link to="/">
         <span className="btn btn-primary btn-lg" href="#" role="button">
           Back home

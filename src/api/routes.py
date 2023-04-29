@@ -74,28 +74,37 @@ def getGivenTrainer(trainer_id):
 
 
 # For all the available classes from all the trainers! All activity per trainer table.
-@api.route('/activity_per_trainer/<trainer_id>', methods=['GET']) 
-@jwt_required()
-def getAllClasses(trainer_id):
-    activities = ActivityPerTrainer.query.filter_by(trainer_id= trainer_id)
-    print(activities, "activitieshuyjuy fsdanjfsnda")
-    # trainers = User.query.filter_by(role = "trainer")
+# @api.route('/activity_per_trainer/<trainer_id>', methods=['GET']) 
+# @jwt_required()
+# def getAllClasses(trainer_id):
+#     activities = ActivityPerTrainer.query.filter_by(trainer_id= trainer_id)
+#     print(activities, "activitieshuyjuy fsdanjfsnda")
+#     # trainers = User.query.filter_by(role = "trainer")
+#     data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
+#     # data = activity_per_trainer.serialize()
+#     return jsonify(data)
+
+
+# For all the available classes from all the trainers! All activity per trainer table.
+@api.route('/activity_per_trainer', methods=['GET']) 
+# @jwt_required()
+def getAllClasses():
+    activities = ActivityPerTrainer.query.all()
     data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
-    # data = activity_per_trainer.serialize()
     return jsonify(data)
 
 
 # # For one individual class, that can be booked.
-# @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
-# @jwt_required()
-# def getGivenClass(activity_per_trainer_id):
-#     activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
+@api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
+@jwt_required()
+def getGivenClass(activity_per_trainer_id):
+    activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
 
-#     data = activity_per_trainer.serialize()
+    data = activity_per_trainer.serialize()
    
-#     return jsonify(data)
+    return jsonify(data)
 
-# @api.route('//<activity_per_trainer_id>', methods=['GET']) 
+# @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
 # @jwt_required()
 # def getGivenClass(activity_per_trainer_id):
 #     activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()

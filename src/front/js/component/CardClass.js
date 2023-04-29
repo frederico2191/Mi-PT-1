@@ -11,7 +11,7 @@ const CardClass = () => {
   const addImageFallback = (event) => {
     event.currentTarget.src = fallbackImage;
   };
-  console.log("GIVEN CLASS INSDIDE THE CARDCLASS COMPONENT:", store.givenClass);
+  console.log("GIVEN CLASS INSDIDE THE CARDCLASS COMPONENT:", store.allClasses);
   // const handleProfileClick = () => {
   //   actions.getGivenTrainer(item.id);
   //   console.log(
@@ -19,26 +19,53 @@ const CardClass = () => {
   //     "givenTrainer of CARD component being called and moving to detailTRainer Page !!!"
   //   );
   // };
-  return (
-    <div>
-      <div className="card" style={{ width: "18rem" }}>
-        <img className="card-img-top" onError={addImageFallback}></img>
-        <div className="card-body">
-          <h5 className="card-title"> id {store.givenClass?.id}</h5>
-          <h5 className="card-title">
-            {" "}
-            description {store.givenClass?.description}
-          </h5>
-          <h5 className="card-title"> duration {store.givenClass?.duration}</h5>
-          {/* <h5 className="card-title"> location_range {store.givenClass?.location_range}</h5>
-        <h5 className="card-title"> location_pinpoint {store.givenClass?.location_pinpoint}</h5> */}
-          <h5 className="card-title"> price {store.givenClass?.price}</h5>
-          <h5 className="card-title"> date {store.givenClass?.date}</h5>
-          <Link to={`/activity_per_trainer/${store.givenClass?.id}`}>
-            <button className="btn btn-outline-primary">Check the class</button>
-          </Link>
 
-          {/* <div className="d-flex justify-content-between">
+  /*const givenClass = store.allClasses.map((elm) => (<h1 key={elm.id}>{elm.description}</h1>)
+  );*/
+  return store.allClasses.map(
+    (item) => {
+      return (
+        <div key={item.id}>
+          <div className="card" style={{ width: "18rem" }}>
+            <img className="card-img-top" onError={addImageFallback}></img>
+            <div className="card-body">
+              <h5 className="card-title"> id {item.id}</h5>
+              <h5 className="card-title"> description {item.description}</h5>
+              <h5 className="card-title"> duration {item.duration}</h5>
+              {/* <h5 className="card-title"> location_range {store.givenClass?.location_range}</h5>
+              <h5 className="card-title"> location_pinpoint {store.givenClass?.location_pinpoint}</h5> */}
+              <h5 className="card-title"> price {item.price}</h5>
+              <h5 className="card-title"> date {item.date}</h5>
+              <Link to={`/activity_per_trainer/${item.id}`}>
+                <button className="btn btn-outline-primary">
+                  Check the class
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // };
+    // console.log("all Classes", allClasses);
+    // store.allClasses.map((elm) => {
+    //
+    // });
+
+    // return <div>mama mimaaaa</div>;
+  );
+};
+
+export default CardClass;
+
+{
+  /* <CardClass key={elm.id} givenClass={elm}></CardClass>
+  ))} */
+}
+
+{
+  /* <div className="d-flex justify-content-between">
             {store.token && store.token != "" && store.token != undefined ? (
               <div>
                 <Link to={`/activity_per_trainer/id`}>
@@ -68,11 +95,5 @@ const CardClass = () => {
             >
               {isFavorite ? <AiFillHeart /> : <AiOutlineHeart />}
             </button>
-          </div> */}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default CardClass;
+          </div> */
+}
