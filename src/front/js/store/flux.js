@@ -210,6 +210,24 @@ const getState = ({ getStore, getActions, setStore }) => {
           return false;
         }
       },
+      searchCity: async (name) => {
+        const store = getStore();
+        try {
+          const resp = await fetch(
+            "https://api.api-ninjas.com/v1/city?name=" + name,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "X-Api-Key": process.env.CITIES_API_API_KEY,
+              },
+            }
+          );
+          const data = await resp.json();
+          return data;
+        } catch (error) {
+          console.error("City not found FLUX", name, error);
+        }
+      },
       registerTrainer: async (
         email,
         password,

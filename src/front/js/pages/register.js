@@ -10,13 +10,13 @@ export const Register = () => {
   const [trainee, setTrainee] = useState(false);
 
   return (
-    <>
+    <div className="container text-center mt-4">
       <button
         onClick={() => {
           setTrainer(!trainer);
           setTrainee(false);
         }}
-        className="btn btn-primary mb-5"
+        className="btn btn-primary mb-5 me-5"
       >
         Trainer
       </button>
@@ -31,6 +31,6 @@ export const Register = () => {
       </button>
       {trainer && <RegisterTrainer />}
       {trainee && <RegisterTrainee />}
-    </>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import SearchCity from "./SearchCity";
 
 export const RegisterTrainer = () => {
   const { store, actions } = useContext(Context);
@@ -9,7 +10,7 @@ export const RegisterTrainer = () => {
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState("");
   const [experience_level, setExperienceLevel] = useState("");
-  // const [city, setCity] = useState("");
+  const [city, setCity] = useState({});
   const [specialty, setSpecialty] = useState("");
   const [coaching_style, setCoachingStyle] = useState("");
   const [age, setAge] = useState("");
@@ -32,14 +33,14 @@ export const RegisterTrainer = () => {
       gender,
       about,
       experience_level,
-      //   city
       specialty,
       coaching_style,
       age,
       first_name,
       last_name,
       height,
-      weight
+      weight,
+      city.name
     );
     if (registeredUser) {
       navigate("/login");
@@ -53,7 +54,7 @@ export const RegisterTrainer = () => {
   };
 
   return (
-    <div>
+    <div className="container-fluid" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label hmtlFor="exampleInputEmail1" className="form-label">
@@ -229,6 +230,7 @@ export const RegisterTrainer = () => {
             onChange={(e) => setWeight(e.target.value)}
           />
         </div>
+        <SearchCity setCity={setCity} city={city} />
         <button type="submit" className="btn btn-primary">
           Register
         </button>

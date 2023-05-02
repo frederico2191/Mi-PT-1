@@ -34,7 +34,7 @@ def register_trainer():
     about = request.json.get("about",None)
     experience_level = request.json.get("experience_level",None)
     approved = request.json.get("approved",None)
-    # city = request.json.get("city",None)
+    city = request.json.get("city",None)
     specialty = request.json.get("specialty",None)
     coaching_style = request.json.get("coaching_style",None)
     age = request.json.get("age",None)
@@ -52,6 +52,7 @@ def register_trainer():
     user_to_register.password= password
     user_to_register.gender= gender
     user_to_register.age= int(age)
+    user_to_register.city= city
     user_to_register.first_name= first_name
     user_to_register.last_name= last_name
     user_to_register.height= height
@@ -68,7 +69,7 @@ def register_trainer():
     trainer_to_register.about = about
     trainer_to_register.experience_level = experience_level
     trainer_to_register.approved = None
-    trainer_to_register.city = None
+    trainer_to_register.city = city
     trainer_to_register.specialty = specialty
     trainer_to_register.coaching_style = coaching_style
     trainer_to_register.user_id = data["id"]
