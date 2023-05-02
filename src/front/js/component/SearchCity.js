@@ -19,7 +19,7 @@ const CityResponse = ({ name, country }) => (
 );
 
 const RenderCityResponse = ({ shouldDisplay, result }) => {
-    if (!shouldDisplay) return null
+  if (!shouldDisplay) return null;
   return result?.name ? (
     <CityResponse name={result.name} country={result.country} />
   ) : (
@@ -27,24 +27,21 @@ const RenderCityResponse = ({ shouldDisplay, result }) => {
   );
 };
 
-const SearchCity = () => {
+const SearchCity = ({ city, setCity }) => {
   const { store, actions } = useContext(Context);
-  const [city, setCity] = useState({});
-  const [searched, setSearched] = useState({});
+  const [searched, setSearched] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSearch = async (event) => {
     event.preventDefault();
     const result = await actions.searchCity(searched);
-    console.log("result in FE", result);
     setIsSubmitted(true);
-    if (!result.length) return setCity({});
+    if (!result?.length) return setCity();
     setCity(result[0]);
   };
 
   const handleType = (event) => {
     event.preventDefault();
-    console.log("on change", event.target.value);
     setSearched(event.target.value);
   };
 

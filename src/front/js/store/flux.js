@@ -234,14 +234,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         gender,
         about,
         experience_level,
-        // city,
         specialty,
         coaching_style,
         age,
         first_name,
         last_name,
         height,
-        weight
+        weight,
+        city
       ) => {
         const store = getStore();
         try {
@@ -259,7 +259,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 gender,
                 about,
                 experience_level,
-                // city,
                 specialty,
                 coaching_style,
                 age,
@@ -267,6 +266,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 last_name,
                 height,
                 weight,
+                city,
               }),
             }
           );
