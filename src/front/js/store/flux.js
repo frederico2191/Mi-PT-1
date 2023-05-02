@@ -188,7 +188,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      register: async (email, password) => {
+      register: async (email, password, gender) => {
         const store = getStore();
         try {
           console.log("in try");
@@ -197,10 +197,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              email: email,
-              password: password,
-            }),
+            body: JSON.stringify({ email, password, gender }),
           });
           const data = await resp.json();
           console.log(data, "new user registered after register fetch");
@@ -210,6 +207,115 @@ const getState = ({ getStore, getActions, setStore }) => {
             "There was an error on register fetch!!! It was caught by flux.js",
             error
           );
+          return false;
+        }
+      },
+      registerTrainer: async (
+        email,
+        password,
+        gender,
+        about,
+        experience_level,
+        // city,
+        specialty,
+        coaching_style,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight
+      ) => {
+        const store = getStore();
+        try {
+          console.log("in try");
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/register/trainer",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+                gender,
+                about,
+                experience_level,
+                // city,
+                specialty,
+                coaching_style,
+                age,
+                first_name,
+                last_name,
+                height,
+                weight,
+              }),
+            }
+          );
+          const data = await resp.json();
+          console.log(data, "new user registered after register fetch");
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on register fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
+        }
+      },
+      registerTrainee: async (
+        email,
+        password,
+        gender,
+
+        // city,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight,
+        body_type,
+        goal,
+        fitness_experience
+      ) => {
+        const store = getStore();
+        try {
+          console.log("in try");
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/register/trainee",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+                gender,
+                // city,
+                age,
+                first_name,
+                last_name,
+                height,
+                weight,
+                body_type,
+                goal,
+                fitness_experience,
+              }),
+            }
+          );
+          const data = await resp.json();
+          console.log(
+            data,
+            "new user (trainee) registered after register fetch"
+          );
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on register trainee fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
         }
       },
 

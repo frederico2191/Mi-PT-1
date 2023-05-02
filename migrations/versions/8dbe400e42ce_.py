@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a6240b317ac2
+Revision ID: 8dbe400e42ce
 Revises: 
-Create Date: 2023-04-29 12:19:59.124512
+Create Date: 2023-05-02 19:05:24.398094
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a6240b317ac2'
+revision = '8dbe400e42ce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,27 +24,19 @@ def upgrade():
     sa.Column('location_type', sa.String(length=250), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('user_role',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=250), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=250), nullable=False),
     sa.Column('password', sa.String(length=250), nullable=False),
-    sa.Column('birthdate', sa.DateTime(), nullable=True),
-    sa.Column('address', sa.String(length=250), nullable=True),
+    sa.Column('age', sa.Integer(), nullable=True),
+    sa.Column('city', sa.String(length=250), nullable=True),
     sa.Column('first_name', sa.String(length=250), nullable=True),
     sa.Column('last_name', sa.String(length=250), nullable=True),
     sa.Column('weight', sa.String(length=250), nullable=True),
     sa.Column('height', sa.String(length=250), nullable=True),
-    sa.Column('latitude', sa.String(length=250), nullable=True),
-    sa.Column('longitude', sa.String(length=250), nullable=True),
     sa.Column('paypal_link', sa.String(length=250), nullable=True),
-    sa.Column('gendera', sa.String(length=250), nullable=True),
-    sa.Column('user_role_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['user_role_id'], ['user_role.id'], ),
+    sa.Column('gender', sa.String(length=250), nullable=True),
+    sa.Column('user_role', sa.String(length=250), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('trainee',
@@ -60,9 +52,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('approved', sa.Boolean(), nullable=True),
     sa.Column('about', sa.String(length=250), nullable=True),
-    sa.Column('experience_level', sa.Integer(), nullable=True),
+    sa.Column('experience_level', sa.String(length=250), nullable=True),
     sa.Column('bank_account', sa.String(length=250), nullable=True),
-    sa.Column('address', sa.String(length=250), nullable=True),
+    sa.Column('city', sa.String(length=250), nullable=True),
     sa.Column('specialty', sa.String(length=250), nullable=True),
     sa.Column('coaching_style', sa.String(length=250), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -115,6 +107,5 @@ def downgrade():
     op.drop_table('trainer')
     op.drop_table('trainee')
     op.drop_table('user')
-    op.drop_table('user_role')
     op.drop_table('activity')
     # ### end Alembic commands ###

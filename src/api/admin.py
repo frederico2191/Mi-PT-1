@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, UserRole, Trainee, Trainer, Activity, ActivityPerTrainer, BookedClass
+from .models import db, User, Trainee, Trainer, Activity, ActivityPerTrainer, BookedClass
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -11,7 +11,6 @@ def setup_admin(app):
 
     
     admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(UserRole, db.session))
     admin.add_view(ModelView(Trainee, db.session))
     admin.add_view(ModelView(Trainer, db.session))
     admin.add_view(ModelView(Activity, db.session))

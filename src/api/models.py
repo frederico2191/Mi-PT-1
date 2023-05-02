@@ -7,24 +7,23 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(250), nullable=False)
-    birthdate = db.Column(db.DateTime, nullable=True)
-    address = db.Column(db.String(250), nullable=True)
+    age = db.Column(db.Integer, nullable=True)
+    city = db.Column(db.String(250), nullable=True)
     first_name = db.Column(db.String(250), nullable=True)
     last_name = db.Column(db.String(250), nullable=True)
     weight = db.Column(db.String(250), nullable=True)
     height = db.Column(db.String(250), nullable=True)
-    latitude = db.Column(db.String(250), nullable=True)
-    longitude = db.Column(db.String(250), nullable=True)
     paypal_link = db.Column(db.String(250), nullable=True)
-    gendera = db.Column(db.String(250), nullable=True)
+    gender = db.Column(db.String(250), nullable=True)
+    user_role = db.Column(db.String(250), nullable=True)
     
     # trainee = db.relationship('Trainee', backref='user', lazy=True)
     # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'), nullable=False)
     # trainer = db.relationship('Trainer', backref='user', lazy=True)
     # gender = db.relationship('Gender', backref='user', lazy=True)
     # gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=True)
-    user_role = db.relationship('UserRole', backref='user', lazy=True)
-    user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=True)
+    # user_role = db.relationship('UserRole', backref='user', lazy=True)
+    # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=True)
 
     def __repr__(self):
         return self.first_name
@@ -39,13 +38,14 @@ class User(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "birthdate": self.birthdate,
-            "address": self.address,
+            "age": self.age,
+            "city": self.city,
             "weight": self.weight,
             "height": self.height,
-            "latitude": self.latitude,
+            "gender": self.gender,
             "paypal_link": self.paypal_link,
-            "user_role": self.user_role.name if self.user_role else "unknown",
+            # "user_role": self.user_role.name if self.user_role else "unknown",
+            "user_role": self.user_role,
             "activities": [activity.activity.serialize() for activity in activity_per_trainer]
         }
 
@@ -76,13 +76,22 @@ class Trainee(db.Model):
 
     atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
 
-class UserRole(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250),nullable=True)
-    # trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
-    # trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
-    def __repr__(self):
-        return self.name
+    def serialize(self):
+        return {
+            "id": self.id,
+            "body_type": self.body_type,
+            "goal": self.goal,
+            "fitness_experience": self.fitness_experience,
+            "user_id": self.user_id
+        }
+
+# class UserRole(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(250),nullable=True)
+#     # trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
+#     # trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
+#     def __repr__(self):
+#         return self.name
     
 
 
@@ -137,7 +146,7 @@ class UserRole(db.Model):
     # increas_muscle_mass = db.Column(db.String(250), nullable=True) #Boolean
     # improve_health= db.Column(db.String(250), nullable=True) #Boolean
     # improve_as_athlete= db.Column(db.String(250), nullable=True) #Boolean
-    # not_sure= db.Column(db.String(250), nullable=True) #Boolean
+    # c= db.Column(db.String(250), nullable=True) #Boolean
 
 
 # class Personal_Success(db.Model): # IMPROVEMENTS PHASE!!!
@@ -166,9 +175,9 @@ class Trainer(db.Model):
 
     approved = db.Column(db.Boolean(), nullable=True)
     about = db.Column(db.String(250), nullable=True)
-    experience_level = db.Column(db.Integer, nullable=True)
+    experience_level = db.Column(db.String(250), nullable=True)
     bank_account = db.Column(db.String(250), nullable=True)
-    address = db.Column(db.String(250), nullable=True)
+    city = db.Column(db.String(250), nullable=True)
     specialty = db.Column(db.String(250), nullable=True)
     coaching_style = db.Column(db.String(250), nullable=True)
 
@@ -193,7 +202,7 @@ class Trainer(db.Model):
             "approved": self.approved,
             "about": self.about,
             "experience_level": self.experience_level,
-            "address": self.address,
+            "city": self.city,
             "bank_account": self.bank_account,
             "specialty": self.specialty,
             "coaching_style": self.coaching_style,
@@ -234,7 +243,6 @@ class Trainer(db.Model):
 #     # results_oriented = db.Column(db.String(250), nullable=True)
 #     # motivating = db.Column(db.String(250), nullable=True)
 #     # high_energy = db.Column(db.String(250), nullable=True)
-#     # results_oriented = db.Column(db.String(250), nullable=True)
 #     # calm = db.Column(db.String(250), nullable=True)
 #     def __repr__(self):
 #         return self.name
