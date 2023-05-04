@@ -209,6 +209,15 @@ def get_hello():
     }
     return jsonify(helloDictionary)
 
+@api.route('/get_user', methods=['GET'])
+@jwt_required()
+def get_user():
+    user_email = get_jwt_identity()
+    db_email = User.query.filter_by(email = user_email)
+    user = db_email.serialize()
+    
+    return jsonify(user)
+
 #Get all trainers to render all the available trainers (initial rending of the)
 @api.route('/trainers', methods=['GET'])
 # @jwt_required()
