@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import SearchCity from "./SearchCity";
+import ConfirmationModal from "./ConfirmationModal";
 
 export const RegisterTrainee = () => {
   const { store, actions } = useContext(Context);
@@ -12,7 +14,7 @@ export const RegisterTrainee = () => {
   const [age, setAge] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-  // const [city, setCity] = useState("");
+  const [city, setCity] = useState({});
   const [body_type, setBodyType] = useState("");
   const [coaching_style, setCoachingStyle] = useState("");
   const [goal, setGoal] = useState("");
@@ -22,8 +24,8 @@ export const RegisterTrainee = () => {
     password: null,
   });
   const navigate = useNavigate();
-
   const handleClick = async (event) => {
+    <ConfirmationModal />;
     event.preventDefault();
     const registeredUser = await actions.registerTrainee(
       email,
@@ -36,8 +38,8 @@ export const RegisterTrainee = () => {
       weight,
       body_type,
       goal,
-      fitness_experience
-      //   city
+      fitness_experience,
+      city.name
     );
     if (registeredUser) {
       navigate("/login");
@@ -51,7 +53,7 @@ export const RegisterTrainee = () => {
   };
 
   return (
-    <div>
+    <div className="container-fluid" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label hmtlFor="exampleInputEmail1" className="form-label">
@@ -88,6 +90,7 @@ export const RegisterTrainee = () => {
             Age
           </label>
           <input
+            required
             type="number"
             className="form-control"
             id="ageInput"
@@ -204,6 +207,7 @@ export const RegisterTrainee = () => {
             onChange={(e) => setWeight(e.target.value)}
           />
         </div>
+        <SearchCity setCity={setCity} city={city} />
         <button type="submit" className="btn btn-primary">
           Register
         </button>

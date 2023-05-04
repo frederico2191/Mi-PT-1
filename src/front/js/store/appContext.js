@@ -22,11 +22,10 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      state.actions.fetchTrainers(),
-        state.actions.getMessage(),
-        state.actions.syncTokenFromLocalStore();
+      state.actions.fetchTrainers(), console.log("IAM THE STORE", state.store);
+      state.actions.getMessage(), state.actions.syncTokenFromLocalStore();
       // state.actions.activity per trainer functino of fetch
-    }, []);
+    }, [state.store]);
 
     // The initial value for the context is not null anymore, but the current state of this component,
     // the context will now have a getStore, getActions and setStore functions available, because they were declared

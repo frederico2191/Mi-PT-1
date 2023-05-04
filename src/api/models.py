@@ -61,6 +61,8 @@ class Trainee(db.Model):
     body_type = db.Column(db.String(250), nullable=True)
     goal = db.Column(db.String(250), nullable=True)
     fitness_experience = db.Column(db.String(250), nullable=True)
+    city = db.Column(db.String(250), nullable=True)
+
 
 
     # fitness_experience = db.relationship('FitnessExperience', backref='trainee', lazy=True) #ENUM !!! 
@@ -82,6 +84,7 @@ class Trainee(db.Model):
             "body_type": self.body_type,
             "goal": self.goal,
             "fitness_experience": self.fitness_experience,
+            "city": self.city,
             "user_id": self.user_id
         }
 
@@ -209,7 +212,6 @@ class Trainer(db.Model):
             "user_id": self.user_id
         }
 
-    # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
 
 # class Specialty(db.Model): #ENUM
 #     id = db.Column(db.Integer, primary_key=True)
@@ -296,6 +298,9 @@ class ActivityPerTrainer(db.Model):
             "duration": self.duration,
             "date": self.date,
             "price": self.price,
+            "trainer_id": self.trainer_id,
+            "traineee_id": self.trainee_id,
+            "activity_id": self.activity_id
         }
 
 class Activity(db.Model):
@@ -309,7 +314,7 @@ class Activity(db.Model):
         return self.name
     
     def serialize(self):
-        return {"name": self.name}
+        return {"name": self.name, "activities":self.activities}
 
 
 class BookedClass(db.Model):

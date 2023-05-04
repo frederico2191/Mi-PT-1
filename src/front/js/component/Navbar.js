@@ -4,7 +4,6 @@ import { Context } from "../store/appContext";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
-  console.log("The store inside of the navbar", store.token);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary bg-dark">
@@ -65,9 +64,6 @@ export const Navbar = () => {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link disabled">Disabled</a>
             </li>
           </ul>
           <form className="d-flex" role="search">

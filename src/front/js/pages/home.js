@@ -1,19 +1,26 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Card from "../component/Card";
 import CardClass from "../component/CardClass";
+import EventModal from "../component/EventModal";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
+  const [showModal, setShowModal] = useState(false);
+  const user = store.user;
 
   useEffect(() => {
     if (store.token && store.token != "" && store.token != undefined)
       actions.getMessage();
     actions.getAllClasses();
-  }, [store.token]);
-  console.log("I am the store.givenClasses 1", store.givenClass);
+    console.log(store, "STORE USER ######## 333333");
+  }, [store.token, user]);
+
+  const createEvent = () => {
+    setShowModal(!showModal);
+  };
 
   return (
     <div>
@@ -40,6 +47,14 @@ export const Home = () => {
           ))} */}
         </div>
       </div>
+      <EventModal />
+
+      {/* <div className="text-center mt-5">
+        <button type="button" class="btn btn-success" onClick={createEvent}>
+          Success
+        </button>
+      </div>
+      {showModal ? <EventModal /> : ""} */}
     </div>
   );
 };

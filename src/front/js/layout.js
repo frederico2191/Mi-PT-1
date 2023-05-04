@@ -8,7 +8,7 @@ import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { DetailTrainer } from "./pages/detailTrainer";
 import injectContext from "./store/appContext";
-import { Navbar } from "./component/navbar";
+import { Navbar } from "./component/Navbar";
 import { Footer } from "./component/footer";
 import { DetailClass } from "./pages/detailClass";
 

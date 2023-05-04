@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import SearchCity from "./SearchCity";
+import ConfirmationModal from "./ConfirmationModal";
 
 export const RegisterTrainer = () => {
   const { store, actions } = useContext(Context);
@@ -26,6 +27,7 @@ export const RegisterTrainer = () => {
   const navigate = useNavigate();
 
   const handleClick = async (event) => {
+    <ConfirmationModal />;
     event.preventDefault();
     const registeredUser = await actions.registerTrainer(
       email,
@@ -171,10 +173,11 @@ export const RegisterTrainer = () => {
           <option value="flexibility">Flexibility</option>
         </select>
         <div className="mb-3">
-          <label hmtlFor="ageInput" className="form-label">
+          <label hmtlFor="ageInput" className="form-label" required>
             Age
           </label>
           <input
+            required
             type="text"
             className="form-control"
             id="ageInput"

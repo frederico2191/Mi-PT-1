@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       givenClass: null,
       givenTrainer: [],
       allClasses: [],
+      user: null,
       demo: [
         {
           title: "FIRST",
@@ -285,8 +286,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         email,
         password,
         gender,
-
-        // city,
         age,
         first_name,
         last_name,
@@ -294,7 +293,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         weight,
         body_type,
         goal,
-        fitness_experience
+        fitness_experience,
+        city
       ) => {
         const store = getStore();
         try {
@@ -310,7 +310,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 email,
                 password,
                 gender,
-                // city,
                 age,
                 first_name,
                 last_name,
@@ -319,6 +318,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 body_type,
                 goal,
                 fitness_experience,
+                city,
               }),
             }
           );
@@ -331,6 +331,39 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error(
             "There was an error on register trainee fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
+        }
+      },
+
+      registerClass: async (name, description, duration, price, date, city) => {
+        const store = getStore();
+        try {
+          console.log("in try");
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/register/class",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name,
+                description,
+                duration,
+                price,
+                date,
+                // city,
+              }),
+            }
+          );
+          const data = await resp.json();
+          console.log(data, "new class registered after register fetch");
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on class register fetch!!! It was caught by flux.js",
             error
           );
           return false;
@@ -355,6 +388,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           const data = await resp.json();
           localStorage.setItem("token", data.access_token);
+          localStorage.setItem("email", data.email);
+          setStore({ user: data["user"] });
           setStore({ token: data.access_token });
           return true;
         } catch (error) {
