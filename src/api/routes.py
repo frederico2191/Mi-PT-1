@@ -163,17 +163,22 @@ def register_trainee():
 
 
 @api.route('/register/class', methods=['POST'])
+@jwt_required()
 def register_class():
     
+    name = request.json.get("name",None)
     description = request.json.get("description",None)
     duration = request.json.get("duration",None)
     price = request.json.get("price",None)
-    name = request.json.get("name",None)
+    eventData = request.json.get("eventData",None)
 
     class_to_register = ActivityPerTrainer()
     class_to_register.description= description
     class_to_register.duration= duration
     class_to_register.price= price
+    class_to_register.date= eventData['date']
+    class_to_register.hour= eventData['hour']
+    class_to_register.minutes= eventData['minutes']
     db.session.add(class_to_register)
     db.session.commit()
     data = class_to_register.serialize()
@@ -236,11 +241,17 @@ def get_trainers():
 @jwt_required()
 def getGivenTrainer(trainer_id):
     trainer = Trainer.query.filter_by(id = trainer_id).first()
-
-    data = trainer.serialize()
+    data_trainer = trainer.serialize()
+    trainer_in_user = User.query.filter_by(id = data_trainer["user_id"]).first()
+    data_user = trainer_in_user.serialize()
+    combined_dictionary = {
+    "dataTrainer": data_trainer,
+    "dataUser": data_user
+    }
+    
     # trainers = User.query.filter_by(role = "trainer")
     # data = [activity_per_trainer.serialize() for given_class in activity_per_trainer]
-    return jsonify(data)
+    return jsonify(combined_dictionary)
     # return jsonify(data)
 
 

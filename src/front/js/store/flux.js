@@ -154,7 +154,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const data = await resp.json();
           setStore({ givenTrainer: data });
-
           return true;
         } catch (error) {
           console.error(
@@ -337,7 +336,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      registerClass: async (name, description, duration, price, date, city) => {
+      registerClass: async (name, description, duration, price, eventData) => {
         const store = getStore();
         try {
           console.log("in try");
@@ -347,13 +346,14 @@ const getState = ({ getStore, getActions, setStore }) => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
               },
               body: JSON.stringify({
                 name,
                 description,
                 duration,
                 price,
-                date,
+                eventData,
                 // city,
               }),
             }
@@ -387,14 +387,37 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
+          // console.log("DATA INSIDE FETCH %%%%%%%%%%%%%%%%%%%%", data);
           localStorage.setItem("token", data.access_token);
-          localStorage.setItem("email", data.email);
+          localStorage.setItem("userRole", data["user"].user_role);
           setStore({ user: data["user"] });
           setStore({ token: data.access_token });
           return true;
         } catch (error) {
           console.error("Invalid email or password format", error);
           return false;
+        }
+      },
+      getUser: async () => {
+        const store = getStore();
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/get_user",
+            opts
+          );
+          const data = await resp.json();
+          setStore({ user: data });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on the getUser fetch!!! It was caught by flux.js",
+            error
+          );
         }
       },
 
@@ -418,6 +441,24 @@ const getState = ({ getStore, getActions, setStore }) => {
         //reset the global store
         setStore({ demo: demo });
       },
+
+      // const handleSubmit = async (e) => {
+      //   e.preventDefault();
+      //   const eventWithTime = {
+      //     ...eventData,
+      //     time: `${eventData.hour}:${eventData.minutes}`,
+      //   };
+
+      //   try {
+      //     const response = await axios.post('/api/events', eventWithTime);
+      //     console.log('Event saved with ID:', response.data.id);
+      //     setEvents([...events, { ...eventWithTime, id: response.data.id }]);
+      //     setShowModal(false);
+      //   } catch (error) {
+      //     console.error('Error adding event:', error);
+      //   }
+      // };
+
       // getFavorites: async () => {
       //   const store = getStore();
       //   try {

@@ -280,7 +280,8 @@ class ActivityPerTrainer(db.Model):
     location_pinpoint = db.Column(db.String(250), nullable=True)
     price = db.Column(db.String(250), nullable=True)
     date = db.Column(db.String(250), nullable=True)
-    slot = db.Column(db.Integer, nullable=True)
+    hour = db.Column(db.String(250), nullable=True)
+    minutes = db.Column(db.String(250), nullable=True)
    
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     
@@ -299,8 +300,10 @@ class ActivityPerTrainer(db.Model):
             "date": self.date,
             "price": self.price,
             "trainer_id": self.trainer_id,
-            "traineee_id": self.trainee_id,
-            "activity_id": self.activity_id
+            "trainee_id": self.trainee_id,
+            "hour": self.hour,
+            "minutes": self.minutes,
+
         }
 
 class Activity(db.Model):

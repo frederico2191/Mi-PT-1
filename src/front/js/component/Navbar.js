@@ -8,8 +8,11 @@ export const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary bg-dark">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Navbar
+        <a
+          className="navbar-brand"
+          href="https://3000-frederico2191-mipt1-dy65wpjy9p3.ws-eu96b.gitpod.io/"
+        >
+          Mi-PT
         </a>
         <button
           className="navbar-toggler"

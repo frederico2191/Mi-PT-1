@@ -25,7 +25,23 @@ export const Login = () => {
   const handleClick = async () => {
     const isLogged = await actions.login(email, password);
     if (!isLogged) setError("invalid credentials");
-    if (store.token && store.token != "" && store.token != undefined) {
+    if (
+      store.token &&
+      store.token != "" &&
+      store.token != undefined &&
+      localStorage.getItem("userRole") == "trainer"
+    ) {
+      // navigate("/");
+      navigate("/home/trainer");
+      console.log(store.user.userRole, "HERE STORE :USER");
+      // if (store.user.user_role="trainer")
+      // navigate("/trainer/dahsbo");
+    } else if (
+      store.token &&
+      store.token != "" &&
+      store.token != undefined &&
+      localStorage.getItem("userRole") == "trainee"
+    ) {
       navigate("/");
     }
   };

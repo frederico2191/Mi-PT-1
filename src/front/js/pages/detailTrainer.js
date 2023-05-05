@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import Card from "../component/Card";
+import ballet from "../../img/ballet.jpg";
 
 export const DetailTrainer = (props) => {
   console.log("hello");
@@ -12,14 +13,52 @@ export const DetailTrainer = (props) => {
 
   useEffect(() => {
     actions.getGivenTrainer({ id });
-    console.log(store.givenTrainer, "givenTrainer of Detailtrainer page !!!");
+    console.log(store, "givenTrainer of Detailtrainer page !!!");
+    console.log(
+      store.givenTrainer,
+      "givenTrainer USERDATA of Detailtrainer page !!!"
+    );
   }, []);
 
   return (
     <div>
+      <div className="container-fluid m-3 mt-6">
+        <div className="container text-center">
+          <div className="row">
+            <div className="row">
+              <div className="col-12">title</div>
+            </div>
+            <div className="row">
+              <div className="col-6">City</div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="row">
+              <div className="col-6">ABOUT</div>
+              <div className="col-6">
+                <img
+                  src={ballet}
+                  alt="ballet"
+                  className="object-fit-contain w-50"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              {/* Experience Level <h4>{store.givenTrainer.experience_level}</h4> */}
+            </div>
+            <div className="col">
+              {/* SPECIALTY <h4>{store.givenTrainer.specialty}</h4> */}
+            </div>
+            <div className="col">
+              {/* COACHING STYLE <h4>{store.givenTrainer.coaching_style}</h4> */}
+            </div>
+          </div>
+        </div>
+      </div>
       {store.givenTrainer ? (
         <div>
-          <h1>After me is the information fetched and stored in Store.</h1>
           <h1>{store.givenTrainer.about}</h1>
           <h1>{store.givenTrainer.address}</h1>
           <h1>{store.givenTrainer.approved}</h1>

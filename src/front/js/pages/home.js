@@ -4,7 +4,6 @@ import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Card from "../component/Card";
 import CardClass from "../component/CardClass";
-import EventModal from "../component/EventModal";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
@@ -47,7 +46,6 @@ export const Home = () => {
           ))} */}
         </div>
       </div>
-      <EventModal />
 
       {/* <div className="text-center mt-5">
         <button type="button" class="btn btn-success" onClick={createEvent}>

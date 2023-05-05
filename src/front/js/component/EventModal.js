@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import SearchCity from "./SearchCity";
+import Calendar from "./Calendar";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
@@ -17,14 +18,12 @@ const EventModal = () => {
   const [coaching_style, setCoachingStyle] = useState("");
   const [goal, setGoal] = useState("");
   const [fitness_experience, setFitnessExperience] = useState("");
-  const [newClass, setNewClass] = useState({
-    name: null,
-    description: null,
-    duration: null,
-    city: null,
-    price: null,
-    date: null,
+  const [eventData, setEventData] = useState({
+    date: "",
+    hour: "",
+    minutes: "",
   });
+
   //
   //   activity_id;
   //   trainer_id;
@@ -33,13 +32,13 @@ const EventModal = () => {
   const handleClick = async (event) => {
     event.preventDefault();
     // <ConfirmationModal />;
+
     const registeredClass = await actions.registerClass(
       name,
       description,
       duration,
       price,
-      date
-      //   city.name
+      eventData
     );
 
     if (registeredClass) {
@@ -152,6 +151,7 @@ const EventModal = () => {
                 </div>
 
                 <SearchCity setCity={setCity} city={city} />
+                <Calendar setEventData={setEventData} eventData={eventData} />
                 <button
                   type="button"
                   className="btn btn-secondary"

@@ -56,7 +56,11 @@ const SearchCity = ({ city, setCity }) => {
         id="city"
         onChange={handleType}
       />
-      <button type="button" class="btn btn-secondary" onClick={handleSearch}>
+      <button
+        type="button"
+        className="btn btn-secondary"
+        onClick={handleSearch}
+      >
         Search
       </button>
       <RenderCityResponse shouldDisplay={isSubmitted} result={city} />
