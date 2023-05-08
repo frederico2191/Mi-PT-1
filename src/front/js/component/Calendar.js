@@ -1,9 +1,9 @@
 import React from "react";
 
-const Calendar = ({ eventData, setEventData }) => {
+const Calendar = ({ eventDate, setEventDate }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEventData({ ...eventData, [name]: value });
+    setEventDate({ ...eventDate, [name]: value });
   };
 
   return (
@@ -12,7 +12,7 @@ const Calendar = ({ eventData, setEventData }) => {
       <input
         type="date"
         name="date"
-        value={eventData.date}
+        value={eventDate.date}
         onChange={handleChange}
         // required
       />
@@ -20,7 +20,7 @@ const Calendar = ({ eventData, setEventData }) => {
       <label htmlFor="hour">Hour:</label>
       <select
         name="hour"
-        value={eventData.hour}
+        value={eventDate.hour}
         onChange={handleChange}
         // required
       >
@@ -33,7 +33,7 @@ const Calendar = ({ eventData, setEventData }) => {
       </select>
 
       <label htmlFor="minutes">Minutes:</label>
-      <select name="minutes" value={eventData.minutes} onChange={handleChange}>
+      <select name="minutes" value={eventDate.minutes} onChange={handleChange}>
         <option value="">Select minutes</option>
         {["00", "15", "30", "45"].map((minutes) => (
           <option key={minutes} value={minutes}>
@@ -49,7 +49,7 @@ export default Calendar;
 
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
-//     setEventData({ ...eventData, [name]: value });
+//     setEventDate({ ...eventDate, [name]: value });
 //   };
 
 //   useEffect(() => {
@@ -106,7 +106,7 @@ export default Calendar;
 //         <div className="modal">
 //           <form onSubmit={handleSubmit}>
 //             <label htmlFor="activity">Activity:</label>
-//             <select name="activity" value={eventData.activity} onChange={handleChange} required>
+//             <select name="activity" value={eventDate.activity} onChange={handleChange} required>
 //               <option value="">Select an activity</option>
 //               {activities.map((activity) => (
 //                 <option key={activity} value={activity}>
@@ -116,10 +116,10 @@ export default Calendar;
 //             </select>
 
 //             <label htmlFor="date">Date:</label>
-//             <input type="date" name="date" value={eventData.date} onChange={handleChange} required />
+//             <input type="date" name="date" value={eventDate.date} onChange={handleChange} required />
 
 //             <label htmlFor="hour">Hour:</label>
-//             <select name="hour" value={eventData.hour} onChange={handleChange} required>
+//             <select name="hour" value={eventDate.hour} onChange={handleChange} required>
 //               <option value="">Select an hour</option>
 //               {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
 //                 <option key={hour} value={hour}>
@@ -129,7 +129,7 @@ export default Calendar;
 //             </select>
 
 //             <label htmlFor="minutes">Minutes:</label>
-//             <select name="minutes" value={eventData.minutes} onChange={handleChange} required>
+//             <select name="minutes" value={eventDate.minutes} onChange={handleChange} required>
 //               <option value="">Select minutes</option>
 //               {['00', '15', '30', '45'].map((minutes) => (
 //                 <option key={minutes} value={minutes}>
@@ -139,7 +139,7 @@ export default Calendar;
 //             </select>
 
 //             <label htmlFor="city">City:</label>
-//             <select name="city" value={eventData.city} onChange={handleChange} required>
+//             <select name="city" value={eventDate.city} onChange={handleChange} required>
 //               <option value="">Select a city</option>
 //               {cities.map((city) => (
 //                 <option key={city} value={city}>

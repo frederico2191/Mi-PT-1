@@ -47,7 +47,7 @@ const SearchCity = ({ city, setCity }) => {
 
   return (
     <>
-      <label hmtlFor="city" className="form-label">
+      <label htmlFor="city" className="form-label">
         City
       </label>
       <input

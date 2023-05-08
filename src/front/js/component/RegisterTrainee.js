@@ -56,7 +56,7 @@ export const RegisterTrainee = () => {
     <div className="container-fluid" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
-          <label hmtlFor="exampleInputEmail1" className="form-label">
+          <label htmlFor="exampleInputEmail1" className="form-label">
             Email address
           </label>
           <input
@@ -73,7 +73,7 @@ export const RegisterTrainee = () => {
           </div>
         </div>
         <div className="mb-3">
-          <label hmtlFor="exampleInputPassword1" className="form-label">
+          <label htmlFor="exampleInputPassword1" className="form-label">
             Password
           </label>
           <input
@@ -86,7 +86,7 @@ export const RegisterTrainee = () => {
           />
         </div>
         <div className="mb-3">
-          <label hmtlFor="ageInput" className="form-label">
+          <label htmlFor="ageInput" className="form-label">
             Age
           </label>
           <input
@@ -160,7 +160,7 @@ export const RegisterTrainee = () => {
           <option value="fitness_enthusiast">fitness_enthusiast</option>
         </select>
         <div className="mb-3">
-          <label hmtlFor="firstNameInput" className="form-label">
+          <label htmlFor="firstNameInput" className="form-label">
             First Name
           </label>
           <input
@@ -172,7 +172,7 @@ export const RegisterTrainee = () => {
           />
         </div>
         <div className="mb-3">
-          <label hmtlFor="lastNameInput" className="form-label">
+          <label htmlFor="lastNameInput" className="form-label">
             Last Name
           </label>
           <input
@@ -184,7 +184,7 @@ export const RegisterTrainee = () => {
           />
         </div>
         <div className="mb-3">
-          <label hmtlFor="heightInput1" className="form-label">
+          <label htmlFor="heightInput1" className="form-label">
             Height
           </label>
           <input
@@ -196,7 +196,7 @@ export const RegisterTrainee = () => {
           />
         </div>
         <div className="mb-3">
-          <label hmtlFor="weightInput1" className="form-label">
+          <label htmlFor="weightInput1" className="form-label">
             Weight
           </label>
           <input

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { Avatar } from "@mui/material";
+import ballet from "../../img/ballet.jpg";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -81,6 +83,7 @@ export const Navbar = () => {
             </button>
           </form>
         </div>
+        <Avatar alt="Profile Pic" src={ballet} />
         <div className="ml-auto">
           {!store.token ? (
             <div>

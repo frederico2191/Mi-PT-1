@@ -6,6 +6,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from .models import db, User, Trainer, ActivityPerTrainer, Trainee, Activity
+from datetime import datetime
 
 api = Blueprint('api', __name__)
 
@@ -170,16 +171,21 @@ def register_class():
     description = request.json.get("description",None)
     duration = request.json.get("duration",None)
     price = request.json.get("price",None)
-    eventData = request.json.get("eventData",None)
+    eventDate = request.json.get("eventDate",None)
+    hour = request.json.get("hour",None)
+    minutes = request.json.get("minutes",None)
 
+    print('hello', dt.parse(eventDate))
+    # treatedDate = datetime.fromisoformat(eventDate)
+    # treatedDate2= treatedDate.datetime(2020, 1, 6, 0, 0, tzinfo=datetime.timezone.utc)
     
     class_to_register = ActivityPerTrainer()
     class_to_register.description= description
     class_to_register.duration= duration
     class_to_register.price= price
-    class_to_register.date= eventData['date']
-    class_to_register.hour= eventData['hour']
-    class_to_register.minutes= eventData['minutes']
+    class_to_register.date= dt.parse(eventDate) # datetime
+    class_to_register.hour= hour # HH
+    class_to_register.minutes = minutes # mm
     db.session.add(class_to_register)
     db.session.commit()
     data = class_to_register.serialize()

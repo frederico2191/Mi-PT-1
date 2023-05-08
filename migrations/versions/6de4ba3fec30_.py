@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8dbe400e42ce
+Revision ID: 6de4ba3fec30
 Revises: 
-Create Date: 2023-05-02 19:05:24.398094
+Create Date: 2023-05-08 18:50:51.840491
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8dbe400e42ce'
+revision = '6de4ba3fec30'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,6 +44,7 @@ def upgrade():
     sa.Column('body_type', sa.String(length=250), nullable=True),
     sa.Column('goal', sa.String(length=250), nullable=True),
     sa.Column('fitness_experience', sa.String(length=250), nullable=True),
+    sa.Column('city', sa.String(length=250), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -68,9 +69,10 @@ def upgrade():
     sa.Column('location_range', sa.String(length=250), nullable=True),
     sa.Column('location_pinpoint', sa.String(length=250), nullable=True),
     sa.Column('price', sa.String(length=250), nullable=True),
-    sa.Column('date', sa.String(length=250), nullable=True),
-    sa.Column('slot', sa.Integer(), nullable=True),
-    sa.Column('activity_id', sa.Integer(), nullable=True),
+    sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('hour', sa.String(length=250), nullable=True),
+    sa.Column('minutes', sa.String(length=250), nullable=True),
+    sa.Column('activity_id', sa.Integer(), nullable=False),
     sa.Column('trainer_id', sa.Integer(), nullable=True),
     sa.Column('trainee_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['activity_id'], ['activity.id'], ),

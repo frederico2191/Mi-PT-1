@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import SearchCity from "./SearchCity";
 import Calendar from "./Calendar";
+import DatePicker from "./DatePicker";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
@@ -18,11 +19,7 @@ const EventModal = () => {
   const [coaching_style, setCoachingStyle] = useState("");
   const [goal, setGoal] = useState("");
   const [fitness_experience, setFitnessExperience] = useState("");
-  const [eventData, setEventData] = useState({
-    date: "",
-    hour: "",
-    minutes: "",
-  });
+  const [eventDate, setEventDate] = useState(null);
 
   //
   //   activity_id;
@@ -37,13 +34,13 @@ const EventModal = () => {
   const handleClick = async (event) => {
     event.preventDefault();
     // <ConfirmationModal />;
-
+    // const parsedEventData = date.toDate();
     const registeredClass = await actions.registerClass(
       name,
       description,
       duration,
       price,
-      eventData
+      eventDate
     );
 
     if (registeredClass) {
@@ -91,7 +88,7 @@ const EventModal = () => {
             <div className="modal-body">
               <form onSubmit={handleClick}>
                 <div className="mb-3">
-                  <label hmtlFor="exampleInputEmail1" className="form-label">
+                  <label htmlFor="exampleInputEmail1" className="form-label">
                     Activity name
                   </label>
                   <select
@@ -110,7 +107,7 @@ const EventModal = () => {
                   </select>
                 </div>
                 <div className="mb-3">
-                  <label hmtlFor="exampleInputPassword1" className="form-label">
+                  <label htmlFor="exampleInputPassword1" className="form-label">
                     Description
                   </label>
                   <input
@@ -123,7 +120,7 @@ const EventModal = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label hmtlFor="ageInput" className="form-label">
+                  <label htmlFor="ageInput" className="form-label">
                     Duration
                   </label>
                   <input
@@ -135,7 +132,7 @@ const EventModal = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label hmtlFor="price" className="form-label">
+                  <label htmlFor="price" className="form-label">
                     Price
                   </label>
                   <input
@@ -148,7 +145,8 @@ const EventModal = () => {
                 </div>
 
                 <SearchCity setCity={setCity} city={city} />
-                <Calendar setEventData={setEventData} eventData={eventData} />
+                <DatePicker setEventDate={setEventDate} eventDate={eventDate} />
+                {/* <Calendar setEventDate={setEventDate} eventDate={eventDate} /> */}
                 <button
                   type="button"
                   className="btn btn-secondary"

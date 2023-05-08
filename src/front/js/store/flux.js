@@ -337,8 +337,16 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      registerClass: async (name, description, duration, price, eventData) => {
+      registerClass: async (name, description, duration, price, date) => {
         const store = getStore();
+        // console.log("date in flux 2", date?.toDate());
+        console.log("date in flux", date);
+        console.log("hello", date);
+        const eventDate = date?.toDate();
+        const hour = date?.hour();
+        const minutes = date?.minute();
+        console.log("hello", { eventDate, hour, minutes });
+
         try {
           console.log("in try");
           const resp = await fetch(
@@ -354,7 +362,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                 description,
                 duration,
                 price,
-                eventData,
+                eventDate,
+                hour,
+                minutes,
                 // city,
               }),
             }
@@ -516,8 +526,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       // const handleSubmit = async (e) => {
       //   e.preventDefault();
       //   const eventWithTime = {
-      //     ...eventData,
-      //     time: `${eventData.hour}:${eventData.minutes}`,
+      //     ...eventDate,
+      //     time: `${eventDate.hour}:${eventDate.minutes}`,
       //   };
 
       //   try {

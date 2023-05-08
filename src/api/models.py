@@ -279,20 +279,14 @@ class ActivityPerTrainer(db.Model):
     location_range = db.Column(db.String(250), nullable=True)
     location_pinpoint = db.Column(db.String(250), nullable=True)
     price = db.Column(db.String(250), nullable=True)
-    date = db.Column(db.String(250), nullable=True)
+    date = db.Column(db.DateTime(timezone=False), nullable=True)
     hour = db.Column(db.String(250), nullable=True)
     minutes = db.Column(db.String(250), nullable=True)
-    # available = db.Column(db.Boolean, nullable=True)
-    
-   
+
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
-    
-
-    # def __repr__(self):
-    #     return self.
     
     def serialize(self):
         activity = Activity.query.get(self.activity_id)
