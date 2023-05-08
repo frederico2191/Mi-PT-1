@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import SearchCity from "./SearchCity";
 import Calendar from "./Calendar";
@@ -29,6 +29,11 @@ const EventModal = () => {
   //   trainer_id;
   //   trainee_id;
   //   const navigate = useNavigate();
+
+  useEffect(() => {
+    actions.getAllTypesActivities();
+    console.log("INSIDE USE EFFECT", store);
+  }, []);
   const handleClick = async (event) => {
     event.preventDefault();
     // <ConfirmationModal />;
@@ -58,7 +63,7 @@ const EventModal = () => {
         data-bs-toggle="modal"
         data-bs-target="#staticBackdrop"
       >
-        Create Class
+        + ADD
       </button>
 
       <div
@@ -99,17 +104,9 @@ const EventModal = () => {
                     }}
                   >
                     <option value="">Select Activity Name</option>
-                    <option value="zumba">Zumba</option>
-                    <option value="calisthenics">Calisthenics</option>
-                    <option value="cross-training">Cross-Training</option>
-                    <option value="box">Box</option>
-                    <option value="kick-box">Kick-Box</option>
-                    <option value="yoga">Yoga</option>
-                    <option value="running">Running</option>
-                    <option value="pilates">Pilates</option>
-                    <option value="functional_training">
-                      Fucntional Training
-                    </option>
+                    {store.allTypesActivities?.map((x) => {
+                      <option value={x.id}>{x.name}</option>;
+                    })}
                   </select>
                 </div>
                 <div className="mb-3">

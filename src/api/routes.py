@@ -172,6 +172,7 @@ def register_class():
     price = request.json.get("price",None)
     eventData = request.json.get("eventData",None)
 
+    
     class_to_register = ActivityPerTrainer()
     class_to_register.description= description
     class_to_register.duration= duration
@@ -197,13 +198,25 @@ def register_class():
 def create_token():
     email = request.json.get("email",None)
     password = request.json.get("password",None)
-    db_email = User.query.filter_by(email = email,password = password).first()
-    if email != db_email.email: return jsonify({"msg": "Wrong email or password, if you don't have an account please Register First"}), 401
+    user = User.query.filter_by(email = email,password = password).first()
+    if not user: return jsonify({"msg": "Wrong email or password, if you don't have an account please Register First"}), 401
     access_token = create_access_token(identity=email)
-    user = db_email.serialize()
     
 
-    return jsonify(access_token=access_token, email=email, user=user)
+    return jsonify(access_token=access_token, email=email)
+
+@api.route('/verify', methods=['GET'])
+@jwt_required()
+def verify_token():
+    email_provided = get_jwt_identity()
+
+    user = User.query.filter_by(email = email_provided).first()
+    serializedUser = user.serialize()
+    if user.trainer: serializedUser["trainer"] = user.trainer[0].serialize()
+    if user.trainee: serializedUser["trainee"] = user.trainee[0].serialize()
+    
+
+    return jsonify(user=serializedUser)
 
 @api.route('/hello_user', methods=['GET'])
 @jwt_required()
@@ -236,6 +249,18 @@ def get_trainers():
     print("I am the data after serialization for trainer",data)
     return jsonify(data)
 
+@api.route('/all_types_activities', methods=['GET'])
+# @jwt_required()
+def get_all_types_activities():
+    # trainers = User.query.filter_by(email = "email1")
+    # trainers = User.query.filter(User.user_role.name == "Trainer")
+    # trainers = User.query.filter(User.user_role.has(name="Trainer"))
+    allTypesActivities = Activity.query.all()
+
+    data = [Activity.serialize() for activity in allTypesActivities]
+    print("222222222m I am the data after serialization for all activities",data)
+    return jsonify(data)
+
 # For one individual trainer profile. Upper part of detailTrainer.
 @api.route('/trainer/<trainer_id>', methods=['GET']) 
 @jwt_required()
@@ -253,6 +278,17 @@ def getGivenTrainer(trainer_id):
     # data = [activity_per_trainer.serialize() for given_class in activity_per_trainer]
     return jsonify(combined_dictionary)
     # return jsonify(data)
+
+
+@api.route('/activity/<activity_id>', methods=['DELETE']) 
+# @jwt_required()
+def deleteClass(activity_id):
+    print('enters?')
+    activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).delete()
+    db.session.commit()
+    
+    # return jsonify("deleted")
+    return jsonify(data)
 
 
 

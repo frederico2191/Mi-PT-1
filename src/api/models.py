@@ -31,7 +31,7 @@ class User(db.Model):
     def serialize(self):
         trainer = Trainer.query.filter_by(user_id = self.id).first()
         serializedTrainer = trainer.serialize() if trainer else None
-        activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = serializedTrainer["id"]) if serializedTrainer else []
+        activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = serializedTrainer["id"]).all() if serializedTrainer else []
 
         return {
             "id": self.id,
@@ -46,7 +46,7 @@ class User(db.Model):
             "paypal_link": self.paypal_link,
             # "user_role": self.user_role.name if self.user_role else "unknown",
             "user_role": self.user_role,
-            "activities": [activity.activity.serialize() for activity in activity_per_trainer]
+            "activities": [activity.serialize() for activity in activity_per_trainer]
         }
 
 atendencies = db.Table('atendencies',
@@ -189,8 +189,6 @@ class Trainer(db.Model):
    
     # coaching_style = db.relationship('CoachingStyle', backref='trainer', lazy=True) #ENUM !!! 
     # coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'), nullable=False)
-    
-
     user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -273,8 +271,10 @@ class Trainer(db.Model):
 
 
 class ActivityPerTrainer(db.Model):
+# class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(250), nullable=True)
+    # name = db.Column(db.String(250), nullable=True)
     duration = db.Column(db.String(250), nullable=True)
     location_range = db.Column(db.String(250), nullable=True)
     location_pinpoint = db.Column(db.String(250), nullable=True)
@@ -282,8 +282,10 @@ class ActivityPerTrainer(db.Model):
     date = db.Column(db.String(250), nullable=True)
     hour = db.Column(db.String(250), nullable=True)
     minutes = db.Column(db.String(250), nullable=True)
+    # available = db.Column(db.Boolean, nullable=True)
+    
    
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
+    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
@@ -293,6 +295,7 @@ class ActivityPerTrainer(db.Model):
     #     return self.
     
     def serialize(self):
+        activity = Activity.query.get(self.activity_id)
         return {
             "id": self.id,
             "description": self.description,
@@ -303,15 +306,18 @@ class ActivityPerTrainer(db.Model):
             "trainee_id": self.trainee_id,
             "hour": self.hour,
             "minutes": self.minutes,
-
+            "name": activity.name,
         }
 
 class Activity(db.Model):
+# class ActivityCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=True)
     location_type = db.Column(db.String(250), nullable=True)
     # indoor_outdoor_remote_id = db.Column(db.Integer, db.ForeignKey('indoor_outdoor_remote.id'),nullable=False)
     activities = db.relationship(ActivityPerTrainer)
+    activities_per_trainer = db.relationship('ActivityPerTrainer', backref='activity', lazy=True)
+
 
     def __repr__(self):
         return self.name
@@ -321,6 +327,7 @@ class Activity(db.Model):
 
 
 class BookedClass(db.Model):
+# class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(250), nullable=True)
     # location = db.Column(db.String(250), nullable=True) # WE can probably retrieve this from  activity_per_trariner
@@ -333,6 +340,8 @@ class BookedClass(db.Model):
 
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
     trainee = db.relationship(Trainee)
+
+
 
 
 

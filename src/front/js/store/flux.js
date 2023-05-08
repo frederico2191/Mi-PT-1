@@ -9,6 +9,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       givenTrainer: [],
       allClasses: [],
       user: null,
+      allTypesActivities: null,
       demo: [
         {
           title: "FIRST",
@@ -137,7 +138,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           .then(() => console.log(getStore(), "getStore"));
       },
 
-      getGivenTrainer: async ({ id }) => {
+      getGivenTrainer: async (id) => {
         const store = getStore();
         console.log(id, "trainerId INSIDE FLUX!!!!!");
 
@@ -369,6 +370,32 @@ const getState = ({ getStore, getActions, setStore }) => {
           return false;
         }
       },
+      deleteClass: async (id) => {
+        const store = getStore();
+        try {
+          console.log("in try deleting class###", id, "ID");
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/api/activity/${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );
+          const data = await resp.json();
+          console.log(data, "new class deleted in the dashboard");
+          await getActions().getUser();
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on class DELETE fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
+        }
+      },
 
       login: async (email, password) => {
         const opts = {
@@ -389,9 +416,29 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           // console.log("DATA INSIDE FETCH %%%%%%%%%%%%%%%%%%%%", data);
           localStorage.setItem("token", data.access_token);
+          setStore({ token: data.access_token });
+          // await getActions().verify();
+          return true;
+        } catch (error) {
+          console.error("Invalid email or password format", error);
+          return false;
+        }
+      },
+      verify: async () => {
+        const opts = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/verify",
+            opts
+          );
+          const data = await resp.json();
           localStorage.setItem("userRole", data["user"].user_role);
           setStore({ user: data["user"] });
-          setStore({ token: data.access_token });
           return true;
         } catch (error) {
           console.error("Invalid email or password format", error);
@@ -440,6 +487,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         //reset the global store
         setStore({ demo: demo });
+      },
+
+      getAllTypesActivities: async () => {
+        const store = getStore();
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/all_types_activities",
+            opts
+          );
+          const data = await resp.json();
+          setStore({ allTypesActivities: data });
+
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on getAllTypesActivities fetch!!! It was caught by flux.js",
+            error
+          );
+        }
       },
 
       // const handleSubmit = async (e) => {

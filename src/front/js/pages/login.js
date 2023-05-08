@@ -33,7 +33,6 @@ export const Login = () => {
     ) {
       // navigate("/");
       navigate("/home/trainer");
-      console.log(store.user.userRole, "HERE STORE :USER");
       // if (store.user.user_role="trainer")
       // navigate("/trainer/dahsbo");
     } else if (

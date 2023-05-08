@@ -12,8 +12,8 @@ export const DetailTrainer = (props) => {
   const [, type, id] = pathname.split("/");
 
   useEffect(() => {
-    actions.getGivenTrainer({ id });
-    console.log(store, "givenTrainer of Detailtrainer page !!!");
+    actions.getGivenTrainer(id);
+    console.log(store, "givenTrainer of Detailtrainers page !!!");
     console.log(
       store.givenTrainer,
       "givenTrainer USERDATA of Detailtrainer page !!!"
