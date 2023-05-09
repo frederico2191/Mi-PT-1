@@ -7,6 +7,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from .models import db, User, Trainer, ActivityPerTrainer, Trainee, Activity
 from datetime import datetime
+from dateutil import parser
 
 api = Blueprint('api', __name__)
 
@@ -174,27 +175,29 @@ def register_class():
     eventDate = request.json.get("eventDate",None)
     hour = request.json.get("hour",None)
     minutes = request.json.get("minutes",None)
+    trainer_id = request.json.get("trainerId",None)
 
-    print('hello', dt.parse(eventDate))
-    # treatedDate = datetime.fromisoformat(eventDate)
-    # treatedDate2= treatedDate.datetime(2020, 1, 6, 0, 0, tzinfo=datetime.timezone.utc)
-    
+
+    print(parser.parse(eventDate),"THE PRINTTTTTT###")
+    datetime_object = parser.parse(eventDate)
+    # datetime_object = datetime.strptime(eventDate.split(".")[0].replace("T"," "), '%y-%m-%d %H:%M:%S')
+    print("####5555555",datetime_object)
+
+
+
     class_to_register = ActivityPerTrainer()
     class_to_register.description= description
     class_to_register.duration= duration
     class_to_register.price= price
-    class_to_register.date= dt.parse(eventDate) # datetime
+    class_to_register.date= datetime_object #dt.parse(eventDate) # datetime
     class_to_register.hour= hour # HH
     class_to_register.minutes = minutes # mm
+    class_to_register.activity_id = name # mm
+    class_to_register.trainer_id = trainer_id # mm
+
     db.session.add(class_to_register)
     db.session.commit()
     data = class_to_register.serialize()
-
-    activity_to_register = Activity()
-    activity_to_register.name = name
-    db.session.add(activity_to_register)
-    db.session.commit()
-
     
     return jsonify(data)
 
@@ -263,7 +266,7 @@ def get_all_types_activities():
     # trainers = User.query.filter(User.user_role.has(name="Trainer"))
     allTypesActivities = Activity.query.all()
 
-    data = [Activity.serialize() for activity in allTypesActivities]
+    data = [{"name": activity.name, "id": activity.id} for activity in allTypesActivities]
     print("222222222m I am the data after serialization for all activities",data)
     return jsonify(data)
 
@@ -289,11 +292,9 @@ def getGivenTrainer(trainer_id):
 @api.route('/activity/<activity_id>', methods=['DELETE']) 
 # @jwt_required()
 def deleteClass(activity_id):
-    print('enters?')
     activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).delete()
     db.session.commit()
     
-    # return jsonify("deleted")
     return jsonify(data)
 
 

@@ -337,12 +337,19 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      registerClass: async (name, description, duration, price, date) => {
+      registerClass: async (
+        name,
+        description,
+        duration,
+        price,
+        date,
+        trainerId
+      ) => {
         const store = getStore();
         // console.log("date in flux 2", date?.toDate());
         console.log("date in flux", date);
         console.log("hello", date);
-        const eventDate = date?.toDate();
+        const eventDate = date?.toISOString();
         const hour = date?.hour();
         const minutes = date?.minute();
         console.log("hello", { eventDate, hour, minutes });
@@ -365,6 +372,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 eventDate,
                 hour,
                 minutes,
+                trainerId,
                 // city,
               }),
             }

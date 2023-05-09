@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Context } from "../store/appContext";
 
-const CardClass = () => {
+const CardClass = ({ givenClass }) => {
   const { actions, store } = useContext(Context);
   const handleToggleFavorite = () => setIsFavorite(!isFavorite);
   const [isFavorite, setIsFavorite] = useState(false);
-  // const isFavorite = store.favorites.find((el) => el.name === item.name);
+  // const isFavorite = store.favorites.find((el) => el.name === givenClass.name);
   const addImageFallback = (event) => {
     event.currentTarget.src = fallbackImage;
   };
   // console.log("GIVEN CLASS INSDIDE THE CARDCLASS COMPONENT:", store.allClasses);
   // const handleProfileClick = () => {
-  //   actions.getGivenTrainer(item.id);
+  //   actions.getGivenTrainer(givenClass.id);
   //   console.log(
   //     store.givenTrainer,
   //     "givenTrainer of CARD component being called and moving to detailTRainer Page !!!"
@@ -22,41 +22,35 @@ const CardClass = () => {
 
   /*const givenClass = store.allClasses.map((elm) => (<h1 key={elm.id}>{elm.description}</h1>)
   );*/
-  return store.allClasses.map(
-    (item) => {
-      return (
-        <div key={item.id}>
-          <div className="card" style={{ width: "18rem" }}>
-            <img className="card-img-top" onError={addImageFallback}></img>
-            <div className="card-body">
-              <h5 className="card-title"> name {item.name}</h5>
-              <h5 className="card-title"> id {item.id}</h5>
-              <h5 className="card-title"> description {item.description}</h5>
-              <h5 className="card-title"> duration {item.duration}</h5>
-              {/* <h5 className="card-title"> location_range {store.givenClass?.location_range}</h5>
+  return (
+    <div key={givenClass.id}>
+      <div className="card" style={{ width: "18rem" }}>
+        <img className="card-img-top" onError={addImageFallback}></img>
+        <div className="card-body">
+          <h5 className="card-title"> id {givenClass.id}</h5>
+          <h5 className="card-title"> name {givenClass.name}</h5>
+          <h5 className="card-title"> description {givenClass.description}</h5>
+          <h5 className="card-title"> duration {givenClass.duration}</h5>
+          {/* <h5 className="card-title"> location_range {store.givenClass?.location_range}</h5>
               <h5 className="card-title"> location_pinpoint {store.givenClass?.location_pinpoint}</h5> */}
-              <h5 className="card-title"> price {item.price}</h5>
-              <h5 className="card-title"> date {item.date}</h5>
-              <Link to={`/activity_per_trainer/${item.id}`}>
-                <button className="btn btn-outline-primary">
-                  Check the class
-                </button>
-              </Link>
-            </div>
-          </div>
+          <h5 className="card-title"> price {givenClass.price}</h5>
+          <h5 className="card-title"> date {givenClass.date}</h5>
+          <Link to={`/activity_per_trainer/${givenClass.id}`}>
+            <button className="btn btn-outline-primary">Check the class</button>
+          </Link>
         </div>
-      );
-    }
-
-    // };
-    // console.log("all Classes", allClasses);
-    // store.allClasses.map((elm) => {
-    //
-    // });
-
-    // return <div>mama mimaaaa</div>;
+      </div>
+    </div>
   );
 };
+
+// };
+// console.log("all Classes", allClasses);
+// store.allClasses.map((elm) => {
+//
+// });
+
+// return <div>mama mimaaaa</div>;
 
 export default CardClass;
 
@@ -74,7 +68,7 @@ export default CardClass;
                     Check the class
                   </button>
                 </Link>
-                <Link to={`/trainer/${item.id}`}>
+                <Link to={`/trainer/${givenClass.id}`}>
                   <button
                     className="btn btn-outline-primary"
                     // onClick={handleProfileClick}

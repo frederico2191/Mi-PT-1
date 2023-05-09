@@ -301,6 +301,8 @@ class ActivityPerTrainer(db.Model):
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
+            "trainer_id":self.trainer_id,
+            "trainee_id":self.trainee_id
         }
 
 class Activity(db.Model):
@@ -309,7 +311,7 @@ class Activity(db.Model):
     name = db.Column(db.String(250), nullable=True)
     location_type = db.Column(db.String(250), nullable=True)
     # indoor_outdoor_remote_id = db.Column(db.Integer, db.ForeignKey('indoor_outdoor_remote.id'),nullable=False)
-    activities = db.relationship(ActivityPerTrainer)
+    # activities = db.relationship(ActivityPerTrainer)
     activities_per_trainer = db.relationship('ActivityPerTrainer', backref='activity', lazy=True)
 
 
@@ -317,7 +319,10 @@ class Activity(db.Model):
         return self.name
     
     def serialize(self):
-        return {"name": self.name, "activities":self.activities}
+        
+        return {"name": self.name, "activitiesPerTrainer":self.activities_per_trainer}
+
+
 
 
 class BookedClass(db.Model):

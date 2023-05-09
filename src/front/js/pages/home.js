@@ -4,7 +4,7 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Card from "../component/Card";
-import CardClass from "../component/CardClass";
+import CardClass2 from "../component/CardClass2";
 import EventModal from "../component/EventModal";
 
 export const Home = () => {
@@ -15,8 +15,9 @@ export const Home = () => {
   useEffect(() => {
     if (store.token && store.token != "" && store.token != undefined)
       actions.getMessage();
+    actions.getAllTypesActivities();
+
     actions.getAllClasses();
-    console.log(store, "STORE USER ######## 333333");
   }, [store.token, user]);
 
   const createEvent = () => {
@@ -35,18 +36,38 @@ export const Home = () => {
       </div>
       <EventModal />
       <div>
-        <h1 className="scrollerTitles">Trainers</h1>
-        <div className="list-group horizontal-scroller">
+        {/* <h1 className="scrollerTitles">Trainers</h1> */}
+        {/* <div className="list-group horizontal-scroller">
           {store.trainers.map((elm) => (
             <Card item={elm} key={elm.id}></Card>
           ))}
-        </div>
-        <h1 className="scrollerTitles">Given Classes</h1>
-        <div className="list-group horizontal-scroller">
-          <CardClass />
+        </div> */}
+        <div>
+          {store.allTypesActivities?.map((x) => {
+            const activityClasses = store.allClasses?.filter(
+              (givenClass) => givenClass.name == x.name
+            );
+            // console.log(activityClasses, "77777777777777########");
+            return (
+              <>
+                <h1 className="scrollerTitles">{x.name}</h1>
+                <div className="list-group horizontal-scroller">
+                  {activityClasses?.map((givenClass) => {
+                    console.log("givenCLASSSSS", givenClass);
+                    return (
+                      <CardClass2
+                        key={givenClass.id}
+                        givenClass={givenClass}
+                      ></CardClass2>
+                    );
+                  })}
+                </div>
+              </>
+            );
+          })}
           {/* {store.allClasses.map((elm) => (
-            <CardClass key={elm.id} givenClass={elm}></CardClass>
           ))} */}
+          {/* <CardClass2 activityType={x} />; */}
         </div>
       </div>
 

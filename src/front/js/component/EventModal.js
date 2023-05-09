@@ -26,13 +26,14 @@ const EventModal = () => {
   //   trainer_id;
   //   trainee_id;
   //   const navigate = useNavigate();
-
   useEffect(() => {
     actions.getAllTypesActivities();
     console.log("INSIDE USE EFFECT", store);
+    console.log(store.user?.["trainer"].id, "HERE ID");
   }, []);
   const handleClick = async (event) => {
     event.preventDefault();
+    const trainerId = store.user?.["trainer"].id;
     // <ConfirmationModal />;
     // const parsedEventData = date.toDate();
     const registeredClass = await actions.registerClass(
@@ -40,7 +41,8 @@ const EventModal = () => {
       description,
       duration,
       price,
-      eventDate
+      eventDate,
+      trainerId
     );
 
     if (registeredClass) {
@@ -102,7 +104,7 @@ const EventModal = () => {
                   >
                     <option value="">Select Activity Name</option>
                     {store.allTypesActivities?.map((x) => {
-                      <option value={x.id}>{x.name}</option>;
+                      return <option value={x.id}>{x.name}</option>;
                     })}
                   </select>
                 </div>
