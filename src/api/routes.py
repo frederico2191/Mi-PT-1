@@ -317,6 +317,7 @@ def deleteClass(activity_id):
 def getAllClasses():
     activities = ActivityPerTrainer.query.all()
     data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
+    # data_future = data.filter_by(activity_per_trainer_date> date.now())
     return jsonify(data)
 
 
