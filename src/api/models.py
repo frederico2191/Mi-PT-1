@@ -282,6 +282,9 @@ class ActivityPerTrainer(db.Model):
     date = db.Column(db.DateTime(timezone=False), nullable=True)
     hour = db.Column(db.String(250), nullable=True)
     minutes = db.Column(db.String(250), nullable=True)
+    city = db.Column(db.String(250), nullable=True)
+    lat = db.Column(db.String(250), nullable=True)
+    lng = db.Column(db.String(250), nullable=True)
 
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
@@ -301,8 +304,9 @@ class ActivityPerTrainer(db.Model):
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
-            "trainer_id":self.trainer_id,
-            "trainee_id":self.trainee_id
+            "city": self.city,
+            "lat": self.lat,
+            "lng": self.lng,
         }
 
 class Activity(db.Model):

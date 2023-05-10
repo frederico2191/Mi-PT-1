@@ -176,6 +176,9 @@ def register_class():
     hour = request.json.get("hour",None)
     minutes = request.json.get("minutes",None)
     trainer_id = request.json.get("trainerId",None)
+    city = request.json.get("city",None)
+    lat = request.json.get("lat",None)
+    lng = request.json.get("lng",None)
 
 
     print(parser.parse(eventDate),"THE PRINTTTTTT###")
@@ -194,6 +197,9 @@ def register_class():
     class_to_register.minutes = minutes # mm
     class_to_register.activity_id = name # mm
     class_to_register.trainer_id = trainer_id # mm
+    class_to_register.city = city.name # mm
+    class_to_register.lat = lat # mm
+    class_to_register.lng = lng # mm
 
     db.session.add(class_to_register)
     db.session.commit()

@@ -42,7 +42,11 @@ const EventModal = () => {
       duration,
       price,
       eventDate,
-      trainerId
+      trainerId,
+      city
+      // address,
+      // lat,
+      // lng,
     );
 
     if (registeredClass) {
