@@ -8,6 +8,7 @@ import CardClass2 from "../component/CardClass2";
 import EventModal from "../component/EventModal";
 import Map from "../component/Map";
 import { Marker, InfoWindow } from "@react-google-maps/api";
+import { Link } from "react-router-dom";
 
 // useEffect(() => {
 //   const fetchEvents = async () => {
@@ -225,7 +226,10 @@ export const Home = () => {
           {filteredEvents.map((givenClass) => (
             <Marker
               key={givenClass.id}
-              position={{ lat: givenClass.lat, lng: givenClass.lng }}
+              position={{
+                lat: parseInt(givenClass.lat),
+                lng: parseInt(givenClass.lng),
+              }}
               onClick={() => setSelectedEvent(givenClass)}
               onMouseOver={() => setHoveredEventId(givenClass.id)}
               onMouseOut={() => setHoveredEventId(null)}
@@ -240,20 +244,77 @@ export const Home = () => {
           ))}
           {selectedEvent && (
             <InfoWindow
-              position={{ lat: selectedEvent.lat, lng: selectedEvent.lng }}
+              position={{
+                lat: parseInt(selectedEvent.lat),
+                lng: parseInt(selectedEvent.lng),
+              }}
               onCloseClick={() => setSelectedEvent(null)}
             >
               <div>
-                <h4>{selectedEvent.description}</h4>
+                <h4>{selectedEvent.name}</h4>
                 <p>
                   {selectedEvent.date} - {selectedEvent.hour}
                 </p>
+                <Link to={`/activity_per_trainer/id`}>
+                  <button className="btn btn-outline-primary">Book me</button>
+                </Link>
+                {/* <Link to={`/trainer/${item.id}`}>
+                  <button
+                    className="btn btn-outline-primary"
+                    // onClick={handleProfileClick}
+                  >
+                    Trainer's Profile
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <Link to={`/register`}>
+                <button className="btn btn-outline-primary">
+                  Check it out
+                </button>
+              </Link> */}
               </div>
             </InfoWindow>
           )}
         </Map>
-        <ul>
-          {filteredEvents.map((event) => (
+        <div>
+          {filteredEvents.map((givenClass) => {
+            console.log("givenCLASSSSS", givenClass);
+            return (
+              <>
+                <h1 className="scrollerTitles">{givenClass.name}</h1>
+                <CardClass2
+                  key={givenClass.id}
+                  givenClass={givenClass}
+                ></CardClass2>
+              </>
+            );
+          })}
+        </div>
+        {filteredEvents.length === 0 && searchPerformed && (
+          <p>
+            Unfortunately, your search did not find any events. How about trying
+            a new activity?
+          </p>
+        )}
+
+        {/*
+                  <>
+                    <h1 className="scrollerTitles">{x.name}</h1>
+                    <div className="list-group horizontal-scroller">
+                      {activityClasses?.map((givenClass) => {
+                        console.log("givenCLASSSSS", givenClass);
+                        return (
+                          <CardClass2
+                            key={givenClass.id}
+                            givenClass={givenClass}
+                          ></CardClass2>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : null} */}
+        {/* {filteredEvents.map((event) => (
             <li
               key={event.id}
               onMouseOver={() => setHoveredEventId(event.id)}
@@ -265,7 +326,7 @@ export const Home = () => {
             >
               {event.description} - {event.date} - {event.hour} - {event.price}{" "}
               {/* - {event.distanceInKm} km */}
-              <button onClick={() => handleApply(event.id)}>Apply</button>
+        {/* <button onClick={() => handleApply(event.id)}>Apply</button>
             </li>
           ))}
         </ul>
@@ -274,7 +335,7 @@ export const Home = () => {
             Unfortunately, your search did not find any events. How about trying
             a new activity?
           </p>
-        )}
+        )} */}
       </div>
     </div>
   );

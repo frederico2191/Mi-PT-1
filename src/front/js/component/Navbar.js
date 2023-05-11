@@ -10,10 +10,7 @@ export const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary bg-dark">
       <div className="container-fluid">
-        <a
-          className="navbar-brand"
-          href="https://3000-frederico2191-mipt1-dy65wpjy9p3.ws-eu96b.gitpod.io/"
-        >
+        <a className="navbar-brand" href={process.env.BASENAME}>
           Mi-PT
         </a>
         <button
