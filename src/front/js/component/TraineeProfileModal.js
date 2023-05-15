@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Context } from '../store/appContext';
 
 const TraineeProfileModal = ({ trainee }) => {
+  const { store, actions } = useContext(Context);
+
   // Placeholder data for now, just to make the modal render with some content
   const placeholderTrainee = {
-    name: 'Peter Parker',
+    first_name: 'Peter',
+    last_name: 'Parker',
     age: 25,
     email: 'peter@parker.com',
-    bodyType: 'Athletic',
+    weight: '75 kg',
+    body_type: 'Athletic',
     about: 'Trying to live as healthy as I can',
     imageURL: 'https://via.placeholder.com/150'
   };
 
   // Will "activate" as soon as it receives the props from trainee
-  const { name, age, email, bodyType, about, imageURL } = trainee || placeholderTrainee;
+  const { 
+    first_name,
+    last_name,
+    age,
+    email,
+    weight, 
+    body_type,
+    about,
+    imageURL
+   } = trainee || placeholderTrainee;
 
   const greenColor = '#198754'; // Bootstrap button success color to match 
 
@@ -38,10 +52,11 @@ const TraineeProfileModal = ({ trainee }) => {
             <img src={imageURL} className="rounded-circle" alt="Trainee" />
           </div>
           <div className="col-8">
-            <p>Name: {name}</p>
+          <p>Name: {first_name} {last_name}</p>
             <p>Age: {age}</p>
             <p>Email: {email}</p>
-            <p>Body Type: {bodyType}</p>
+            <p>Weight: {weight}</p>
+            <p>Body Type: {body_type}</p>
             <p>About: {about}</p>
           </div>
         </div>
