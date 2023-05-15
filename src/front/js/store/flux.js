@@ -344,7 +344,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         price,
         date,
         trainerId,
-        city
+        city,
+        trainerName
       ) => {
         const store = getStore();
         // console.log("date in flux 2", date?.toDate());
@@ -379,6 +380,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 city,
                 lat,
                 lng,
+                trainerName,
               }),
             }
           );

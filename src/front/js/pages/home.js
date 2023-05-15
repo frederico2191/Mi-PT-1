@@ -4,7 +4,7 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Card from "../component/Card";
-import CardClass2 from "../component/CardClass2";
+import CardClass3 from "../component/CardClass3";
 import EventModal from "../component/EventModal";
 import Map from "../component/Map";
 import { Marker, InfoWindow } from "@react-google-maps/api";
@@ -156,10 +156,10 @@ export const Home = () => {
                       {activityClasses?.map((givenClass) => {
                         console.log("givenCLASSSSS", givenClass);
                         return (
-                          <CardClass2
+                          <CardClass3
                             key={givenClass.id}
                             givenClass={givenClass}
-                          ></CardClass2>
+                          ></CardClass3>
                         );
                       })}
                     </div>

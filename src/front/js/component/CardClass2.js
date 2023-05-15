@@ -25,7 +25,7 @@ const CardClass = ({ givenClass }) => {
   return (
     <div key={givenClass.id}>
       <div className="card" style={{ width: "18rem" }}>
-        <img className="card-img-top" onError={addImageFallback}></img>
+        <img className="card-img-top" onError={addImageFallback} />
         <div className="card-body">
           <h5 className="card-title"> id {givenClass.id}</h5>
           <h5 className="card-title"> name {givenClass.name}</h5>

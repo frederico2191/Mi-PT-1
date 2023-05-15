@@ -175,14 +175,16 @@ def register_class():
     eventDate = request.json.get("eventDate",None)
     hour = request.json.get("hour",None)
     minutes = request.json.get("minutes",None)
+    city = request.json.get("city",None)
     trainer_id = request.json.get("trainerId",None)
+    trainer_name = request.json.get("trainerName",None)
     city = request.json.get("city",None)
     lat = request.json.get("lat",None)
     lng = request.json.get("lng",None)
 
 
-    print(parser.parse(eventDate),"THE PRINTTTTTT###")
-    datetime_object = parser.parse(eventDate)
+    print("####4444444 T NAMEEE",trainer_name)
+    datetime_object = parser.parse(eventDate) if eventDate else None
     # datetime_object = datetime.strptime(eventDate.split(".")[0].replace("T"," "), '%y-%m-%d %H:%M:%S')
     print("####5555555",datetime_object)
 
@@ -197,9 +199,10 @@ def register_class():
     class_to_register.minutes = minutes # mm
     class_to_register.activity_id = name # mm
     class_to_register.trainer_id = trainer_id # mm
-    class_to_register.city = city.name # mm
+    class_to_register.city = city["name"] if city else None # mm
     class_to_register.lat = lat # mm
     class_to_register.lng = lng # mm
+    class_to_register.trainer_name = trainer_name # mm
 
     db.session.add(class_to_register)
     db.session.commit()

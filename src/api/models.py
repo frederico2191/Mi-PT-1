@@ -35,8 +35,8 @@ class User(db.Model):
 
         return {
             "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
             "email": self.email,
             "age": self.age,
             "city": self.city,
@@ -285,6 +285,7 @@ class ActivityPerTrainer(db.Model):
     city = db.Column(db.String(250), nullable=True)
     lat = db.Column(db.String(250), nullable=True)
     lng = db.Column(db.String(250), nullable=True)
+    trainer_name = db.Column(db.String(250), nullable=True)
 
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
@@ -307,6 +308,7 @@ class ActivityPerTrainer(db.Model):
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
+            "trainerName":self.trainer_name
         }
 
 class Activity(db.Model):

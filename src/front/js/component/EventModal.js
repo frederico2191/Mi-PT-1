@@ -12,8 +12,6 @@ const EventModal = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
   const [city, setCity] = useState({});
   const [body_type, setBodyType] = useState("");
   const [coaching_style, setCoachingStyle] = useState("");
@@ -34,7 +32,10 @@ const EventModal = () => {
   const handleClick = async (event) => {
     event.preventDefault();
     const trainerId = store.user?.["trainer"].id;
-    // <ConfirmationModal />;
+    const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
+    // const trainerName = store.user?.firstName;
+    console.log(store, " STORE.  !!! zzzz TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
+    console.log(trainerName, "TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
     // const parsedEventData = date.toDate();
     const registeredClass = await actions.registerClass(
       name,
@@ -43,10 +44,11 @@ const EventModal = () => {
       price,
       eventDate,
       trainerId,
-      city
+      city,
+      trainerName
       // address,
       // lat,
-      // lng,
+      // lng
     );
 
     if (registeredClass) {
