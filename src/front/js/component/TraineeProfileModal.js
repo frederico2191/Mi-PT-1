@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+=======
+import React, { useContext } from 'react';
+import { Context } from '../store/appContext';
+>>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
 
 const TraineeProfileModal = ({ trainee }) => {
   const { store, actions } = useContext(Context);
 
   // Placeholder data for now, just to make the modal render with some content
   const placeholderTrainee = {
+<<<<<<< HEAD
     first_name: "Peter",
     last_name: "Parker",
     age: 25,
@@ -18,15 +24,37 @@ const TraineeProfileModal = ({ trainee }) => {
 
   // Will "activate" as soon as it receives the props from trainee
   const {
+=======
+    first_name: 'Peter',
+    last_name: 'Parker',
+    age: 25,
+    email: 'peter@parker.com',
+    weight: '75 kg',
+    body_type: 'Athletic',
+    about: 'Trying to live as healthy as I can',
+    imageURL: 'https://via.placeholder.com/150'
+  };
+
+  // Will "activate" as soon as it receives the props from trainee
+  const { 
+>>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
     first_name,
     last_name,
     age,
     email,
+<<<<<<< HEAD
     weight,
     body_type,
     about,
     imageURL,
   } = trainee || placeholderTrainee;
+=======
+    weight, 
+    body_type,
+    about,
+    imageURL
+   } = trainee || placeholderTrainee;
+>>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
 
   const greenColor = "#198754"; // Bootstrap button success color to match
 
@@ -52,9 +80,13 @@ const TraineeProfileModal = ({ trainee }) => {
             <img src={imageURL} className="rounded-circle" alt="Trainee" />
           </div>
           <div className="col-8">
+<<<<<<< HEAD
             <p>
               Name: {first_name} {last_name}
             </p>
+=======
+          <p>Name: {first_name} {last_name}</p>
+>>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
             <p>Age: {age}</p>
             <p>Email: {email}</p>
             <p>Weight: {weight}</p>
