@@ -17,9 +17,11 @@ class User(db.Model):
     gender = db.Column(db.String(250), nullable=True)
     user_role = db.Column(db.String(250), nullable=True)
     
-    # trainee = db.relationship('Trainee', backref='user', lazy=True)
+    trainee = db.relationship('Trainee', backref='user', lazy=True, uselist=False)
     # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'), nullable=False)
-    # trainer = db.relationship('Trainer', backref='user', lazy=True)
+    trainer = db.relationship('Trainer', backref='user', uselist=False)
+    # trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'), nullable=False)
+
     # gender = db.relationship('Gender', backref='user', lazy=True)
     # gender_id = db.Column(db.Integer, db.ForeignKey('gender.id'), nullable=True)
     # user_role = db.relationship('UserRole', backref='user', lazy=True)
@@ -29,9 +31,16 @@ class User(db.Model):
         return self.first_name
 
     def serialize(self):
-        trainer = Trainer.query.filter_by(user_id = self.id).first()
-        serializedTrainer = trainer.serialize() if trainer else None
-        activity_per_trainer = ActivityPerTrainer.query.filter_by(trainer_id = serializedTrainer["id"]).all() if serializedTrainer else []
+        print(self.trainer, "$$$$$$$$")
+        if (self.user_role == "trainer"): 
+            trainer = Trainer.query.filter_by(user_id = self.id).first()
+            serializedTrainer = trainer.serialize() if trainer else None
+            activities = ActivityPerTrainer.query.filter_by(trainer_id = serializedTrainer["id"]).all() if serializedTrainer else []
+        elif(self.user_role == "trainee"):
+            trainee = Trainee.query.filter_by(user_id = self.id).first()
+            serializedTrainee = trainee.serialize() if trainee else None
+            activities = ActivityPerTrainer.query.filter_by(trainee_id = serializedTrainee["id"]).all() if serializedTrainee else []
+        
 
         return {
             "id": self.id,
@@ -46,7 +55,9 @@ class User(db.Model):
             "paypal_link": self.paypal_link,
             # "user_role": self.user_role.name if self.user_role else "unknown",
             "user_role": self.user_role,
-            "activities": [activity.serialize() for activity in activity_per_trainer]
+            "activities": [activity.serialize() for activity in activities],
+            "trainer": self.trainer.serialize() if self.trainer else None,
+            "trainee": self.trainee.serialize() if self.trainee else None,
         }
 
 atendencies = db.Table('atendencies',
@@ -73,7 +84,7 @@ class Trainee(db.Model):
     
     
     # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
-    user = db.relationship('User', backref='trainee', lazy=True) #ENUM !!! 
+    # user = db.relationship('User', backref='trainee', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
@@ -184,18 +195,11 @@ class Trainer(db.Model):
     specialty = db.Column(db.String(250), nullable=True)
     coaching_style = db.Column(db.String(250), nullable=True)
 
-    # specialty = db.relationship('Specialty', backref='trainer', lazy=True) #ENUM !!! 
-    # specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'), nullable=False)
-   
-    # coaching_style = db.relationship('CoachingStyle', backref='trainer', lazy=True) #ENUM !!! 
-    # coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'), nullable=False)
-    user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
+    # user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     activities = db.relationship("ActivityPerTrainer")
 
-    # def __repr__(self):
-    #     return self.id
 
     def serialize(self):
         return {

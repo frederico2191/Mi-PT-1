@@ -26,8 +26,8 @@ const EventModal = () => {
   //   const navigate = useNavigate();
   useEffect(() => {
     actions.getAllTypesActivities();
-    console.log("INSIDE USE EFFECT", store);
-    console.log(store.user?.["trainer"].id, "HERE ID");
+    // console.log("INSIDE USE EFFECT", store);
+    // console.log(store.user?.["trainer"].id, "HERE ID");
   }, []);
   const handleClick = async (event) => {
     event.preventDefault();

@@ -22,7 +22,6 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      state.actions.fetchTrainers(), console.log("IAM THE STORE", state.store);
       state.actions.getMessage(), state.actions.syncTokenFromLocalStore();
       state.actions.verify();
       // state.actions.activity per trainer functino of fetch

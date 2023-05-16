@@ -11,7 +11,7 @@ const ByActivity = () => {
         {store.user ? (
           [
             ...new Set(
-              store.user.activities.map((x) => {
+              store.user.activities?.map((x) => {
                 return x.name;
               })
             ),

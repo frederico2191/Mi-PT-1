@@ -410,8 +410,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(data, "new class deleted in the dashboard");
-          await getActions().getUser();
+          console.log(data, "Class sucessufully deleted !");
+          await getActions().verify();
           return true;
         } catch (error) {
           console.error(
@@ -442,7 +442,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           // console.log("DATA INSIDE FETCH %%%%%%%%%%%%%%%%%%%%", data);
           localStorage.setItem("token", data.access_token);
           setStore({ token: data.access_token });
-          // await getActions().verify();
+          await getActions().verify();
           return true;
         } catch (error) {
           console.error("Invalid email or password format", error);
@@ -470,35 +470,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           return false;
         }
       },
-      getUser: async () => {
-        const store = getStore();
-        const opts = {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        };
-        try {
-          const resp = await fetch(
-            process.env.BACKEND_URL + "/api/get_user",
-            opts
-          );
-          const data = await resp.json();
-          setStore({ user: data });
-          return true;
-        } catch (error) {
-          console.error(
-            "There was an error on the getUser fetch!!! It was caught by flux.js",
-            error
-          );
-        }
-      },
 
       logout: () => {
         localStorage.removeItem("token");
         console.log("logging out");
         setStore({ token: null });
       },
-
       changeColor: (index, color) => {
         //get the store
         const store = getStore();

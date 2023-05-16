@@ -230,8 +230,6 @@ def verify_token():
 
     user = User.query.filter_by(email = email_provided).first()
     serializedUser = user.serialize()
-    if user.trainer: serializedUser["trainer"] = user.trainer[0].serialize()
-    if user.trainee: serializedUser["trainee"] = user.trainee[0].serialize()
     
 
     return jsonify(user=serializedUser)
@@ -251,21 +249,11 @@ def get_user():
     user_email = get_jwt_identity()
     db_email = User.query.filter_by(email = user_email)
     user = db_email.serialize()
-    
+    # data = [user.serialize() for user in db_email]
     return jsonify(user)
+    # return jsonify(data)
 
-#Get all trainers to render all the available trainers (initial rending of the)
-@api.route('/trainers', methods=['GET'])
-# @jwt_required()
-def get_trainers():
-    # trainers = User.query.filter_by(email = "email1")
-    # trainers = User.query.filter(User.user_role.name == "Trainer")
-    # trainers = User.query.filter(User.user_role.has(name="Trainer"))
-    trainers = Trainer.query.all()
 
-    data = [trainer.serialize() for trainer in trainers]
-    print("I am the data after serialization for trainer",data)
-    return jsonify(data)
 
 @api.route('/all_types_activities', methods=['GET'])
 # @jwt_required()
@@ -304,7 +292,7 @@ def deleteClass(activity_id):
     activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).delete()
     db.session.commit()
     
-    return jsonify(data)
+    return jsonify()
 
 
 
