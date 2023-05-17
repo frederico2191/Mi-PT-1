@@ -317,6 +317,18 @@ def getAllClasses():
     # data_future = data.filter_by(activity_per_trainer_date> date.now())
     return jsonify(data)
 
+@api.route('/classes', methods=['GET'])
+@jwt_required()
+def get_classes():
+    # Query the database for all ActivityPerTrainer instances
+    classes = ActivityPerTrainer.query.all()
+
+    # Serialize the data for the response
+    classes_data = [c.serialize() for c in classes]
+
+    # Return the data as JSON
+    return jsonify(classes_data), 200
+
 
 # # For one individual class, that can be booked.
 @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
@@ -328,6 +340,37 @@ def getGivenClass(activity_per_trainer_id):
    
     return jsonify(data)
 
+@api.route('/book_class', methods=['POST'])
+@jwt_required()
+def book_class():
+    data = request.get_json()
+    activity_per_trainer_id = data.get('activity_per_trainer_id')
+    trainee_id = data.get('trainee_id')
+
+    activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
+    trainee = Trainee.query.get(trainee_id)
+
+    if not trainee or not activity_per_trainer:
+        return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
+
+    
+    existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id, trainee_id=trainee_id).first()
+    if existing_booking:
+        return jsonify({'error': 'Class already booked.'}), 400
+
+
+    new_booking = BookedClass(
+        date=datetime.now(),
+        activity_per_trainer_id=activity_per_trainer_id,
+        trainer_id=activity_per_trainer.trainer_id,
+        trainee_id=trainee_id,
+    )
+    db.session.add(new_booking)
+    db.session.commit()
+
+    return jsonify({'message': 'Class booked successfully.'}), 200
+
+
 # @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
 # @jwt_required()
 # def getGivenClass(activity_per_trainer_id):
@@ -336,6 +379,3 @@ def getGivenClass(activity_per_trainer_id):
 #     data = activity_per_trainer.serialize()
    
 #     return jsonify(data)
-
-
-

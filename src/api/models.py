@@ -67,24 +67,11 @@ atendencies = db.Table('atendencies',
 
 class Trainee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # body_type = db.relationship('BodyType', backref='trainee', lazy=True) #ENUM !!! 
-    # body_type_id = db.Column(db.Integer, db.ForeignKey('body_type.id'), nullable=False)
     body_type = db.Column(db.String(250), nullable=True)
     goal = db.Column(db.String(250), nullable=True)
     fitness_experience = db.Column(db.String(250), nullable=True)
     city = db.Column(db.String(250), nullable=True)
 
-
-
-    # fitness_experience = db.relationship('FitnessExperience', backref='trainee', lazy=True) #ENUM !!! 
-    # fitness_experience_id = db.Column(db.Integer, db.ForeignKey('fitness_experience.id'), nullable=False)
-
-    # goal = db.relationship('Goal', backref='trainee', lazy=True) #ENUM !!! 
-    # goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'), nullable=False)
-    
-    
-    # user_role_id = db.Column(db.Integer, db.ForeignKey('user_role.id'), nullable=False)
-    # user = db.relationship('User', backref='trainee', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
@@ -98,91 +85,6 @@ class Trainee(db.Model):
             "city": self.city,
             "user_id": self.user_id
         }
-
-# class UserRole(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=True)
-#     # trainee = db.relationship('Trainee', backref='user_role', lazy=True) #TO CCHECK LATER
-#     # trainer = db.relationship('Trainer', backref='user_role', lazy=True)  #TO CCHECK LATER
-#     def __repr__(self):
-#         return self.name
-    
-
-
-
-# class Gender(db.Model): #ENUM
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-
-    # female = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # male = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # non_binary = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # intersex = db.Column(db.String(250), nullable=True) #Boolean!!!
-    # transgender = db.Column(db.String(250), nullable=True) #Boolean!!!
-
-    # def __repr__(self):
-    #     return self.name
-
-
-# class BodyType(db.Model): #ENUM !!!
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-#     # endomorph = db.Column(db.String(250), nullable=True) #Boolean 
-#     # mesomorph = db.Column(db.String(250), nullable=True) #Boolean
-#     # ectomorph = db.Column(db.String(250), nullable=True) #Boolean
-#     def __repr__(self):
-#         return self.name
-
-
-
-# class FitnessExperience(db.Model): #ENUM
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-
-#     def __repr__(self):
-#         return self.name
-
-#     # new_to_it = db.Column(db.String(250), nullable=True) #Boolean
-#     # getting_back = db.Column(db.String(250), nullable=True) #Boolean
-#     # currently_working_out = db.Column(db.String(250), nullable=True) #Boolean
-#     # fitness_enthusiast= db.Column(db.String(250), nullable=True) #Boolean
-
-# class Goal(db.Model): #ENUM
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-
-#     def __repr__(self):
-#         return self.name
-
-
-    # lose_weight = db.Column(db.String(250), nullable=True) #Boolean
-    # get_toned = db.Column(db.String(250), nullable=True) #Boolean
-    # increas_muscle_mass = db.Column(db.String(250), nullable=True) #Boolean
-    # improve_health= db.Column(db.String(250), nullable=True) #Boolean
-    # improve_as_athlete= db.Column(db.String(250), nullable=True) #Boolean
-    # c= db.Column(db.String(250), nullable=True) #Boolean
-
-
-# class Personal_Success(db.Model): # IMPROVEMENTS PHASE!!!
-#     id = db.Column(db.Integer, primary_key=True)
-#     fit_old_clothes = db.Column(db.String(250), nullable=True) #Boolean
-#     feel_stronger = db.Column(db.String(250), nullable=True) #Boolean
-#     feel_energized = db.Column(db.String(250), nullable=True) #Boolean
-#     improve_mental_health= db.Column(db.String(250), nullable=True) #Boolean
-#     make_fitness_habit= db.Column(db.String(250), nullable=True) #Boolean
-#     make_eating_healthy_habit= db.Column(db.String(250), nullable=True) #Boolean
-#     learn_to_love_working_out= db.Column(db.String(250), nullable=True) #Boolean
-#     none_of_the_above= db.Column(db.String(250), nullable=True) #Boolean
-
-# class Personal_Adversity(db.Model): # IMPROVEMENTS PHASE!!!
-#     id = db.Column(db.Integer, primary_key=True)
-#     injury = db.Column(db.String(250), nullable=True) #Boolean
-#     lack_accountability = db.Column(db.String(250), nullable=True) #Boolean
-#     lack_motivation = db.Column(db.String(250), nullable=True) #Boolean
-#     poor_results= db.Column(db.String(250), nullable=True) #Boolean
-#     exercise_not_enjoyable= db.Column(db.String(250), nullable=True) #Boolean
-#     too_busy= db.Column(db.String(250), nullable=True) #Boolean
-#     none_of_the_above= db.Column(db.String(250), nullable=True) #Boolean
 
 class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -215,65 +117,6 @@ class Trainer(db.Model):
         }
 
 
-# class Specialty(db.Model): #ENUM
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-#     # running_performance = db.Column(db.String(250), nullable=True)
-#     # functional_training = db.Column(db.String(250), nullable=True)
-#     # postpartum_training = db.Column(db.String(250), nullable=True)
-#     # weight_loss = db.Column(db.String(250), nullable=True)
-#     # strength_development = db.Column(db.String(250), nullable=True)
-#     # metabolic_conditioning = db.Column(db.String(250), nullable=True)
-#     # injury_reduction = db.Column(db.String(250), nullable=True)
-#     # sports_performance = db.Column(db.String(250), nullable=True)
-#     # flexibility = db.Column(db.String(250), nullable=True)
-#     # metabolic_conditioning = db.Column(db.String(250), nullable=True)
-
-#     def __repr__(self):
-#         return self.name
-
-# class Specialty_Per_Trainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
-#     id = db.Column(db.Integer, primary_key=True)
-#     specialty_id = db.Column(db.Integer, db.ForeignKey('specialty.id'))
-#     specialty = db.relationship(Specialty)
-#     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
-#     trainer = db.relationship(Trainer)
-
-# class CoachingStyle(db.Model): #ENUM
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-#     # supportive = db.Column(db.String(250), nullable=True)
-#     # laid_back = db.Column(db.String(250), nullable=True)
-#     # results_oriented = db.Column(db.String(250), nullable=True)
-#     # motivating = db.Column(db.String(250), nullable=True)
-#     # high_energy = db.Column(db.String(250), nullable=True)
-#     # calm = db.Column(db.String(250), nullable=True)
-#     def __repr__(self):
-#         return self.name
-
-# class CoachingStylePerTrainer(db.Model): #MUST BECOME ASSOCIATION TABLE 
-#     id = db.Column(db.Integer, primary_key=True)
-#     coaching_style_id = db.Column(db.Integer, db.ForeignKey('coaching_style.id'))
-#     coaching_style = db.relationship(CoachingStyle)
-
-#     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
-#     trainer = db.relationship(Trainer)
-
-# class IndoorOutdoorRemote(db.Model): #ENUM !!!
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250),nullable=False)
-
-#     # indoor = db.Column(db.String(250), nullable=True)
-#     # outdoor = db.Column(db.String(250), nullable=True)
-#     # remote = db.Column(db.String(250), nullable=True)
-#     def __repr__(self):
-#         return self.name
-    
-#     activity = db.relationship('Activity', backref='indoor_outdoor_remote', lazy=True)
-#     def __repr__(self):
-#         return self.name
-
-
 class ActivityPerTrainer(db.Model):
 # class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -289,12 +132,12 @@ class ActivityPerTrainer(db.Model):
     city = db.Column(db.String(250), nullable=True)
     lat = db.Column(db.String(250), nullable=True)
     lng = db.Column(db.String(250), nullable=True)
-    trainer_name = db.Column(db.String(250), nullable=True)
+    # trainer_name = db.Column(db.String(250), nullable=True) WE DONT NEED THIS ACCESSIBLE FROM TRAINER SERALIZE
 
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
-    trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
+    # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) WE DONT NEED TRAINEE
     
     def serialize(self):
         activity = Activity.query.get(self.activity_id)
@@ -305,14 +148,14 @@ class ActivityPerTrainer(db.Model):
             "date": self.date,
             "price": self.price,
             "trainer_id": self.trainer_id,
-            "trainee_id": self.trainee_id,
+            #"trainee_id": self.trainee_id, we dont need trainee [tobi]
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
-            "trainerName":self.trainer_name
+            # "trainerName":self.trainer_name DONT NEED
         }
 
 class Activity(db.Model):
@@ -350,6 +193,17 @@ class BookedClass(db.Model):
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
     trainee = db.relationship(Trainee)
 
+    def serialize(self):
+        activity_per_trainer = ActivityPerTrainer.query.get(self.activity_per_trainer_id)
+        trainer = Trainer.query.get(self.trainer_id)
+        trainee = Trainee.query.get(self.trainee_id)
+
+        return {
+            "id": self.id,
+            "date": self.date,
+            "activity_per_trainer": activity_per_trainer.serialize() if activity_per_trainer else None,
+            "trainer": trainer.serialize() if trainer else None,
+            "trainee": trainee.serialize() if trainee else None,}
 
 
 
