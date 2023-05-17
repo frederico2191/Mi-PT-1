@@ -14,7 +14,11 @@ export const DetailClass = () => {
   }, [id]);
 
   console.log("store.givenClass", store.givenClass);
-
+  const handleBookClass = () => {
+    // this will not work until store successfully has user data
+    const trainee_id = store.user.id;
+    actions.bookClass({ activity_per_trainer_id: id, trainee_id });
+  };
   return (
     <div>
       <div>
@@ -24,7 +28,9 @@ export const DetailClass = () => {
         <p>id{store.givenClass?.id}</p>
         <p>price{store.givenClass?.price}</p>
       </div>
-      <button className="btn btn-outline-primary">Book this Class</button>
+      <button className="btn btn-outline-primary" onClick={handleBookClass}>
+        Book this Class
+      </button>
       <div></div>
       <Link to="/">
         <span className="btn btn-primary btn-lg" href="#" role="button">
