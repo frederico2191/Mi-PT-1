@@ -18,8 +18,9 @@ export const DetailClass = () => {
     // this will not work until store successfully has user data
     // const trainee_id = store.user.id;
     const trainee_id = store.user?.["trainee"].id;
+    const trainee_name = store.user?.firstName;
 
-    actions.bookClass({ activity_per_trainer_id: id, trainee_id });
+    actions.bookClass({ id, trainee_id, trainee_name });
   };
   return (
     <div>

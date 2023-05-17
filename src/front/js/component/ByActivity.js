@@ -44,7 +44,7 @@ const ByActivity = () => {
                             className="g-col-6 border border-success-subtle"
                             key={y.id}
                           >
-                            {`${y.date} ${y.hour}:${y.minutes}H`}{" "}
+                            {`${y.traineeName} ${y.date} ${y.hour}:${y.minutes}H`}{" "}
                             <TfiTrash
                               onClick={() => actions.deleteClass(y.id)}
                             />

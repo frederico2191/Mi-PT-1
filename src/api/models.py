@@ -133,9 +133,8 @@ class ActivityPerTrainer(db.Model):
     lat = db.Column(db.String(250), nullable=True)
     lng = db.Column(db.String(250), nullable=True)
     trainer_name = db.Column(db.String(250), nullable=True)
-
+    trainee_name = db.Column(db.String(250), nullable=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
-    
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) 
     
@@ -155,7 +154,8 @@ class ActivityPerTrainer(db.Model):
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
-            "trainerName":self.trainer_name
+            "trainerName":self.trainer_name,
+            "traineeName":self.trainee_name,
         }
 
 class Activity(db.Model):

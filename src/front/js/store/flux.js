@@ -514,18 +514,19 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      bookClass: async ({ activity_per_trainer_id, trainee_id }) => {
+      bookClass: async ({ id, trainee_id, trainee_name }) => {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/book_class`, // replace with your booking endpoint
+          `${process.env.BACKEND_URL}/api/book_class`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // assuming you are storing JWT in localstorage
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              activity_per_trainer_id,
+              id,
               trainee_id,
+              trainee_name,
             }),
           }
         );
