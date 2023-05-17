@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       token: null,
       givenClass: null,
       givenTrainer: [],
+      givenTrainee: null,
       allClasses: [],
       user: null,
       allTypesActivities: null,
@@ -159,6 +160,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error(
             "There was an error on getGivenTrainer fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+      getGivenTrainee: async (id) => {
+        const store = getStore();
+        console.log(id, "traineeId INSIDE FLUX!!!!!");
+
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/trainee/" + id,
+            opts
+          );
+
+          const data = await resp.json();
+          setStore({ givenTrainee: data });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on getGivenTrainee fetch!!! It was caught by flux.js",
             error
           );
         }

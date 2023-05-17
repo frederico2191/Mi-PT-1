@@ -1,12 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
+import TraineeProfileModal from "./TraineeProfileModal";
 
 const ByActivity = () => {
   const { store, actions } = useContext(Context);
 
+  const handleClickTraineeProfile = async (traineeId) => {
+    await actions.getGivenTrainee(traineeId);
+  };
+
   return (
     <div>
+      <TraineeProfileModal />;
       <div className="accordion accordion-flush" id="accordionFlushExample">
         {store.user ? (
           [
@@ -39,17 +45,30 @@ const ByActivity = () => {
                     {store.user.activities
                       .filter((activity) => activity.name == x)
                       .map((y) => {
-                        return (
+                        return y.trainee_id ? (
                           <div
                             className="g-col-6 border border-success-subtle"
                             key={y.id}
                           >
-                            {`${y.traineeName} ${y.date} ${y.hour}:${y.minutes}H`}{" "}
-                            <TfiTrash
-                              onClick={() => actions.deleteClass(y.id)}
-                            />
+                            <div className="d-inline">
+                              <div
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                onClick={() =>
+                                  handleClickTraineeProfile(y.trainee_id)
+                                }
+                              >
+                                {`${y.traineeName || ""}`}
+                              </div>
+                              <div className="d-inline">
+                                {`${y.date} ${y.hour}:${y.minutes}H`}{" "}
+                                <TfiTrash
+                                  onClick={() => actions.deleteClass(y.id)}
+                                />
+                              </div>
+                            </div>
                           </div>
-                        );
+                        ) : null;
                       })}
                   </div>
                 </div>

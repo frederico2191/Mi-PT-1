@@ -286,6 +286,16 @@ def getGivenTrainer(trainer_id):
     return jsonify(combined_dictionary)
     # return jsonify(data)
 
+@api.route('/trainee/<trainee_id>', methods=['GET']) 
+@jwt_required()
+def getGivenTrainee(trainee_id):
+    trainee = Trainee.query.filter_by(id = trainee_id).first()
+    data = trainee.serialize() if trainee else None
+
+    trainee_in_user = User.query.filter_by(id = data["user_id"]).first()
+    data_user = trainee_in_user.serialize() if trainee_in_user else None
+
+    return jsonify(data_user)
 
 @api.route('/activity/<activity_id>', methods=['DELETE']) 
 # @jwt_required()

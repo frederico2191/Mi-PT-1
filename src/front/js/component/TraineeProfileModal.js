@@ -1,60 +1,8 @@
-<<<<<<< HEAD
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
-=======
-import React, { useContext } from 'react';
-import { Context } from '../store/appContext';
->>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
 
-const TraineeProfileModal = ({ trainee }) => {
+const TraineeProfileModal = () => {
   const { store, actions } = useContext(Context);
-
-  // Placeholder data for now, just to make the modal render with some content
-  const placeholderTrainee = {
-<<<<<<< HEAD
-    first_name: "Peter",
-    last_name: "Parker",
-    age: 25,
-    email: "peter@parker.com",
-    weight: "75 kg",
-    body_type: "Athletic",
-    about: "Trying to live as healthy as I can",
-    imageURL: "https://via.placeholder.com/150",
-  };
-
-  // Will "activate" as soon as it receives the props from trainee
-  const {
-=======
-    first_name: 'Peter',
-    last_name: 'Parker',
-    age: 25,
-    email: 'peter@parker.com',
-    weight: '75 kg',
-    body_type: 'Athletic',
-    about: 'Trying to live as healthy as I can',
-    imageURL: 'https://via.placeholder.com/150'
-  };
-
-  // Will "activate" as soon as it receives the props from trainee
-  const { 
->>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
-    first_name,
-    last_name,
-    age,
-    email,
-<<<<<<< HEAD
-    weight,
-    body_type,
-    about,
-    imageURL,
-  } = trainee || placeholderTrainee;
-=======
-    weight, 
-    body_type,
-    about,
-    imageURL
-   } = trainee || placeholderTrainee;
->>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
 
   const greenColor = "#198754"; // Bootstrap button success color to match
 
@@ -74,34 +22,75 @@ const TraineeProfileModal = ({ trainee }) => {
         marginRight: "auto",
       }}
     >
-      <div className="card-body d-flex flex-column">
-        <div className="row">
-          <div className="col-4">
-            <img src={imageURL} className="rounded-circle" alt="Trainee" />
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Launch demo modal
+      </button>
+
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                {store?.givenTrainee?.trainee.goal || "hello"}
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body d-flex flex-column">
+              <div className="row">
+                <div className="col-4">
+                  <img src="" className="rounded-circle" alt="Trainee" />
+                </div>
+                <div className="col-8">
+                  {/* <p>
+                    Name: {first_name} {last_name}
+                  </p>
+
+                  <p>Age: {age}</p>
+                  <p>Email: {email}</p>
+                  <p>Weight: {weight}</p>
+                  <p>Body Type: {body_type}</p>
+                  <p>About: {about}</p> */}
+                </div>
+              </div>
+              <div className="mt-auto">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  style={{ alignSelf: "flex-end" }}
+                >
+                  Go to Trainee Profile
+                </button>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" className="btn btn-primary">
+                Save changes
+              </button>
+            </div>
           </div>
-          <div className="col-8">
-<<<<<<< HEAD
-            <p>
-              Name: {first_name} {last_name}
-            </p>
-=======
-          <p>Name: {first_name} {last_name}</p>
->>>>>>> 22180cd2d25207edfd6cd4893be5ff1e2fc505e0
-            <p>Age: {age}</p>
-            <p>Email: {email}</p>
-            <p>Weight: {weight}</p>
-            <p>Body Type: {body_type}</p>
-            <p>About: {about}</p>
-          </div>
-        </div>
-        <div className="mt-auto">
-          <button
-            type="button"
-            className="btn btn-success"
-            style={{ alignSelf: "flex-end" }}
-          >
-            Go to Trainee Profile
-          </button>
         </div>
       </div>
     </div>
