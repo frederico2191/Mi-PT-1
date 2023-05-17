@@ -1,8 +1,23 @@
 .activity {
-  width: 100%;
+  width: 500px;
   height: 100%;
   margin-bottom: 1rem;
-  border-width: 2px;
-  border-color: lightgrey;
   border-radius: 5px;
+}
+
+.activity-separator {
+  min-height: 27px;
+  width: 1px;
+  background-color: rgb(69, 69, 69);
+  height: max-content;
+  margin-right: 2rem;
+  margin-left: 2rem;
+}
+
+.activity--booked {
+  background-color: rgb(242, 199, 199);
+}
+
+.activity--available {
+  background-color: rgb(202, 242, 199);
 }

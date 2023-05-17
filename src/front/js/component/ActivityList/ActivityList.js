@@ -38,7 +38,7 @@ const ActivityList = () => {
                   className="accordion-collapse collapse"
                   data-bs-parent="#accordionFlushExample"
                 >
-                  <div className="accordion-body">
+                  <div className="accordion-body d-flex flex-column justify-content-center align-items-center">
                     {store.user.activities
                       .filter((activity) => activity.name == x)
                       .map((activity) => {
