@@ -27,18 +27,20 @@ const Layout = () => {
       <BrowserRouter basename={basename}>
         <ScrollToTop>
           <Navbar />
-          <Routes>
-            <Route element={<Home />} path="/" />
-            <Route element={<Register />} path="/register" />
-            <Route element={<Login />} path="/login" />
-            <Route element={<HomeTrainer />} path="/home/trainer" />
-            <Route path="/trainer/:trainer_id" element={<DetailTrainer />} />
-            <Route
-              path="/activity_per_trainer/:activity_per_trainer_id"
-              element={<DetailClass />}
-            />
-            <Route element={<h1>Not found!</h1>} />
-          </Routes>
+          <div className="mx-5 fw-light">
+            <Routes>
+              <Route element={<Home />} path="/" />
+              <Route element={<Register />} path="/register" />
+              <Route element={<Login />} path="/login" />
+              <Route element={<HomeTrainer />} path="/home/trainer" />
+              <Route path="/trainer/:trainer_id" element={<DetailTrainer />} />
+              <Route
+                path="/activity_per_trainer/:activity_per_trainer_id"
+                element={<DetailClass />}
+              />
+              <Route element={<h1>Not found!</h1>} />
+            </Routes>
+          </div>
           <Footer />
         </ScrollToTop>
       </BrowserRouter>

@@ -489,6 +489,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           const data = await resp.json();
           localStorage.setItem("userRole", data["user"].user_role);
+          localStorage.setItem("userName", data["user"].firstName);
           setStore({ user: data["user"] });
           return true;
         } catch (error) {
@@ -499,6 +500,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       logout: () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userName");
         console.log("logging out");
         setStore({ token: null });
       },

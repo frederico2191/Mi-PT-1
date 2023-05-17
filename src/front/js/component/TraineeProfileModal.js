@@ -11,30 +11,21 @@ const TraineeProfileModal = () => {
   return (
     <div
       className="card"
-      style={{
-        backgroundColor: "black",
-        color: greenColor,
-        position: "relative",
-        width: "fit-content",
-        minWidth: "350px",
-        padding: "10px",
-        marginLeft: "auto",
-        marginRight: "auto",
-      }}
+      // style={{
+      //   backgroundColor: "black",
+      //   color: greenColor,
+      //   position: "relative",
+      //   width: "fit-content",
+      //   minWidth: "350px",
+      //   padding: "10px",
+      //   marginLeft: "auto",
+      //   marginRight: "auto",
+      // }}
     >
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Launch demo modal
-      </button>
-
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
