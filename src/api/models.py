@@ -132,12 +132,12 @@ class ActivityPerTrainer(db.Model):
     city = db.Column(db.String(250), nullable=True)
     lat = db.Column(db.String(250), nullable=True)
     lng = db.Column(db.String(250), nullable=True)
-    # trainer_name = db.Column(db.String(250), nullable=True) WE DONT NEED THIS ACCESSIBLE FROM TRAINER SERALIZE
+    trainer_name = db.Column(db.String(250), nullable=True)
 
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
-    # trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) WE DONT NEED TRAINEE
+    trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) 
     
     def serialize(self):
         activity = Activity.query.get(self.activity_id)
@@ -148,14 +148,14 @@ class ActivityPerTrainer(db.Model):
             "date": self.date,
             "price": self.price,
             "trainer_id": self.trainer_id,
-            #"trainee_id": self.trainee_id, we dont need trainee [tobi]
+            "trainee_id": self.trainee_id,
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
-            # "trainerName":self.trainer_name DONT NEED
+            "trainerName":self.trainer_name
         }
 
 class Activity(db.Model):

@@ -16,7 +16,9 @@ export const DetailClass = () => {
   console.log("store.givenClass", store.givenClass);
   const handleBookClass = () => {
     // this will not work until store successfully has user data
-    const trainee_id = store.user.id;
+    // const trainee_id = store.user.id;
+    const trainee_id = store.user?.["trainee"].id;
+
     actions.bookClass({ activity_per_trainer_id: id, trainee_id });
   };
   return (
