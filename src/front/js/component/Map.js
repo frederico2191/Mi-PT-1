@@ -4,13 +4,13 @@ import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 const libraries = ["places"];
 
 const mapContainerStyle = {
-  width: "100%",
+  width: "80%",
   height: "400px",
 };
 
 const Map = ({ onMapClick, markerPosition, children }) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBh1vaimejxuAf2sgR69gQsq0MxWMOrOrc",
+    googleMapsApiKey: "AIzaSyDDZ4KCljuX_ugUKoGDSsdiswCVE0k_UY8",
     libraries,
   });
 

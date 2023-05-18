@@ -70,11 +70,15 @@ export const Home = () => {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
+        console.log(
+          "I am current position marker position inside map",
+          markerPosition
+        );
       });
     } else {
       alert("Geolocation is not supported by this browser.");
     }
-  }, []);
+  }, [filteredEvents]);
 
   const createEvent = () => {
     setShowModal(!showModal);
@@ -276,19 +280,35 @@ export const Home = () => {
           )}
         </Map>
         <div>
-          {filteredEvents.map((givenClass) => {
-            console.log("givenCLASSSSS", givenClass);
+          {store.allTypesActivities?.map((x) => {
+            const activityClasses = filteredEvents.filter(
+              (givenClass) => givenClass.name == x.name
+            );
+
             return (
               <>
-                <h1 className="scrollerTitles">{givenClass.name}</h1>
-                <CardClass2
-                  key={givenClass.id}
-                  givenClass={givenClass}
-                ></CardClass2>
+                {activityClasses.length > 0 ? (
+                  <>
+                    <h1 className="scrollerTitles">{x.name}</h1>
+                    <div className="list-group horizontal-scroller">
+                      {activityClasses?.map((givenClass) => {
+                        console.log("givenCLASSSSS", givenClass);
+                        return (
+                          <CardClass3
+                            key={givenClass.id}
+                            givenClass={givenClass}
+                          ></CardClass3>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : null}
               </>
             );
           })}
         </div>
+      </div>
+      <div>
         {filteredEvents.length === 0 && searchPerformed && (
           <p>
             Unfortunately, your search did not find any events. How about trying
