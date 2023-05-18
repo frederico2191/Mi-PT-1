@@ -14,7 +14,7 @@ api = Blueprint('api', __name__)
 possible_genders=["male", "female", "non-binary", "intersex", "transgender", ""]
 possible_body_types=["endomorph", "mesomorph", "ectomorph", ""]
 possible_fitness_experiences=["new_to_it", "getting_back", "currently_working_out","fitness_enthusiast", ""]
-possible_goals=[ "loose_weight","get_toned", "increas_muscle_mass","improve_health", "improve_as_athlete",""]
+possible_goals=[ "lose_weight","get_toned", "increas_muscle_mass","improve_health", "improve_as_athlete",""]
 possible_specialties=["running_performance", "functional_training", "postpartum_training","weight_loss","strength_development","metabolic_conditioning","injury_reduction","sports_performance","flexibility","metabolic_conditioning", ""]
 possible_coaching_styles=["supportive", "laid_back", "results_oriented","motivating","high_energy", "calm", ""]
 # possible_indoor_outdoor_remote=["indoor", "outdoor", "remote"]
@@ -287,9 +287,19 @@ def getGivenTrainer(trainer_id):
 
 
 @api.route('/activity/<activity_id>', methods=['DELETE']) 
-# @jwt_required()
+@jwt_required()
 def deleteClass(activity_id):
-    activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).delete()
+    activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).first()
+    db.session.delete(activity_to_delete)
+    db.session.commit()
+    
+    return jsonify()
+
+@api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
+@jwt_required()
+def deleteClass(bookedclass_id):
+    booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
+    db.session.delete(booked_class_to_delete)
     db.session.commit()
     
     return jsonify()
@@ -354,7 +364,7 @@ def book_class():
         return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
 
     
-    existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id, trainee_id=trainee_id).first()
+    existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id).first()
     if existing_booking:
         return jsonify({'error': 'Class already booked.'}), 400
 
@@ -367,8 +377,10 @@ def book_class():
     )
     db.session.add(new_booking)
     db.session.commit()
-
-    return jsonify({'message': 'Class booked successfully.'}), 200
+    resp_body = {
+        "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
+    }
+    return jsonify({"respBody": resp_body}), 200
 
 
 # @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 

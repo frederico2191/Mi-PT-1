@@ -271,9 +271,11 @@ const getState = ({ getStore, getActions, setStore }) => {
               }),
             }
           );
-          const data = await resp.json();
-          console.log(data, "new user registered after register fetch");
-          return true;
+          if (resp.status === 200) {
+            const data = await resp.json();
+            console.log(data, "new user registered after register fetch");
+            return true;
+          } else return false;
         } catch (error) {
           console.error(
             "There was an error on register fetch!!! It was caught by flux.js",
@@ -520,8 +522,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // assuming you are storing JWT in localstorage
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // assuming you are storing JWT in localstorage
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               activity_per_trainer_id,
