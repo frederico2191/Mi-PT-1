@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       token: null,
       givenClass: null,
       givenTrainer: [],
+      givenTrainee: null,
       allClasses: [],
       user: null,
       allTypesActivities: null,
@@ -159,6 +160,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error(
             "There was an error on getGivenTrainer fetch!!! It was caught by flux.js",
+            error
+          );
+        }
+      },
+      getGivenTrainee: async (id) => {
+        const store = getStore();
+        console.log(id, "traineeId INSIDE FLUX!!!!!");
+
+        const opts = {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/trainee/" + id,
+            opts
+          );
+
+          const data = await resp.json();
+          setStore({ givenTrainee: data });
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on getGivenTrainee fetch!!! It was caught by flux.js",
             error
           );
         }
@@ -465,6 +491,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           const data = await resp.json();
           localStorage.setItem("userRole", data["user"].user_role);
+          localStorage.setItem("userName", data["user"].firstName);
           setStore({ user: data["user"] });
           return true;
         } catch (error) {
@@ -475,6 +502,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       logout: () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userName");
         console.log("logging out");
         setStore({ token: null });
       },
@@ -516,18 +545,19 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      bookClass: async ({ activity_per_trainer_id, trainee_id }) => {
+      bookClass: async ({ id, trainee_id, trainee_name }) => {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/book_class`, // replace with your booking endpoint
+          `${process.env.BACKEND_URL}/api/book_class`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`, // assuming you are storing JWT in localstorage
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              activity_per_trainer_id,
+              id,
               trainee_id,
+              trainee_name,
             }),
           }
         );

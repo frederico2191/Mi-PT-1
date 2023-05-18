@@ -76,7 +76,7 @@ const EventModal = () => {
         id="staticBackdrop"
         data-bs-backdrop="static"
         data-bs-keyboard="false"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
       >
@@ -110,7 +110,11 @@ const EventModal = () => {
                   >
                     <option value="">Select Activity Name</option>
                     {store.allTypesActivities?.map((x) => {
-                      return <option value={x.id}>{x.name}</option>;
+                      return (
+                        <option key={x.id} value={x.id}>
+                          {x.name}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>

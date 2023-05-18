@@ -131,15 +131,13 @@ export const Home = () => {
 
   return (
     <div>
-      <div className="text-center mt-5">
-        <h1>Welcome to Mi PT</h1>
-
-        <div className="alert alert-info">
-          {store.message ||
-            "Loading message from the backend (make sure your python backend is running)..."}
-        </div>
+      <div className="text-center mt-5 mb-5">
+        <h1>Activities</h1>
+        <p className="">
+          Check the broad range of activities we have to offer, hosted by our
+          experienced Trainers. Get ready to break a sweat!
+        </p>
       </div>
-      <EventModal />
       <div>
         <div>
           {store.allTypesActivities?.map((x) => {

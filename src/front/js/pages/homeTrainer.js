@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import EventModal from "../component/EventModal";
-import ByActivity from "../component/ByActivity";
+import ActivityList from "../component/ActivityList/ActivityList";
+import "../../styles/home.css";
 
 const homeTrainer = () => {
   const { store, actions } = useContext(Context);
@@ -14,7 +15,7 @@ const homeTrainer = () => {
   // useEffect(() => {}, []);
 
   return (
-    <div className="container text-center">
+    <div className="home-container container text-center">
       <div className="row justify-content-between my-5 ">
         <h2 className="col-4 ">My Classes</h2>
         <div className="col-3 align-self-center">
@@ -27,7 +28,7 @@ const homeTrainer = () => {
       <div className="row justify-content-end">
         {" "}
         <div className="col align-self-end">
-          <ByActivity />
+          <ActivityList />
         </div>
       </div>
     </div>
