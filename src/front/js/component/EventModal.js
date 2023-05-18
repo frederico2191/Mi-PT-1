@@ -3,20 +3,22 @@ import { Context } from "../store/appContext";
 import SearchCity from "./SearchCity";
 import Calendar from "./Calendar";
 import DatePicker from "./DatePicker";
+import LocationPicker2 from "./LocationPicker2";
+import "./EventModal.css";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
-  const [location, setlLocation] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [city, setCity] = useState({});
-  const [body_type, setBodyType] = useState("");
-  const [coaching_style, setCoachingStyle] = useState("");
-  const [goal, setGoal] = useState("");
-  const [fitness_experience, setFitnessExperience] = useState("");
+  const [location, setLocation] = useState({
+    lat: "",
+    lng: "",
+    adress: "",
+  });
   const [eventDate, setEventDate] = useState(null);
 
   //
@@ -26,6 +28,7 @@ const EventModal = () => {
   //   const navigate = useNavigate();
   useEffect(() => {
     actions.getAllTypesActivities();
+    // setMap({ ...map, lat: 3 });
     // console.log("INSIDE USE EFFECT", store);
     // console.log(store.user?.["trainer"].id, "HERE ID");
   }, []);
@@ -45,10 +48,8 @@ const EventModal = () => {
       eventDate,
       trainerId,
       city,
-      trainerName
-      // address,
-      // lat,
-      // lng
+      trainerName,
+      location
     );
 
     if (registeredClass) {
@@ -158,24 +159,30 @@ const EventModal = () => {
 
                 <SearchCity setCity={setCity} city={city} />
                 <DatePicker setEventDate={setEventDate} eventDate={eventDate} />
+                <LocationPicker2
+                  setLocation={setLocation}
+                  location={location}
+                />
+
                 {/* <Calendar setEventDate={setEventDate} eventDate={eventDate} /> */}
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
+
                 <button type="submit" className="btn btn-primary">
                   Launch Class
                 </button>
               </form>
             </div>
-            {/* <div className="modal-footer">
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
               <button type="button" className="btn btn-primary">
                 Launch Class
               </button>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

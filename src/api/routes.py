@@ -306,14 +306,14 @@ def deleteClass(activity_id):
     
     return jsonify()
 
-@api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
-@jwt_required()
-def deleteClass(bookedclass_id):
-    booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
-    db.session.delete(booked_class_to_delete)
-    db.session.commit()
+# @api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
+# @jwt_required()
+# def deleteClass(bookedclass_id):
+#     booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
+#     db.session.delete(booked_class_to_delete)
+#     db.session.commit()
     
-    return jsonify()
+#     return jsonify()
 
 
 
