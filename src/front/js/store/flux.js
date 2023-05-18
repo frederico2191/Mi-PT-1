@@ -381,8 +381,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         const eventDate = date?.toISOString();
         const hour = date?.hour();
         const minutes = date?.minute();
-        const lat = location?.latitude;
-        const lng = location?.longitude;
+        const lat = location?.lat;
+        const lng = location?.lng;
         // const address = location?.address;
         console.log("hello", { eventDate, hour, minutes });
 

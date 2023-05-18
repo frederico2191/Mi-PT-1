@@ -5,6 +5,7 @@ import Calendar from "./Calendar";
 import DatePicker from "./DatePicker";
 import LocationPicker2 from "./LocationPicker2";
 import "./EventModal.css";
+import LocationPicker4 from "./LocationPicker4";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
@@ -36,6 +37,7 @@ const EventModal = () => {
     event.preventDefault();
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
+    console.log("LOCATION inside the click", location.location);
     // const trainerName = store.user?.firstName;
     console.log(store, " STORE.  !!! zzzz TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
     console.log(trainerName, "TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
@@ -169,19 +171,20 @@ const EventModal = () => {
                 <button type="submit" className="btn btn-primary">
                   Launch Class
                 </button>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Launch Class
+                  </button>
+                </div>
               </form>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="button" className="btn btn-primary">
-                Launch Class
-              </button>
             </div>
           </div>
         </div>
