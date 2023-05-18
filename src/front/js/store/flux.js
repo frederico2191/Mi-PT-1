@@ -373,17 +373,17 @@ const getState = ({ getStore, getActions, setStore }) => {
         date,
         trainerId,
         city,
-        trainerName
+        trainerName,
+        location
       ) => {
         const store = getStore();
         // console.log("date in flux 2", date?.toDate());
-        console.log("date in flux", date);
-        console.log("hello", date);
         const eventDate = date?.toISOString();
         const hour = date?.hour();
         const minutes = date?.minute();
-        const lat = city?.latitude;
-        const lng = city?.longitude;
+        const lat = location?.lat;
+        const lng = location?.lng;
+        // const address = location?.address;
         console.log("hello", { eventDate, hour, minutes });
 
         try {

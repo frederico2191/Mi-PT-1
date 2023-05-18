@@ -313,7 +313,7 @@ def deleteBookedClass(bookedclass_id):
     db.session.delete(booked_class_to_delete)
     db.session.commit()
     
-    return jsonify()
+#     return jsonify()
 
 
 
