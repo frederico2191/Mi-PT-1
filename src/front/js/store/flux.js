@@ -23,8 +23,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           initial: "white",
         },
       ],
+      processedResults: [],
     },
     actions: {
+      setProcessedResults: (filteredEvents) => {
+        setStore({ processedResults: filteredEvents });
+      },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
         const store = getStore();

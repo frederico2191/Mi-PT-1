@@ -13,6 +13,10 @@ import { Footer } from "./component/footer";
 import { DetailClass } from "./pages/detailClass";
 import UpcomingClassesTrainee from "./pages/upcomingClassesTrainee";
 import HomeTrainer from "./pages/homeTrainer";
+import Search from "./pages/search";
+import { LoadScript } from "@react-google-maps/api";
+
+const libraries = ["places"];
 
 //create your first component
 const Layout = () => {
@@ -26,28 +30,37 @@ const Layout = () => {
   return (
     <div>
       <BrowserRouter basename={basename}>
-        <ScrollToTop>
-          <Navbar />
-          <div className="mx-5 fw-light">
-            <Routes>
-              <Route element={<Home />} path="/" />
-              <Route element={<Register />} path="/register" />
-              <Route element={<Login />} path="/login" />
-              <Route element={<HomeTrainer />} path="/home/trainer" />
-              <Route
-                element={<UpcomingClassesTrainee />}
-                path="/trainee/upcomingclasses"
-              />
-              <Route path="/trainer/:trainer_id" element={<DetailTrainer />} />
-              <Route
-                path="/activity_per_trainer/:activity_per_trainer_id"
-                element={<DetailClass />}
-              />
-              <Route element={<h1>Not found!</h1>} />
-            </Routes>
-          </div>
-          <Footer />
-        </ScrollToTop>
+        <LoadScript
+          googleMapsApiKey={"AIzaSyDDZ4KCljuX_ugUKoGDSsdiswCVE0k_UY8"}
+          libraries={libraries}
+        >
+          <ScrollToTop>
+            <Navbar />
+            <div className="mx-5 fw-light">
+              <Routes>
+                <Route element={<Home />} path="/" />
+                <Route element={<Register />} path="/register" />
+                <Route element={<Login />} path="/login" />
+                <Route element={<HomeTrainer />} path="/home/trainer" />
+                <Route element={<Search />} path="/search" />
+                <Route
+                  element={<UpcomingClassesTrainee />}
+                  path="/trainee/upcomingclasses"
+                />
+                <Route
+                  path="/trainer/:trainer_id"
+                  element={<DetailTrainer />}
+                />
+                <Route
+                  path="/activity_per_trainer/:activity_per_trainer_id"
+                  element={<DetailClass />}
+                />
+                <Route element={<h1>Not found!</h1>} />
+              </Routes>
+            </div>
+            {/* <Footer /> */}
+          </ScrollToTop>
+        </LoadScript>
       </BrowserRouter>
     </div>
   );

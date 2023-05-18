@@ -7,7 +7,7 @@ import Card from "../component/Card";
 import CardClass3 from "../component/CardClass3";
 import EventModal from "../component/EventModal";
 import Map from "../component/Map";
-import { Marker, InfoWindow } from "@react-google-maps/api";
+import { MarkerF, InfoWindow } from "@react-google-maps/api";
 import { Link } from "react-router-dom";
 
 // useEffect(() => {
@@ -63,22 +63,20 @@ export const Home = () => {
     console.log("FILTERED EVENTS", filteredEvents);
   }, [filteredEvents]);
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setMarkerPosition({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-        console.log(
-          "I am current position marker position inside map",
-          markerPosition
-        );
-      });
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  }, [filteredEvents]);
+  // useEffect(() => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       const marker = {
+  //         lat: position.coords.latitude,
+  //         lng: position.coords.longitude,
+  //       };
+  //       setMarkerPosition(marker);
+  //       console.log("I am current position marker position inside map", marker);
+  //     });
+  //   } else {
+  //     alert("Geolocation is not supported by this browser.");
+  //   }
+  // }, [filteredEvents]);
 
   const createEvent = () => {
     setShowModal(!showModal);
@@ -115,9 +113,11 @@ export const Home = () => {
     });
 
     setFilteredEvents(filtered);
+    actions.setProcessedResults({ processedResults: filtered });
     // setSelectedActivity("");
     // setSearchDistance("");
   };
+
   const getDistanceInKm = (pos1, pos2) => {
     const R = 6371; // Earth's radius in kilometers
     const dLat = (pos2.lat - pos1.lat) * (Math.PI / 180);
@@ -173,7 +173,6 @@ export const Home = () => {
         </div>
       </div>
       <div>
-        <h1>Trainee Page</h1>
         {/* <div>
           <label htmlFor="activity">Activity:</label>
           <select
@@ -224,9 +223,12 @@ export const Home = () => {
           />
         </div>
         <button onClick={handleSearch}>Search</button>
-        <Map markerPosition={markerPosition}>
+        <Map
+          markerPosition={markerPosition}
+          setMarkerPosition={setMarkerPosition}
+        >
           {filteredEvents.map((givenClass) => (
-            <Marker
+            <MarkerF
               key={givenClass.id}
               position={{
                 lat: parseInt(givenClass.lat),

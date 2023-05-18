@@ -163,12 +163,9 @@ const EventModal = () => {
                   setLocation={setLocation}
                   location={location}
                 />
-
-                {/* <Calendar setEventDate={setEventDate} eventDate={eventDate} /> */}
-
-                <button type="submit" className="btn btn-primary">
+                {/* <button type="submit" className="btn btn-primary">
                   Launch Class
-                </button>
+                </button> */}
 
                 <div className="modal-footer">
                   <button
