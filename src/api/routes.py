@@ -404,7 +404,7 @@ def book_class():
     # db.session.add(activity_per_trainer)
     db.session.commit()
     resp_body = {
-        "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
+        "message": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
     }
     return jsonify({"respBody": resp_body}), 200
 
