@@ -31,9 +31,12 @@ const TraineeProfileModal = () => {
       >
         <div className="modal-dialog">
           <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                {store?.givenTrainee?.trainee.goal || "hello"}
+            <div className="modal-header text-center">
+              <h1
+                className="modal-title fs-5 text-center"
+                id="exampleModalLabel"
+              >
+                {`${store?.givenTrainee?.firstName}'s profile`}
               </h1>
               <button
                 type="button"
@@ -44,42 +47,24 @@ const TraineeProfileModal = () => {
             </div>
             <div className="modal-body d-flex flex-column">
               <div className="row">
-                <div className="col-4">
-                  <img src="" className="rounded-circle" alt="Trainee" />
-                </div>
+                <div className="col-4"></div>
                 <div className="col-8">
-                  {/* <p>
-                    Name: {first_name} {last_name}
+                  <p>
+                    Name: {store?.givenTrainee?.firstName}{" "}
+                    {store?.givenTrainee?.lastName}
                   </p>
-
-                  <p>Age: {age}</p>
-                  <p>Email: {email}</p>
-                  <p>Weight: {weight}</p>
-                  <p>Body Type: {body_type}</p>
-                  <p>About: {about}</p> */}
+                  <p>Age: {store?.givenTrainee?.age}</p>
+                  <p>Email: {store?.givenTrainee?.email}</p>
+                  <p>Weight: {store?.givenTrainee?.weight}</p>
+                  <p>Body Type: {store?.givenTrainee?.trainee?.body_type}</p>
+                  <p>Goal: {store?.givenTrainee?.trainee?.goal}</p>
+                  <p>
+                    Fitness Experience:{" "}
+                    {store?.givenTrainee?.trainee?.fitness_experience}
+                  </p>
+                  <p>About: {store?.givenTrainee?.about}</p>
                 </div>
               </div>
-              <div className="mt-auto">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  style={{ alignSelf: "flex-end" }}
-                >
-                  Go to Trainee Profile
-                </button>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
-              </button>
             </div>
           </div>
         </div>
