@@ -45,9 +45,8 @@ const TraineeProfileModal = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body d-flex flex-column">
+            <div className="modal-body d-flex flex-column text-left ms-3">
               <div className="row">
-                <div className="col-4"></div>
                 <div className="col-8">
                   <p>
                     Name: {store?.givenTrainee?.firstName}{" "}
@@ -62,7 +61,7 @@ const TraineeProfileModal = () => {
                     Fitness Experience:{" "}
                     {store?.givenTrainee?.trainee?.fitness_experience}
                   </p>
-                  <p>About: {store?.givenTrainee?.about}</p>
+                  {/* <p>About: {store?.givenTrainee?.about}</p> */}
                 </div>
               </div>
             </div>

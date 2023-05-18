@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FiMapPin } from "react-icons/fi";
 import Map from "./Map";
-import { StandaloneSearchBox } from "@react-google-maps/api";
+import { StandaloneSearchBox, useLoadScript } from "@react-google-maps/api";
 import "./LocationPicker2.css";
+
+const libraries = ["places"];
 
 const LocationPicker2 = ({ setLocation, location }) => {
   const [showMap, setShowMap] = useState(false);
@@ -25,6 +27,11 @@ const LocationPicker2 = ({ setLocation, location }) => {
       alert("Geolocation is not supported by this browser.");
     }
   }, []);
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyBh1vaimejxuAf2sgR69gQsq0MxWMOrOrc",
+    libraries,
+  });
 
   const onMapClick = (e) => {
     setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
@@ -60,7 +67,7 @@ const LocationPicker2 = ({ setLocation, location }) => {
       </div>
 
       {/* {showMap && ( */}
-      {
+      {isLoaded && (
         <div style={{ height: "400px" }}>
           <StandaloneSearchBox
             onLoad={onSearchBoxLoad}
@@ -74,7 +81,7 @@ const LocationPicker2 = ({ setLocation, location }) => {
           </StandaloneSearchBox>
           <Map onMapClick={onMapClick} markerPosition={markerPosition} />
         </div>
-      }
+      )}
     </div>
   );
 };

@@ -333,9 +333,13 @@ def deleteClass(activity_id):
 @api.route('/activity_per_trainer', methods=['GET']) 
 # @jwt_required()
 def getAllClasses():
-    activities = ActivityPerTrainer.query.all()
-    data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
-    
+    # activities = ActivityPerTrainer.query.all()
+    # data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
+
+    todays_datetime = datetime(datetime.today().year, datetime.today().month, datetime.today().day)
+    upcoming_activities = ActivityPerTrainer.query.filter(ActivityPerTrainer.date >= todays_datetime).all()
+    data = [activity_per_trainer.serialize() for activity_per_trainer in upcoming_activities]
+    # payments = Payment.query.filter(Payment.due_date >= todays_datetime).all()
     # data_future = data.filter_by(activity_per_trainer_date> date.now())
 
     return jsonify(data)
@@ -376,7 +380,7 @@ def book_class():
 
     # activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
     activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
-    print(activity_per_trainer.serialize(),"$$$888888888888888")
+    # print(activity_per_trainer.serialize(),"$$$888888888888888")
     # activity_per_trainer = activity_per_trainer.serialize()
     # aux = ...activities_per_trainer.trainee_name
     activity_per_trainer.trainee_id = trainee_id

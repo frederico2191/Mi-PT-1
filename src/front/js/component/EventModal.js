@@ -5,7 +5,6 @@ import Calendar from "./Calendar";
 import DatePicker from "./DatePicker";
 import LocationPicker2 from "./LocationPicker2";
 import "./EventModal.css";
-import LocationPicker4 from "./LocationPicker4";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
@@ -21,7 +20,6 @@ const EventModal = () => {
     adress: "",
   });
   const [eventDate, setEventDate] = useState(null);
-
   //
   //   activity_id;
   //   trainer_id;
