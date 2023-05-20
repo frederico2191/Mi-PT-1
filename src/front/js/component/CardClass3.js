@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./CardClass3.css";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const CardClass3 = ({ givenClass }) => {
   const [hovered, setHovered] = useState(false);
@@ -25,11 +26,14 @@ const CardClass3 = ({ givenClass }) => {
           <div className="h-100 d-flex flex-column justify-content-end align-items-center">
             {hovered && (
               <>
-                <a href="#" className="card-class3__button">
-                  View Details
-                </a>
+                <Link to={`/activity_per_trainer/${givenClass.id}`}>
+                  <a className="card-class3__button">View Details</a>
+                  {/* <button className="btn btn-outline-primary">
+                  Check the class
+                </button> */}
+                </Link>
                 <p className="card-class3__time-address">
-                  {console.log("papagay", dayjs(givenClass.date).format("LL"))}
+                  {/* {console.log("papagay", dayjs(givenClass.date).format("LL"))} */}
                   {dayjs(givenClass.date).format("lll")}
                 </p>
               </>
