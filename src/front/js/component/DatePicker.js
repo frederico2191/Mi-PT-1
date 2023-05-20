@@ -18,7 +18,8 @@ const DatePicker = ({ eventDate, setEventDate }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileDateTimePicker
-        label="Basic date picker"
+        id="date_picker"
+        className="w-100 mb-4"
         defaultValue={eventDate && dayjs(eventDate)}
         value={eventDate}
         onChange={handleChange}

@@ -4,3 +4,12 @@
 .pac-container {
   z-index: 1052 !important;
 }
+
+.map-container {
+  height: 400px;
+  margin-bottom: 7rem;
+}
+
+.event__input {
+  height: 56px;
+}

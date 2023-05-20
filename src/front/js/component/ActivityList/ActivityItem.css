@@ -1,5 +1,5 @@
 .activity {
-  width: 500px;
+  width: 550px;
   height: 100%;
   margin-bottom: 1rem;
   border-radius: 5px;
@@ -20,4 +20,8 @@
 
 .activity--available {
   background-color: rgb(202, 242, 199);
+}
+
+.activity__section {
+  width: 33%;
 }

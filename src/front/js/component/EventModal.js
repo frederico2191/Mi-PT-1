@@ -101,7 +101,7 @@ const EventModal = () => {
                     Activity name
                   </label>
                   <select
-                    className="form-select"
+                    className="form-select event__input"
                     aria-label="Default select example"
                     onChange={(e) => {
                       e.persist();
@@ -126,7 +126,7 @@ const EventModal = () => {
                   <input
                     required
                     type="text"
-                    className="form-control"
+                    className="form-control event__input"
                     id="exampleInputPassword1"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -138,7 +138,7 @@ const EventModal = () => {
                   </label>
                   <input
                     type="number"
-                    className="form-control"
+                    className="form-control event__input"
                     id="ageInput"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
@@ -150,7 +150,7 @@ const EventModal = () => {
                   </label>
                   <input
                     type="number"
-                    className="form-control"
+                    className="form-control event__input "
                     id="price"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
@@ -158,11 +158,19 @@ const EventModal = () => {
                 </div>
 
                 <SearchCity setCity={setCity} city={city} />
-                <DatePicker setEventDate={setEventDate} eventDate={eventDate} />
-                <LocationPicker2
-                  setLocation={setLocation}
-                  location={location}
-                />
+                <div className="mt-4">
+                  <label className="form-label">Date</label>
+                  <DatePicker
+                    setEventDate={setEventDate}
+                    eventDate={eventDate}
+                  />
+                </div>
+                <div className="map-container">
+                  <LocationPicker2
+                    setLocation={setLocation}
+                    location={location}
+                  />
+                </div>
                 {/* <button type="submit" className="btn btn-primary">
                   Launch Class
                 </button> */}

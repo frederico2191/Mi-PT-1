@@ -45,26 +45,36 @@ const TraineeProfileModal = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body d-flex flex-column text-left ms-3">
-              <div className="row">
-                <div className="col-8">
-                  <p>
-                    Name: {store?.givenTrainee?.firstName}{" "}
-                    {store?.givenTrainee?.lastName}
-                  </p>
-                  <p>Age: {store?.givenTrainee?.age}</p>
-                  <p>Email: {store?.givenTrainee?.email}</p>
-                  <p>Weight: {store?.givenTrainee?.weight}</p>
-                  <p>Body Type: {store?.givenTrainee?.trainee?.body_type}</p>
-                  <p>Goal: {store?.givenTrainee?.trainee?.goal}</p>
-                  <p>
-                    Fitness Experience:{" "}
-                    {store?.givenTrainee?.trainee?.fitness_experience}
-                  </p>
-                  {/* <p>About: {store?.givenTrainee?.about}</p> */}
-                </div>
-              </div>
+            <div className="modal-body d-flex flex-column text-start justify-content-start ms-3">
+              {/* <div className="row"> */}
+              {/* <div className="col-8"> */}
+              <p>
+                <b>Name:</b> {store?.givenTrainee?.firstName}{" "}
+                {store?.givenTrainee?.lastName}
+              </p>
+              <p>
+                <b>Age:</b> {store?.givenTrainee?.age}
+              </p>
+              <p>
+                <b>Email:</b> {store?.givenTrainee?.email}
+              </p>
+              <p>
+                <b>Weight:</b> {store?.givenTrainee?.weight}
+              </p>
+              <p>
+                <b>Body Type:</b> {store?.givenTrainee?.trainee?.body_type}
+              </p>
+              <p>
+                <b>Goal:</b> {store?.givenTrainee?.trainee?.goal}
+              </p>
+              <p>
+                <b>Fitness Experience:</b>{" "}
+                {store?.givenTrainee?.trainee?.fitness_experience}
+              </p>
+              {/* <p>About: {store?.givenTrainee?.about}</p> */}
             </div>
+            {/* </div> */}
+            {/* </div> */}
           </div>
         </div>
       </div>

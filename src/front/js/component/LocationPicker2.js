@@ -9,7 +9,6 @@ const libraries = ["places"];
 
 const LocationPicker2 = ({ setLocation, location }) => {
   const { store, actions } = useContext(Context);
-  const [showMap, setShowMap] = useState(false);
   const [searchBox, setSearchBox] = useState(null);
   const [markerPosition, setMarkerPosition] = useState({
     lat: 40.7128,
@@ -76,30 +75,42 @@ const LocationPicker2 = ({ setLocation, location }) => {
 
   return (
     <div>
-      <div onClick={() => setShowMap(!showMap)}>
-        {showMap ? "Hide Map" : <FiMapPin />}
-      </div>
-
-      {/* {showMap && ( */}
-      {/* {isLoaded && ( */}
       <div style={{ height: "400px" }}>
         <StandaloneSearchBox
           onLoad={onSearchBoxLoad}
           onPlacesChanged={onPlacesChanged}
         >
-          <input
-            type="text"
-            placeholder="Please insert address"
-            style={{ width: "100%", height: "40px", paddingLeft: "10px" }}
-          />
+          <>
+            <label htmlFor="search-box">Address</label>
+            <input
+              type="text"
+              id="search-box"
+              placeholder=" "
+              style={{
+                paddingLeft: "15px",
+                width: "100%",
+                height: "56px",
+                marginBottom: "1rem",
+                marginTop: "10px",
+                borderColor: "lightGrey",
+                borderRadius: "5px",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                outline: "none",
+              }}
+            />
+          </>
         </StandaloneSearchBox>
         <Map
           onMapClick={onMapClick}
           markerPosition={markerPosition}
           setMarkerPosition={setMarkerPosition}
+          mapContainerStyle={{
+            width: "100%",
+            height: "400px",
+          }}
         />
       </div>
-      {/* )} */}
     </div>
   );
 };

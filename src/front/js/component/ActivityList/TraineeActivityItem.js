@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
 import "./ActivityItem.css";
+import dayjs from "dayjs";
 
 const TraineeActivityItem = ({ activity }) => {
   const { store, actions } = useContext(Context);
@@ -29,7 +30,7 @@ const TraineeActivityItem = ({ activity }) => {
           </div>
         ) : null}
         <div className="d-inline">
-          {`${activity.date} ${activity.hour}:${activity.minutes}H`}{" "}
+          {dayjs(activity.date).format("lll")}{" "}
           {/* <TfiTrash onClick={() => actions.unbookClass(activity.id)} /> */}
           <TfiTrash onClick={() => actions.unbookClass(activity.id)} />
         </div>

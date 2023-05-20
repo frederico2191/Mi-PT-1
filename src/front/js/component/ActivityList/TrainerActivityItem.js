@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
 import "./ActivityItem.css";
+import dayjs from "dayjs";
 
 const TrainerActivityItem = ({ activity }) => {
   const { store, actions } = useContext(Context);
@@ -14,14 +15,14 @@ const TrainerActivityItem = ({ activity }) => {
 
   return (
     <div
-      className={`activity p-2 ${
+      className={`activity p-2 px-4 ${
         activity.traineeName ? "activity--booked" : "activity--available"
       }`}
       key={activity.id}
     >
-      <div className="d-flex flex-row align-items-center justify-content-center">
+      <div className="d-flex flex-row align-items-center justify-content-between">
         {activity.traineeName ? (
-          <div className="d-flex flex-row align-items-center justify-content-end">
+          <div className="col-4 d-flex flex-row align-items-center activity__trainee-name justify-self-start">
             <div
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -32,11 +33,14 @@ const TrainerActivityItem = ({ activity }) => {
             </div>
             <div className="activity-separator" />
           </div>
-        ) : null}
-        <div className="d-inline">
-          {`${activity.date} ${activity.hour}:${activity.minutes}H`}{" "}
-          <TfiTrash onClick={() => actions.deleteClass(activity.id)} />
-        </div>
+        ) : (
+          <div className="w-5 col-4" />
+        )}
+        <div className="col-4">{dayjs(activity.date).format("lll")} </div>
+        <TfiTrash
+          className="col-4 d-flex"
+          onClick={() => actions.deleteClass(activity.id)}
+        />
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ import UpcomingClassesTrainee from "./pages/upcomingClassesTrainee";
 import HomeTrainer from "./pages/homeTrainer";
 import Search from "./pages/search";
 import { LoadScript } from "@react-google-maps/api";
+import "./layout.css";
 
 const libraries = ["places"];
 
@@ -28,7 +29,7 @@ const Layout = () => {
     return <BackendURL />;
 
   return (
-    <div>
+    <div className="h-100">
       <BrowserRouter basename={basename}>
         <LoadScript
           googleMapsApiKey={"AIzaSyDDZ4KCljuX_ugUKoGDSsdiswCVE0k_UY8"}
@@ -36,7 +37,7 @@ const Layout = () => {
         >
           <ScrollToTop>
             <Navbar />
-            <div className="mx-5 fw-light">
+            <div className="mx-5 fw-light h-100">
               <Routes>
                 <Route element={<Home />} path="/" />
                 <Route element={<Register />} path="/register" />

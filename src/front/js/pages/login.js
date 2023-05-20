@@ -48,7 +48,7 @@ export const Login = () => {
   return (
     <div className="text-center mt-5">
       <h1>Login</h1>
-      {store.token && store.token != "" && store.token != undefined ? (
+      {store.token ? (
         "You are logged in with  the following token: " + store.token
       ) : (
         <div>

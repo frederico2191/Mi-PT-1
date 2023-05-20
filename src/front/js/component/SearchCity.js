@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
+import "./EventModal.css";
 
 const NoResult = () => (
   <p>No Results found for your search. Please try again.</p>
@@ -53,7 +54,7 @@ const SearchCity = ({ city, setCity }) => {
       </label>
       <input
         type="text"
-        className="form-control"
+        className="form-control event__input"
         id="city"
         onChange={handleType}
       />

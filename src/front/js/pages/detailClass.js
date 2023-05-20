@@ -16,7 +16,7 @@ export const DetailClass = () => {
 
   console.log("store.givenClass", store.givenClass);
   const handleBookClass = async () => {
-    $("#exampleModal").modal("hide");
+    // $("#exampleModal").modal("hide");
     const trainee_id = store.user?.["trainee"].id;
     const trainee_name = store.user?.firstName;
     await actions.bookClass({ id, trainee_id, trainee_name });
