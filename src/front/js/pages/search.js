@@ -82,6 +82,11 @@ const Search = () => {
     // setSearchDistance("");
   };
 
+  const handleType = (event) => {
+    event.preventDefault();
+    actions.setSearchedCityName(event.target.value);
+  };
+
   const mapStyle = {
     width: "80%",
     height: "350px",
@@ -124,13 +129,20 @@ const Search = () => {
         <input
           type="number"
           name="distance"
-          className="search-distance"
+          className="search-input"
           placeholder="Distance(km)"
           onChange={handleDistance}
           min="1"
         />
       </div>
-      <SearchCity setCity={setCity} city={city} />
+      <input
+        type="text"
+        name="city"
+        className="search-input"
+        placeholder="City"
+        id="city"
+        onChange={handleType}
+      />
       <button onClick={handleSearch} className="btn btn-primary">
         Search
       </button>

@@ -1,0 +1,30 @@
+.footer {
+  margin-top: 5rem;
+  background-color: rgb(23, 28, 49);
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+}
+
+.icons-container {
+  display: flex;
+  justify-content: end;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.icon {
+  margin-right: 1rem;
+}
+
+.text-container {
+  width: 100%;
+  padding-bottom: 2rem;
+  text-align: center;
+}
+
+.copyright {
+  color: lightGrey;
+}
