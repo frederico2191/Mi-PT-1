@@ -181,6 +181,7 @@ def register_class():
     city = request.json.get("city",None)
     lat = request.json.get("lat",None)
     lng = request.json.get("lng",None)
+    address = request.json.get("address",None)
 
 
     print("####4444444 T NAMEEE",trainer_name)
@@ -203,6 +204,7 @@ def register_class():
     class_to_register.lat = lat # mm
     class_to_register.lng = lng # mm
     class_to_register.trainer_name = trainer_name # mm
+    class_to_register.address = address # mm
     
 
     db.session.add(class_to_register)

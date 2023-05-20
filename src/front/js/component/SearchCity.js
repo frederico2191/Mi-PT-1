@@ -32,17 +32,18 @@ const SearchCity = ({ city, setCity }) => {
   const [searched, setSearched] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    const result = await actions.searchCity(searched);
-    setIsSubmitted(true);
-    if (!result?.length) return setCity();
-    setCity(result[0]);
-  };
+  // const handleSearch = async (event) => {
+  //   event.preventDefault();
+  //   const result = await actions.searchCity(searched);
+  //   setIsSubmitted(true);
+  //   if (!result?.length) return setCity();
+  //   setCity(result[0]);
+  // };
 
   const handleType = (event) => {
     event.preventDefault();
-    setSearched(event.target.value);
+    // setSearched(event.target.value);
+    actions.setSearchedCityName(event.target.value);
   };
 
   return (
@@ -56,13 +57,13 @@ const SearchCity = ({ city, setCity }) => {
         id="city"
         onChange={handleType}
       />
-      <button
+      {/* <button
         type="button"
         className="btn btn-secondary"
         onClick={handleSearch}
       >
         Search
-      </button>
+      </button> */}
       <RenderCityResponse shouldDisplay={isSubmitted} result={city} />
     </>
   );

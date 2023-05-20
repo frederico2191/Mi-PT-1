@@ -24,10 +24,19 @@ const getState = ({ getStore, getActions, setStore }) => {
         },
       ],
       processedResults: [],
+      searchedCityName: "",
+      searchedCityObject: null,
     },
     actions: {
       setProcessedResults: (filteredEvents) => {
         setStore({ processedResults: filteredEvents });
+      },
+
+      setSearchedCityName: (city) => {
+        setStore({ searchedCityName: city });
+      },
+      setSearchedCityObject: (city) => {
+        setStore({ searchedCityObject: city });
       },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
@@ -387,7 +396,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const minutes = date?.minute();
         const lat = location?.lat;
         const lng = location?.lng;
-        // const address = location?.address;
+        const address = location?.address;
         console.log("hello", { eventDate, hour, minutes });
 
         try {
@@ -413,6 +422,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 lat,
                 lng,
                 trainerName,
+                address,
               }),
             }
           );

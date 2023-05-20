@@ -1,8 +1,9 @@
 import * as React from "react";
 import "../../../styles/home.css";
 import Map from "../Map";
-import { MarkerF, InfoWindow } from "@react-google-maps/api";
+import { MarkerF, InfoWindowF } from "@react-google-maps/api";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 const HomeLocationPicker = ({
   mapContainerStyle,
@@ -19,10 +20,13 @@ const HomeLocationPicker = ({
       ? "https://maps.google.com/mapfiles/kml/shapes/info.png"
       : "https://maps.google.com/mapfiles/kml/shapes/target.png";
 
-  const getPosition = (point) => ({
-    lat: parseInt(point.lat),
-    lng: parseInt(point.lng),
-  });
+  const getPosition = (point) => {
+    const coords = {
+      lat: Number(point.lat),
+      lng: Number(point.lng),
+    };
+    return coords;
+  };
 
   return (
     <Map
@@ -37,27 +41,33 @@ const HomeLocationPicker = ({
           onClick={() => setSelectedEvent(givenClass)}
           onMouseOver={() => setHoveredEventId(givenClass.id)}
           onMouseOut={() => setHoveredEventId(null)}
-          icon={{
-            url: getUrl(givenClass),
-            scaledSize: new window.google.maps.Size(30, 30),
-          }}
+          // icon={{
+          //   url: getUrl(givenClass),
+          //   scaledSize: new window.google.maps.Size(30, 30),
+          // }}
         />
       ))}
       {selectedEvent && (
-        <InfoWindow
+        <InfoWindowF
           position={getPosition(selectedEvent)}
           onCloseClick={() => setSelectedEvent(null)}
         >
-          <div>
-            <h4>{selectedEvent.name}</h4>
-            <p>
-              {selectedEvent.date} - {selectedEvent.hour}
-            </p>
-            <Link to={`/activity_per_trainer/id`}>
+          <div className="p-1">
+            <span className="d-flex flex-row align-items-center mb-3">
+              <h4 className="align-self-end mb-0">{selectedEvent.name}</h4>
+              <span className="mb-0">
+                &nbsp; w/ &nbsp;
+                <b className="fs-5">{selectedEvent.trainerName}</b>
+              </span>
+            </span>
+            <p className="mb-2">{dayjs(selectedEvent.date).format("lll")}</p>
+            <p className="fw-bold mb-2">{selectedEvent.duration}min</p>
+            <p>{selectedEvent.address}</p>
+            <Link to={`/activity_per_trainer/${selectedEvent.id}`}>
               <button className="btn btn-outline-primary">Book me</button>
             </Link>
           </div>
-        </InfoWindow>
+        </InfoWindowF>
       )}
     </Map>
   );

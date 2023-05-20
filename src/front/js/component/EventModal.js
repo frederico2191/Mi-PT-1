@@ -17,7 +17,7 @@ const EventModal = () => {
   const [location, setLocation] = useState({
     lat: "",
     lng: "",
-    adress: "",
+    address: "",
   });
   const [eventDate, setEventDate] = useState(null);
   //
@@ -35,7 +35,7 @@ const EventModal = () => {
     event.preventDefault();
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
-    console.log("LOCATION inside the click", location.location);
+    console.log("LOCATION inside the click", location.address);
     // const trainerName = store.user?.firstName;
     console.log(store, " STORE.  !!! zzzz TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
     console.log(trainerName, "TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;

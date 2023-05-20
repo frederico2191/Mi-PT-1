@@ -66,7 +66,7 @@ const LocationPicker2 = ({ setLocation, location }) => {
         });
         setLocation({
           ...location,
-          location: `${place.name}, ${place.formatted_address}`,
+          address: `${place.name}, ${place.formatted_address}`,
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
         });

@@ -4,6 +4,7 @@ import SearchResults from "../component/Search/SearchResults";
 import { Context } from "../store/appContext";
 import { getDistanceInKm } from "../utilities";
 import "./search.css";
+import SearchCity from "../component/SearchCity";
 
 const Search = () => {
   const { store, actions } = useContext(Context);
@@ -15,16 +16,38 @@ const Search = () => {
   const [markerPosition, setMarkerPosition] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [hoveredEventId, setHoveredEventId] = useState(null);
+  const [city, setCity] = useState(null);
 
   useEffect(() => {
-    if (store.token && store.token) {
-      actions.getAllTypesActivities();
-      actions.getAllClasses();
-    }
+    (async () => {
+      if (store.token && store.token) {
+        await actions.getAllTypesActivities();
+        await actions.getAllClasses();
+      }
+    })();
   }, [store.token, store.user]);
 
-  const handleSearch = () => {
+  const handleDistance = (e) => {
+    setSearchDistance(e.target.value);
+  };
+
+  const handleSearch = async () => {
     setSearchPerformed(true);
+    let foundCity;
+    let distance = searchDistance;
+
+    if (store.searchedCityName) {
+      const result = await actions.searchCity(store.searchedCityName);
+      if (!result?.length) setCity();
+      foundCity = result[0];
+      actions.setSearchedCityObject(foundCity);
+      setCity(foundCity);
+    }
+    if (foundCity && searchDistance === "") {
+      distance = 20;
+      setSearchDistance(20);
+    }
+
     let filtered = store.allClasses?.filter((givenClass) => {
       const isInSelectedActivity =
         selectedActivity === "" || givenClass.name === selectedActivity;
@@ -33,12 +56,12 @@ const Search = () => {
         return false;
       }
 
-      if (searchDistance !== "") {
-        const distanceInKm = getDistanceInKm(markerPosition, {
-          lat: givenClass.lat,
-          lng: givenClass.lng,
+      if (distance) {
+        const distanceInKm = getDistanceInKm(foundCity || markerPosition, {
+          lat: givenClass.lat || givenClass.latitude,
+          lng: givenClass.lng || givenClass.longitude,
         });
-        return distanceInKm <= parseFloat(searchDistance);
+        return distanceInKm <= parseFloat(distance);
       }
 
       return true;
@@ -53,7 +76,6 @@ const Search = () => {
       return { ...givenClass, distanceInKm: distanceInKm.toFixed(2) };
     });
 
-    console.log("filtered", filtered);
     setFilteredEvents(filtered);
     actions.setProcessedResults({ processedResults: filtered });
     // setSelectedActivity("");
@@ -103,12 +125,12 @@ const Search = () => {
           type="number"
           name="distance"
           className="search-distance"
-          value={searchDistance}
           placeholder="Distance(km)"
-          onChange={(e) => setSearchDistance(e.target.value)}
+          onChange={handleDistance}
           min="1"
         />
       </div>
+      <SearchCity setCity={setCity} city={city} />
       <button onClick={handleSearch} className="btn btn-primary">
         Search
       </button>

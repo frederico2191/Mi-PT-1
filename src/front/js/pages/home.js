@@ -52,11 +52,13 @@ export const Home = () => {
   const [hoveredEventId, setHoveredEventId] = useState(null);
 
   useEffect(() => {
-    if (store.token && store.token != "" && store.token != undefined)
-      actions.getMessage();
-    actions.getAllTypesActivities();
+    (async () => {
+      if (store.token && store.token != "" && store.token != undefined)
+        await actions.getMessage();
+      await actions.getAllTypesActivities();
 
-    actions.getAllClasses();
+      await actions.getAllClasses();
+    })();
   }, [store.token, user]);
 
   useEffect(() => {
@@ -131,6 +133,14 @@ export const Home = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;
+  };
+
+  const getCoords = (element) => {
+    const coords = {
+      lat: Number(element.lat),
+      lng: Number(element.lng),
+    };
+    return coords;
   };
 
   return (
@@ -228,30 +238,26 @@ export const Home = () => {
           setMarkerPosition={setMarkerPosition}
         >
           {filteredEvents.map((givenClass) => (
-            <MarkerF
-              key={givenClass.id}
-              position={{
-                lat: parseInt(givenClass.lat),
-                lng: parseInt(givenClass.lng),
-              }}
-              onClick={() => setSelectedEvent(givenClass)}
-              onMouseOver={() => setHoveredEventId(givenClass.id)}
-              onMouseOut={() => setHoveredEventId(null)}
-              icon={{
-                url:
-                  hoveredEventId === givenClass.id
-                    ? "https://maps.google.com/mapfiles/kml/shapes/info.png"
-                    : "https://maps.google.com/mapfiles/kml/shapes/target.png",
-                scaledSize: new window.google.maps.Size(30, 30),
-              }}
-            />
+            <>
+              <MarkerF
+                key={givenClass.id}
+                position={getCoords(givenClass)}
+                onClick={() => setSelectedEvent(givenClass)}
+                onMouseOver={() => setHoveredEventId(givenClass.id)}
+                onMouseOut={() => setHoveredEventId(null)}
+                // icon={{
+                //   url:
+                //     hoveredEventId === givenClass.id
+                //       ? "https://maps.google.com/mapfiles/kml/shapes/info.png"
+                //       : "https://maps.google.com/mapfiles/kml/shapes/target.png",
+                //   scaledSize: new window.google.maps.Size(30, 30),
+                // }}
+              />
+            </>
           ))}
           {selectedEvent && (
             <InfoWindow
-              position={{
-                lat: parseInt(selectedEvent.lat),
-                lng: parseInt(selectedEvent.lng),
-              }}
+              position={getCoords(selectedEvent)}
               onCloseClick={() => setSelectedEvent(null)}
             >
               <div>
@@ -259,7 +265,7 @@ export const Home = () => {
                 <p>
                   {selectedEvent.date} - {selectedEvent.hour}
                 </p>
-                <Link to={`/activity_per_trainer/id`}>
+                <Link to={`/activity_per_trainer/${selectedEvent.id}`}>
                   <button className="btn btn-outline-primary">Book me</button>
                 </Link>
                 {/* <Link to={`/trainer/${item.id}`}>

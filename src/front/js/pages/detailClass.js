@@ -15,11 +15,11 @@ export const DetailClass = () => {
   }, [id]);
 
   console.log("store.givenClass", store.givenClass);
-  const handleBookClass = () => {
+  const handleBookClass = async () => {
     $("#exampleModal").modal("hide");
     const trainee_id = store.user?.["trainee"].id;
     const trainee_name = store.user?.firstName;
-    actions.bookClass({ id, trainee_id, trainee_name });
+    await actions.bookClass({ id, trainee_id, trainee_name });
     // return alert("Class Sucessfully Booked");
   };
 

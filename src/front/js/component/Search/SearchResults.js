@@ -25,7 +25,7 @@ const SearchResults = ({ filteredEvents, searchPerformed }) => {
           (givenClass) => givenClass.name == activityType.name
         );
         return activityClasses?.length ? (
-          <>
+          <div key={activityType.id}>
             <h1 className="scrollerTitles">{activityType.name}</h1>
             <div className="list-group search-horizontal-scroller">
               {activityClasses?.map((givenClass) => {
@@ -37,7 +37,7 @@ const SearchResults = ({ filteredEvents, searchPerformed }) => {
                 );
               })}
             </div>
-          </>
+          </div>
         ) : null;
       })}
     </div>
