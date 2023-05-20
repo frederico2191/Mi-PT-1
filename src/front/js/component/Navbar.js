@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Avatar } from "@mui/material";
 import ballet from "../../img/ballet.jpg";
+import { IoMdSearch } from "react-icons/io";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -14,6 +15,13 @@ export const Navbar = () => {
           Mi-PT
         </a>
         <div className="d-flex">
+          <Link to="/search" className="my-auto me-3">
+            <IoMdSearch
+              className="my-auto"
+              style={{ fill: "lightGrey" }}
+              size={30}
+            />
+          </Link>
           <Avatar alt="Profile Pic" src={ballet} />
           <div className="ml-auto">
             {!store.token ? (
