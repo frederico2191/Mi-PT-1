@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
+import { mappedFitnessExperience, mappedGoals } from "../utilities";
 
 export const RegisterTrainee = () => {
   const { store, actions } = useContext(Context);
@@ -25,7 +26,11 @@ export const RegisterTrainee = () => {
   });
   const navigate = useNavigate();
   const handleClick = async (event) => {
-    <ConfirmationModal />;
+    <ConfirmationModal
+      message="Are you ready to submit your registration?"
+      submitText="Save changes"
+      title="Confirmation"
+    />;
     event.preventDefault();
     const registeredUser = await actions.registerTrainee(
       email,
@@ -115,7 +120,7 @@ export const RegisterTrainee = () => {
           <option value="transgender">Transgender</option>
         </select>
         <select
-          className="form-select "
+          className="form-select mt-3"
           aria-label="Default select example"
           onChange={(e) => {
             e.persist();
@@ -129,7 +134,7 @@ export const RegisterTrainee = () => {
           <option value="ectomorph">Ectomorph</option>
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
           onChange={(e) => {
             e.persist();
@@ -138,14 +143,12 @@ export const RegisterTrainee = () => {
           }}
         >
           <option value="">Select Your Main Goal</option>
-          <option value="lose_weight">lose_weight</option>
-          <option value="get_toned">get_toned</option>
-          <option value="increas_muscle_mass">increas_muscle_mass</option>
-          <option value="improve_health">improve_health</option>
-          <option value="improve_as_athlete">improve_as_athlete </option>
+          {mappedGoals.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
           onChange={(e) => {
             e.persist();
@@ -154,10 +157,9 @@ export const RegisterTrainee = () => {
           }}
         >
           <option value="">Select Your Fitness Experience</option>
-          <option value="new_to_it"> new_to_it</option>
-          <option value="getting_back">getting_back</option>
-          <option value="currently_working_out">currently_working_out</option>
-          <option value="fitness_enthusiast">fitness_enthusiast</option>
+          {mappedFitnessExperience.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <div className="mb-3">
           <label htmlFor="firstNameInput" className="form-label">
@@ -208,7 +210,7 @@ export const RegisterTrainee = () => {
           />
         </div>
         <SearchCity setCity={setCity} city={city} />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary mt-3">
           Register
         </button>
       </form>

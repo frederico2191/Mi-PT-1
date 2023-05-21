@@ -1,12 +1,12 @@
 import React from "react";
 
-const ConfirmationModal = () => {
+const ConfirmationModal = ({ id, message, submitText, title, onConfirm }) => {
   return (
-    <div className="modal" tabIndex="-1">
+    <div className="modal" id={id} tabIndex="-1">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Confirmation</h5>
+            <h5 className="modal-title">{title}</h5>
             <button
               type="button"
               className="btn-close"
@@ -15,18 +15,23 @@ const ConfirmationModal = () => {
             ></button>
           </div>
           <div className="modal-body">
-            <p>Are you ready to submit your registration? </p>
+            <p>{message}</p>
           </div>
           <div className="modal-footer">
             <button
+              id="btn-close"
               type="button"
               className="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              Go back
+              Cancel
             </button>
-            <button type="button" className="btn btn-primary">
-              Save changes
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onConfirm}
+            >
+              {submitText}
             </button>
           </div>
         </div>

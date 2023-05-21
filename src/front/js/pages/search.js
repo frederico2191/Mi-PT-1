@@ -143,7 +143,7 @@ const Search = () => {
         id="city"
         onChange={handleType}
       />
-      <button onClick={handleSearch} className="btn btn-primary">
+      <button onClick={handleSearch} className="btn btn-primary mb-5">
         Search
       </button>
       <SearchResults

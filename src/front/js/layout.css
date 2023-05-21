@@ -1,3 +1,15 @@
 .app-container {
   min-height: 90vh;
 }
+
+.routes-container {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .routes-container {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+}

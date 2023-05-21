@@ -34,12 +34,20 @@ const TrainerActivityItem = ({ activity }) => {
         ) : (
           <div className="w-5 col-4" />
         )}
-        <div className="col-4">{dayjs(activity.date).format("lll")} </div>
+        <div className="col-4">
+          {dayjs(activity.date).format("lll")}{" "}
+          <span className="badge rounded-pill bg-info">
+            {activity.duration}min
+          </span>
+        </div>
         <div className="d-flex justify-content-end">
           <TfiTrash
             className="col-4"
+            role="button"
+            onClick={() => actions.setselectedClassId(activity.id)}
             size={50}
-            onClick={() => actions.deleteClass(activity.id)}
+            data-bs-toggle="modal"
+            data-bs-target="#deleteClass"
           />
         </div>
       </div>

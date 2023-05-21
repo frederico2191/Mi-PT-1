@@ -8,6 +8,9 @@ import { IoMdSearch } from "react-icons/io";
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
 
+  const isTrainer = store.user?.user_role == "trainer";
+  const isTrainee = store.user?.user_role == "trainee";
+
   return (
     <nav className="navbar navbar-expand bg-body-tertiary bg-dark container-fluid">
       <div className="container-fluid d-flex ">
@@ -50,16 +53,32 @@ export const Navbar = () => {
                       </a>
                       <ul className="dropdown-menu dropdown-menu-end">
                         <li>
+                          <Link className="dropdown-item" to="/profile">
+                            My Profile
+                          </Link>
+                        </li>
+                        <li>
                           <Link className="dropdown-item" to="/edit-profile">
                             Edit Profile
                           </Link>
                         </li>
                         <li>
-                          <Link
-                            className="dropdown-item"
-                            to="/trainee/upcomingclasses"
-                          >
-                            My Upcoming Classes
+                          {isTrainee ? (
+                            <Link
+                              className="dropdown-item"
+                              to="/trainee/upcomingclasses"
+                            >
+                              My Upcoming Classes
+                            </Link>
+                          ) : isTrainer ? (
+                            <Link className="dropdown-item" to="/home/trainer">
+                              My Classes
+                            </Link>
+                          ) : null}
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/">
+                            Home
                           </Link>
                         </li>
                         <li>

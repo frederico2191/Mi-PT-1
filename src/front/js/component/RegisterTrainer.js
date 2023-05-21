@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
+import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 
 export const RegisterTrainer = () => {
   const { store, actions } = useContext(Context);
@@ -27,7 +28,11 @@ export const RegisterTrainer = () => {
   const navigate = useNavigate();
 
   const handleClick = async (event) => {
-    <ConfirmationModal />;
+    <ConfirmationModal
+      message="Are you ready to submit your registration?"
+      submitText="Save changes"
+      title="Confirmation"
+    />;
     event.preventDefault();
     const registeredUser = await actions.registerTrainer(
       email,
@@ -136,7 +141,7 @@ export const RegisterTrainer = () => {
           <option value="begginer">Begginer</option>
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
           onChange={(e) => {
             e.persist();
@@ -145,15 +150,12 @@ export const RegisterTrainer = () => {
           }}
         >
           <option value="">Select Your Coaching Style</option>
-          <option value="supportive">Supportive</option>
-          <option value="laid_back">Laid Back</option>
-          <option value="results_oriented">Results Oriented</option>
-          <option value="motivating">Motivating</option>
-          <option value="high_energy">High Energy</option>
-          <option value="calm">Calm</option>
+          {mappedCoachingStyle.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
           onChange={(e) => {
             e.persist();
@@ -162,15 +164,9 @@ export const RegisterTrainer = () => {
           }}
         >
           <option value="">Select You Specialty</option>
-          <option value="running_performance">Running Performance</option>
-          <option value="functional_training">Functional Training</option>
-          <option value="postpartum_training">Postpartum Training</option>
-          <option value="weight_loss">Weight Loss</option>
-          <option value="strength_development">Strength Development</option>
-          <option value="metabolic_conditioning">Metabolic Conditioning</option>
-          <option value="injury_reduction">Injury Reduction</option>
-          <option value="sports_performance">Sports Performance</option>
-          <option value="flexibility">Flexibility</option>
+          {mappedSpecialty.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <div className="mb-3">
           <label htmlFor="ageInput" className="form-label" required>
@@ -234,7 +230,7 @@ export const RegisterTrainer = () => {
           />
         </div>
         <SearchCity setCity={setCity} city={city} />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary mt-3">
           Register
         </button>
       </form>

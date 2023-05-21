@@ -1,10 +1,23 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+import { mappedFitnessExperience, mappedGoals } from "../utilities";
 
 const TraineeProfileModal = () => {
   const { store, actions } = useContext(Context);
 
   const greenColor = "#198754"; // Bootstrap button success color to match
+
+  const getGoal = () =>
+    mappedGoals.find((el) => el.value === store.givenTrainee?.trainee?.goal)
+      ?.label;
+
+  const getFitnessExperience = () => {
+    const foundExperience = mappedFitnessExperience.find(
+      (el) => el.value === store.givenTrainee?.trainee?.fitness_experience
+    );
+    console.log("foundExperience", foundExperience);
+    return foundExperience?.label;
+  };
 
   /* inline styles to avoid creating extra files for now; 
   Following color scheme from the logo */
@@ -62,14 +75,17 @@ const TraineeProfileModal = () => {
                 <b>Weight:</b> {store?.givenTrainee?.weight}
               </p>
               <p>
-                <b>Body Type:</b> {store?.givenTrainee?.trainee?.body_type}
+                <b>Body Type:</b>{" "}
+                {store?.givenTrainee?.trainee?.body_type
+                  .charAt(0)
+                  .toUpperCase() +
+                  store?.givenTrainee?.trainee?.body_type.slice(1)}
               </p>
               <p>
-                <b>Goal:</b> {store?.givenTrainee?.trainee?.goal}
+                <b>Goal:</b> {getGoal()}
               </p>
               <p>
-                <b>Fitness Experience:</b>{" "}
-                {store?.givenTrainee?.trainee?.fitness_experience}
+                <b>Fitness Experience:</b> {getFitnessExperience()}
               </p>
               {/* <p>About: {store?.givenTrainee?.about}</p> */}
             </div>

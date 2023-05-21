@@ -35,11 +35,7 @@ const EventModal = () => {
     event.preventDefault();
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
-    console.log("LOCATION inside the click", location.address);
-    // const trainerName = store.user?.firstName;
-    console.log(store, " STORE.  !!! zzzz TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
-    console.log(trainerName, "TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
-    // const parsedEventData = date.toDate();
+
     const registeredClass = await actions.registerClass(
       name,
       description,
@@ -54,6 +50,7 @@ const EventModal = () => {
 
     if (registeredClass) {
       alert("Class registered successfully!");
+      document.getElementById("btn-close")?.click();
     } else {
       setTimeout(() => {
         alert("unable to register class");
@@ -171,12 +168,10 @@ const EventModal = () => {
                     location={location}
                   />
                 </div>
-                {/* <button type="submit" className="btn btn-primary">
-                  Launch Class
-                </button> */}
 
                 <div className="modal-footer">
                   <button
+                    id="btn-close"
                     type="button"
                     className="btn btn-secondary"
                     data-bs-dismiss="modal"

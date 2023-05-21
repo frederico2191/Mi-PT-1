@@ -35,7 +35,7 @@ export const Home = () => {
                 !givenClass.trainee_id && givenClass.name == x.name
             );
             return (
-              <>
+              <div key={x.id}>
                 {activityClasses.length > 0 ? (
                   <>
                     <h1 className="scrollerTitles">{x.name}</h1>
@@ -51,7 +51,7 @@ export const Home = () => {
                     </div>
                   </>
                 ) : null}
-              </>
+              </div>
             );
           })}
         </div>

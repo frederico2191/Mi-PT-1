@@ -13,6 +13,8 @@ import { Footer } from "./component/footer";
 import { DetailClass } from "./pages/detailClass";
 import UpcomingClassesTrainee from "./pages/upcomingClassesTrainee";
 import HomeTrainer from "./pages/homeTrainer";
+import Profile from "./pages/profile";
+import EditProfile from "./pages/editProfile";
 import Search from "./pages/search";
 import { LoadScript } from "@react-google-maps/api";
 import "./layout.css";
@@ -37,11 +39,13 @@ const Layout = () => {
         >
           <ScrollToTop>
             <Navbar />
-            <div className="mx-5 fw-light min-vh-100 mb-5">
+            <div className="mx-sm-0 mx-md-2 mx-lg-3 fw-light min-vh-100 mb-5">
               <Routes>
                 <Route element={<Home />} path="/" />
                 <Route element={<Register />} path="/register" />
                 <Route element={<Login />} path="/login" />
+                <Route element={<Profile />} path="/profile" />
+                <Route element={<EditProfile />} path="/edit-profile" />
                 <Route element={<HomeTrainer />} path="/home/trainer" />
                 <Route element={<Search />} path="/search" />
                 <Route

@@ -1,8 +1,110 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-import CardClass from "../component/CardClass";
-import { Modal } from "@mui/material";
+import ballet from "../../img/ballet.jpg";
+import "./detail.css";
+import dayjs from "dayjs";
+import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
+import ConfirmationModal from "../component/ConfirmationModal";
+
+const TrainerSection = () => {
+  const { store, actions } = useContext(Context);
+
+  const getSpecialty = () =>
+    mappedSpecialty.find(
+      (el) => el.value === store.givenTrainer.trainer?.specialty
+    )?.label;
+
+  const getCoachingStyle = () =>
+    mappedCoachingStyle.find(
+      (el) => el.value === store.givenTrainer.trainer?.coaching_style
+    )?.label;
+
+  return (
+    <div className="class__trainer-section mx-1 mt-5">
+      <div className="me-4">
+        <Link to={`/trainer/${store.givenTrainer?.id}`}>
+          <h3>
+            {store.givenTrainer?.firstName} {store.givenTrainer?.lastName}
+          </h3>
+        </Link>
+        <p>
+          <b>CITY </b>&bull;{store.givenTrainer?.city}
+        </p>
+        <p>
+          <b>EXP LEVEL</b> &bull;{" "}
+          {store.givenTrainer?.trainer?.experience_level}
+        </p>
+        <p>
+          <b>SPECIALTY</b> &bull; {getSpecialty()}
+        </p>
+        <p>
+          <b>COACHING STYLE</b> &bull; {getCoachingStyle()}
+        </p>
+      </div>
+      <img
+        src={ballet}
+        alt="ballet"
+        className="object-fit-contain class__trainer-image"
+      />
+    </div>
+  );
+};
+
+const ClassSection = ({ classId }) => {
+  const { store, actions } = useContext(Context);
+  const navigate = useNavigate();
+
+  const isTrainee = store.user?.user_role == "trainee";
+
+  const handleBookClass = async () => {
+    // $("#exampleModal").modal("hide");
+    const traineeId = store.user?.trainee?.id;
+    const traineeName = store.user?.firstName;
+    await actions.bookClass({ id: classId, traineeId, traineeName });
+    const closeModal = document.getElementById("btn-close");
+    closeModal?.click();
+    navigate("/trainee/upcomingclasses");
+  };
+
+  return (
+    <>
+      <ConfirmationModal
+        id="bookClass"
+        message="Are you sure you want to book this class?"
+        submitText="Confirm"
+        title="Book Class"
+        onConfirm={handleBookClass}
+      />
+      <div className="class__class-section">
+        <p>
+          <b>DATE</b> &bull; {dayjs(store.givenClass?.date).format("lll")}
+        </p>
+        <p>
+          <b>DURATION</b> &bull; {store.givenClass?.duration}
+        </p>
+        <p>
+          <b>ADDRESS</b> &bull; {store.givenClass?.address}
+        </p>
+        <p>
+          <b>PRICE</b> &bull; {store.givenClass?.price}
+        </p>
+        <p>
+          <b>DESCRIPTION</b> &bull; {store.givenClass?.description}
+        </p>
+      </div>
+      {isTrainee ? (
+        <button
+          className="btn btn-primary mt-3"
+          data-bs-toggle="modal"
+          data-bs-target="#bookClass"
+        >
+          Book this Class
+        </button>
+      ) : null}
+    </>
+  );
+};
 
 export const DetailClass = () => {
   const { store, actions } = useContext(Context);
@@ -10,92 +112,30 @@ export const DetailClass = () => {
   const [, type, id] = pathname.split("/");
 
   useEffect(() => {
-    actions.getGivenClass({ id });
-    console.log(store.givenClass, "givenClass of detailClass page !!!");
+    (async () => {
+      await actions.getGivenClass({ id });
+      const trainerId = store.givenClass?.trainer_id;
+      await actions.getGivenTrainer(trainerId);
+      console.log(store.givenClass, "givenClass of detailClass page !!!");
+      console.log(store.givenTrainer, "givenTrainer of detailClass page !!!");
+    })();
   }, [id]);
 
   console.log("store.givenClass", store.givenClass);
-  const handleBookClass = async () => {
-    // $("#exampleModal").modal("hide");
-    const trainee_id = store.user?.["trainee"].id;
-    const trainee_name = store.user?.firstName;
-    await actions.bookClass({ id, trainee_id, trainee_name });
-    // return alert("Class Sucessfully Booked");
-  };
 
   return (
-    <div>
-      <div>
-        <p>description{store.givenClass?.description}</p>
-        <p>duration{store.givenClass?.duration}</p>
-        <p>id{store.givenClass?.id}</p>
-        <p>price{store.givenClass?.price}</p>
+    <div className="detail-container">
+      <TrainerSection />
+      <div className="detail-separator" />
+      <div className="d-flex flex-row align-items-center">
+        &bull;
+        <h2 className="fst-italic mb-0 mx-3">{store.givenClass?.name} Class</h2>
+        &bull;
       </div>
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Book this Class
-      </button>
-
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Confirmation
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">...</div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              {/* <button
-                class="btn btn-default"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                Cancel
-              </button> */}
-
-              <button
-                type="button"
-                class="btn btn-primary"
-                // data-dismiss="modal"
-                onClick={handleBookClass}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* <button className="btn btn-outline-primary" onClick={handleBookClass}>
-        Book this Class
-      </button>
-      <div></div> */}
-
+      <div className="detail-separator" />
+      <ClassSection classId={id} />
       <Link to="/">
-        <span className="btn btn-primary btn-lg" href="#" role="button">
+        <span className="btn btn-secondary btn-lg mt-5" href="#" role="button">
           Back home
         </span>
       </Link>

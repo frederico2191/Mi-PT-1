@@ -26,17 +26,20 @@ const getState = ({ getStore, getActions, setStore }) => {
       processedResults: [],
       searchedCityName: "",
       searchedCityObject: null,
+      selectedClassId: null,
     },
     actions: {
       setProcessedResults: (filteredEvents) => {
         setStore({ processedResults: filteredEvents });
       },
-
       setSearchedCityName: (city) => {
         setStore({ searchedCityName: city });
       },
       setSearchedCityObject: (city) => {
         setStore({ searchedCityObject: city });
+      },
+      setselectedClassId: (selectedClassId) => {
+        setStore({ selectedClassId });
       },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
@@ -136,22 +139,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-
-      fetchDetail: ({ type, id }) => {
-        console.log(type, id, "TYPE AND ID INSIDE");
-        fetch(`https://www.swapi.tech/api/${type}/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            setStore({ detail: data.result.properties });
-          })
-          .then(() => console.log(getStore(), "getStore"));
-      },
-
       getGivenTrainer: async (id) => {
         const store = getStore();
         console.log(id, "trainerId INSIDE FLUX!!!!!");
@@ -427,6 +414,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
+          await getActions().verify();
           console.log(data, "new class registered after register fetch");
           return true;
         } catch (error) {
@@ -506,6 +494,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           localStorage.setItem("userRole", data["user"].user_role);
           localStorage.setItem("userName", data["user"].firstName);
+          localStorage.setItem("userId", data["user"].id);
           setStore({ user: data["user"] });
           return true;
         } catch (error) {
@@ -559,23 +548,47 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
         }
       },
-      bookClass: async ({ id, trainee_id, trainee_name }) => {
+      bookClass: async ({ id, traineeId, traineeName }) => {
+        try {
+          const response = await fetch(
+            `${process.env.BACKEND_URL}/api/book_class`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id,
+                trainee_id: traineeId,
+                trainee_name: traineeName,
+              }),
+            }
+          );
+          const data = await response.json();
+          window.alert("Class Sucessfully Booked");
+          await getActions().verify();
+          return data;
+        } catch (error) {
+          window.alert("There was an error booking this class.");
+        }
+      },
+      unbookClass: async (id) => {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/book_class`,
+          `${process.env.BACKEND_URL}/api/unbook_class`,
           {
             method: "PUT",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // assuming you are storing JWT in localstorage
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               id,
-              trainee_id,
-              trainee_name,
             }),
           }
         );
         const data = await response.json();
+        await getActions().verify();
         return data;
       },
 
