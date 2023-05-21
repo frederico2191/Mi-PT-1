@@ -31,7 +31,8 @@ export const Home = () => {
         <div>
           {store.allTypesActivities?.map((x) => {
             const activityClasses = store.allClasses?.filter(
-              (givenClass) => givenClass.name == x.name
+              (givenClass) =>
+                !givenClass.trainee_id && givenClass.name == x.name
             );
             return (
               <>

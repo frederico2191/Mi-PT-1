@@ -7,8 +7,6 @@ import dayjs from "dayjs";
 const TrainerActivityItem = ({ activity }) => {
   const { store, actions } = useContext(Context);
 
-  const userType = localStorage.getItem("userRole");
-
   const handleClickTraineeProfile = async (traineeId) => {
     await actions.getGivenTrainee(traineeId);
   };
@@ -37,10 +35,13 @@ const TrainerActivityItem = ({ activity }) => {
           <div className="w-5 col-4" />
         )}
         <div className="col-4">{dayjs(activity.date).format("lll")} </div>
-        <TfiTrash
-          className="col-4 d-flex"
-          onClick={() => actions.deleteClass(activity.id)}
-        />
+        <div className="d-flex justify-content-end">
+          <TfiTrash
+            className="col-4"
+            size={50}
+            onClick={() => actions.deleteClass(activity.id)}
+          />
+        </div>
       </div>
     </div>
   );

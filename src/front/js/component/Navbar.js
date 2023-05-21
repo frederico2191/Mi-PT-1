@@ -50,19 +50,17 @@ export const Navbar = () => {
                       </a>
                       <ul className="dropdown-menu dropdown-menu-end">
                         <li>
-                          <a className="dropdown-item" href="#">
-                            My Profile
-                          </a>
+                          <Link className="dropdown-item" to="/edit-profile">
+                            Edit Profile
+                          </Link>
                         </li>
                         <li>
-                          <a className="dropdown-item" href="#">
-                            Favorites
-                          </a>
-                        </li>
-                        <li>
-                          <a className="dropdown-item" href="#">
-                            Activity
-                          </a>
+                          <Link
+                            className="dropdown-item"
+                            to="/trainee/upcomingclasses"
+                          >
+                            My Upcoming Classes
+                          </Link>
                         </li>
                         <li>
                           <hr className="dropdown-divider" />
