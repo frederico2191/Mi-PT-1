@@ -3,6 +3,7 @@ import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
 import "./ActivityItem.css";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const TrainerActivityItem = ({ activity }) => {
   const { store, actions } = useContext(Context);
@@ -35,17 +36,21 @@ const TrainerActivityItem = ({ activity }) => {
           <div className="w-5 col-4" />
         )}
         <div className="col-4">
-          {dayjs(activity.date).format("lll")}{" "}
-          <span className="badge rounded-pill bg-info">
-            {activity.duration}min
-          </span>
+          <Link
+            className="text-reset text-decoration-none"
+            to={`/activity_per_trainer/${activity.id}`}
+          >
+            {dayjs(activity.date).format("lll")}{" "}
+            <span className="badge rounded-pill bg-info">
+              {activity.duration}min
+            </span>
+          </Link>
         </div>
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end col-4">
           <TfiTrash
-            className="col-4"
             role="button"
             onClick={() => actions.setselectedClassId(activity.id)}
-            size={50}
+            size={20}
             data-bs-toggle="modal"
             data-bs-target="#deleteClass"
           />

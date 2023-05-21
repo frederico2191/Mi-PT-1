@@ -27,7 +27,7 @@ const CardClass3 = ({ givenClass }) => {
             {hovered && (
               <>
                 <Link to={`/activity_per_trainer/${givenClass.id}`}>
-                  <a className="card-class3__button">View Details</a>
+                  <div className="card-class3__button">View Details</div>
                   {/* <button className="btn btn-outline-primary">
                   Check the class
                 </button> */}

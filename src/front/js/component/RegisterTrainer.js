@@ -5,8 +5,9 @@ import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 
-export const RegisterTrainer = () => {
+export const RegisterTrainer = ({ isEdit = false }) => {
   const { store, actions } = useContext(Context);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
@@ -21,19 +22,53 @@ export const RegisterTrainer = () => {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
 
-  const [newUser, setNewUser] = useState({
-    email: null,
-    password: null,
-  });
   const navigate = useNavigate();
 
-  const handleClick = async (event) => {
-    <ConfirmationModal
-      message="Are you ready to submit your registration?"
-      submitText="Save changes"
-      title="Confirmation"
-    />;
-    event.preventDefault();
+  useEffect(() => {
+    if (store.user?.id) {
+      setEmail(store.user?.email);
+      setPassword(store.user?.password);
+      setGender(store.user?.gender);
+      setAbout(store.user?.trainer?.about);
+      setExperienceLevel(store.user?.trainer?.experience_level);
+      setCity(store.user?.city);
+      setSpecialty(store.user?.trainer?.specialty);
+      setCoachingStyle(store.user?.trainer?.coaching_style);
+      setAge(store.user?.age);
+      setFirstName(store.user?.firstName);
+      setLastName(store.user?.lastName);
+      setWeight(store.user?.weight);
+      setHeight(store.user?.height);
+    }
+  }, [store.user?.id]);
+
+  const updateTrainer = async () => {
+    const updatedUser = await actions.updateTrainer(
+      // TO DO CREATE UPDATE TRAINER
+      email,
+      password,
+      gender,
+      about,
+      experience_level,
+      specialty,
+      coaching_style,
+      age,
+      first_name,
+      last_name,
+      height,
+      weight,
+      city.name
+    );
+    if (updatedUser) {
+      navigate("/");
+    } else {
+      setTimeout(() => {
+        alert("unable to update user");
+      }, "100");
+    }
+  };
+
+  const registerTrainer = async () => {
     const registeredUser = await actions.registerTrainer(
       email,
       password,
@@ -58,6 +93,17 @@ export const RegisterTrainer = () => {
         alert("unable to register user");
       }, "100");
     }
+  };
+
+  const handleClick = async (event) => {
+    // <ConfirmationModal
+    //   message="Are you ready to submit your registration?"
+    //   submitText="Save changes"
+    //   title="Confirmation"
+    // />;
+    event.preventDefault();
+    if (isEdit) return updateTrainer();
+    else return registerTrainer();
   };
 
   return (
@@ -96,6 +142,7 @@ export const RegisterTrainer = () => {
         <select
           className="form-select"
           aria-label="Default select example"
+          value={gender}
           onChange={(e) => {
             e.persist();
             console.log("EVENT", e.target.value);
@@ -118,6 +165,7 @@ export const RegisterTrainer = () => {
             placeholder="Tell us a little bit about yourself as a coach"
             id="exampleFormControlTextarea1"
             rows="8"
+            value={about}
             onChange={(e) => {
               e.persist();
               console.log("EVENT TExt about", e.target.value);
@@ -128,6 +176,7 @@ export const RegisterTrainer = () => {
         <select
           className="form-select"
           aria-label="Default select example"
+          value={experience_level}
           onChange={(e) => {
             e.persist();
             console.log("EVENT experience level", e.target.value);
@@ -143,6 +192,7 @@ export const RegisterTrainer = () => {
         <select
           className="form-select mt-3"
           aria-label="Default select example"
+          value={coaching_style}
           onChange={(e) => {
             e.persist();
             console.log("EVENT COACHING STYLE", e.target.value);
@@ -157,6 +207,7 @@ export const RegisterTrainer = () => {
         <select
           className="form-select mt-3"
           aria-label="Default select example"
+          value={specialty}
           onChange={(e) => {
             e.persist();
             console.log("EVENT trainer's specialty", e.target.value);
@@ -229,9 +280,20 @@ export const RegisterTrainer = () => {
             onChange={(e) => setWeight(e.target.value)}
           />
         </div>
-        <SearchCity setCity={setCity} city={city} />
+        <div className="mb-3">
+          <label htmlFor="cityInput1" className="form-label">
+            City
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="cityInput1"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+        </div>
         <button type="submit" className="btn btn-primary mt-3">
-          Register
+          {isEdit ? "Save changes" : "Register"}
         </button>
       </form>
     </div>

@@ -53,12 +53,17 @@ export const Navbar = () => {
                       </a>
                       <ul className="dropdown-menu dropdown-menu-end">
                         <li>
-                          <Link className="dropdown-item" to="/profile">
-                            My Profile
-                          </Link>
+                          {isTrainer ? (
+                            <Link
+                              className="dropdown-item"
+                              to={`/trainer/${store.user?.trainer?.id}`}
+                            >
+                              My Profile
+                            </Link>
+                          ) : null}
                         </li>
                         <li>
-                          <Link className="dropdown-item" to="/edit-profile">
+                          <Link className="dropdown-item" to={`${isTrainer ? 'trainer' : 'trainee'}/edit-profile`}>
                             Edit Profile
                           </Link>
                         </li>

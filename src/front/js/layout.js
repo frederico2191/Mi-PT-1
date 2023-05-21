@@ -13,8 +13,8 @@ import { Footer } from "./component/footer";
 import { DetailClass } from "./pages/detailClass";
 import UpcomingClassesTrainee from "./pages/upcomingClassesTrainee";
 import HomeTrainer from "./pages/homeTrainer";
-import Profile from "./pages/profile";
-import EditProfile from "./pages/editProfile";
+import EditTrainerProfile from "./pages/editTrainerProfile";
+import EditTraineeProfile from "./pages/editTraineeProfile";
 import Search from "./pages/search";
 import { LoadScript } from "@react-google-maps/api";
 import "./layout.css";
@@ -44,8 +44,14 @@ const Layout = () => {
                 <Route element={<Home />} path="/" />
                 <Route element={<Register />} path="/register" />
                 <Route element={<Login />} path="/login" />
-                <Route element={<Profile />} path="/profile" />
-                <Route element={<EditProfile />} path="/edit-profile" />
+                <Route
+                  element={<EditTrainerProfile />}
+                  path="/trainer/edit-profile"
+                />
+                <Route
+                  element={<EditTraineeProfile />}
+                  path="/trainee/edit-profile"
+                />
                 <Route element={<HomeTrainer />} path="/home/trainer" />
                 <Route element={<Search />} path="/search" />
                 <Route

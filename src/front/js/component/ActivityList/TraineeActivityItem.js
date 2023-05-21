@@ -36,18 +36,22 @@ const TraineeActivityItem = ({ activity }) => {
           <div className="w-5 col-4" />
         )}
         <div className="col-4">
-          {dayjs(activity.date).format("lll")}{" "}
-          <span className="badge bg-info rounded-pill">
-            {activity.duration}min
-          </span>
+          <Link
+            className="text-reset text-decoration-none"
+            to={`/activity_per_trainer/${activity.id}`}
+          >
+            {dayjs(activity.date).format("lll")}{" "}
+            <span className="badge bg-info rounded-pill">
+              {activity.duration}min
+            </span>
+          </Link>
         </div>
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end col-4">
           <TfiTrash
-            className="col-4"
             role="button"
             data-bs-toggle="modal"
             data-bs-target="#unbookClass"
-            size={50}
+            size={20}
             onClick={() => actions.setselectedClassId(activity.id)}
           />
         </div>
