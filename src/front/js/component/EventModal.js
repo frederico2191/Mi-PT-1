@@ -3,22 +3,23 @@ import { Context } from "../store/appContext";
 import SearchCity from "./SearchCity";
 import Calendar from "./Calendar";
 import DatePicker from "./DatePicker";
+import LocationPicker2 from "./LocationPicker2";
+import "./EventModal.css";
 
 const EventModal = () => {
   const { store, actions } = useContext(Context);
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
-  const [location, setlLocation] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [city, setCity] = useState({});
-  const [body_type, setBodyType] = useState("");
-  const [coaching_style, setCoachingStyle] = useState("");
-  const [goal, setGoal] = useState("");
-  const [fitness_experience, setFitnessExperience] = useState("");
+  const [location, setLocation] = useState({
+    lat: "",
+    lng: "",
+    address: "",
+  });
   const [eventDate, setEventDate] = useState(null);
-
   //
   //   activity_id;
   //   trainer_id;
@@ -26,6 +27,7 @@ const EventModal = () => {
   //   const navigate = useNavigate();
   useEffect(() => {
     actions.getAllTypesActivities();
+    // setMap({ ...map, lat: 3 });
     // console.log("INSIDE USE EFFECT", store);
     // console.log(store.user?.["trainer"].id, "HERE ID");
   }, []);
@@ -33,10 +35,7 @@ const EventModal = () => {
     event.preventDefault();
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
-    // const trainerName = store.user?.firstName;
-    console.log(store, " STORE.  !!! zzzz TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
-    console.log(trainerName, "TRAONER NAME!!!!!!!!!!!"); // <ConfirmationModal />;
-    // const parsedEventData = date.toDate();
+
     const registeredClass = await actions.registerClass(
       name,
       description,
@@ -45,14 +44,13 @@ const EventModal = () => {
       eventDate,
       trainerId,
       city,
-      trainerName
-      // address,
-      // lat,
-      // lng
+      trainerName,
+      location
     );
 
     if (registeredClass) {
       alert("Class registered successfully!");
+      document.getElementById("btn-close")?.click();
     } else {
       setTimeout(() => {
         alert("unable to register class");
@@ -100,7 +98,7 @@ const EventModal = () => {
                     Activity name
                   </label>
                   <select
-                    className="form-select"
+                    className="form-select event__input"
                     aria-label="Default select example"
                     onChange={(e) => {
                       e.persist();
@@ -125,7 +123,7 @@ const EventModal = () => {
                   <input
                     required
                     type="text"
-                    className="form-control"
+                    className="form-control event__input"
                     id="exampleInputPassword1"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -137,7 +135,7 @@ const EventModal = () => {
                   </label>
                   <input
                     type="number"
-                    className="form-control"
+                    className="form-control event__input"
                     id="ageInput"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
@@ -149,7 +147,7 @@ const EventModal = () => {
                   </label>
                   <input
                     type="number"
-                    className="form-control"
+                    className="form-control event__input "
                     id="price"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
@@ -157,25 +155,35 @@ const EventModal = () => {
                 </div>
 
                 <SearchCity setCity={setCity} city={city} />
-                <DatePicker setEventDate={setEventDate} eventDate={eventDate} />
-                {/* <Calendar setEventDate={setEventDate} eventDate={eventDate} /> */}
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Launch Class
-                </button>
+                <div className="mt-4">
+                  <label className="form-label">Date</label>
+                  <DatePicker
+                    setEventDate={setEventDate}
+                    eventDate={eventDate}
+                  />
+                </div>
+                <div className="map-container">
+                  <LocationPicker2
+                    setLocation={setLocation}
+                    location={location}
+                  />
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    id="btn-close"
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Launch Class
+                  </button>
+                </div>
               </form>
             </div>
-            {/* <div className="modal-footer">
-              <button type="button" className="btn btn-primary">
-                Launch Class
-              </button>
-            </div> */}
           </div>
         </div>
       </div>

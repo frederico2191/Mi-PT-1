@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
 import TraineeProfileModal from "../TraineeProfileModal";
-import ActivityItem from "./ActivityItem";
+import TrainerActivityItem from "./TrainerActivityItem";
+import TraineeActivityItem from "./TraineeActivityItem";
 
 const ActivityList = () => {
   const { store, actions } = useContext(Context);
@@ -42,8 +43,16 @@ const ActivityList = () => {
                     {store.user.activities
                       .filter((activity) => activity.name == x)
                       .map((activity) => {
-                        return (
-                          <ActivityItem key={activity.id} activity={activity} />
+                        return store.user?.user_role == "trainer" ? (
+                          <TrainerActivityItem
+                            key={activity.id}
+                            activity={activity}
+                          />
+                        ) : (
+                          <TraineeActivityItem
+                            key={activity.id}
+                            activity={activity}
+                          />
                         );
                       })}
                   </div>

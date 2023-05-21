@@ -4,6 +4,8 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import Card from "../component/Card";
 import ballet from "../../img/ballet.jpg";
+import "./detail.css";
+import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 
 export const DetailTrainer = (props) => {
   console.log("hello");
@@ -20,59 +22,74 @@ export const DetailTrainer = (props) => {
     );
   }, []);
 
+  const getSpecialty = () =>
+    mappedSpecialty.find(
+      (el) => el.value === store.givenTrainer.trainer?.specialty
+    )?.label;
+
+  const getCoachingStyle = () =>
+    mappedCoachingStyle.find(
+      (el) => el.value === store.givenTrainer.trainer?.coaching_style
+    )?.label;
+
   return (
-    <div>
-      <div className="container-fluid m-3 mt-6">
+    <div className="mt-5">
+      <div className="container-fluid mt-6">
         <div className="container text-center">
           <div className="row">
             <div className="row">
-              <div className="col-12">title</div>
+              <h2 className="col-12 text-start">
+                {store.givenTrainer.firstName} {store.givenTrainer.lastName}
+              </h2>
             </div>
             <div className="row">
-              <div className="col-6">City</div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="row">
-              <div className="col-6">ABOUT</div>
-              <div className="col-6">
-                <img
-                  src={ballet}
-                  alt="ballet"
-                  className="object-fit-contain w-50"
-                />
+              <div className="col-6 text-start mb-3">
+                {store.givenTrainer.city}
               </div>
             </div>
           </div>
           <div className="row">
-            <div className="col">
-              {/* Experience Level <h4>{store.givenTrainer.experience_level}</h4> */}
+            <div className="row">
+              <div className="col-6 text-start">
+                {store.givenTrainer.trainer?.about}
+              </div>
+              <div className="col-6">
+                <img
+                  src={ballet}
+                  alt="ballet"
+                  className="object-fit-contain detail-image col-12"
+                />
+              </div>
             </div>
+          </div>
+          <div className="row mt-5">
             <div className="col">
-              {/* SPECIALTY <h4>{store.givenTrainer.specialty}</h4> */}
+              EXPERIENCE LEVEL{" "}
+              <h4 className="detail__section-title">
+                {store.givenTrainer.trainer?.experience_level
+                  .charAt(0)
+                  .toUpperCase() +
+                  store.givenTrainer.trainer?.experience_level.slice(1)}
+              </h4>
             </div>
+            &bull;
             <div className="col">
-              {/* COACHING STYLE <h4>{store.givenTrainer.coaching_style}</h4> */}
+              SPECIALTY{" "}
+              <h4 className="detail__section-title">{getSpecialty()}</h4>
             </div>
+            &bull;
+            <div className="col">
+              COACHING STYLE{" "}
+              <h4 className="detail__section-title">{getCoachingStyle()}</h4>
+            </div>
+            <Link to="/" className="detail__button-back">
+              <span className="btn btn-secondary  btn-lg" role="button">
+                Back home
+              </span>
+            </Link>
           </div>
         </div>
       </div>
-      {store.givenTrainer ? (
-        <div>
-          <h1>{store.givenTrainer.about}</h1>
-          <h1>{store.givenTrainer.address}</h1>
-          <h1>{store.givenTrainer.approved}</h1>
-          <h1>{store.givenTrainer.coaching_style}</h1>
-          <h1>{store.givenTrainer.experience_level}</h1>
-          <h1>{store.givenTrainer.specialty}</h1>
-        </div>
-      ) : (
-        <Link to="/">
-          <span className="btn btn-primary btn-lg" href="#" role="button">
-            Back home
-          </span>
-        </Link>
-      )}
     </div>
   );
   {

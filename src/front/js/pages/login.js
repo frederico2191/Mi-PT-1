@@ -48,7 +48,7 @@ export const Login = () => {
   return (
     <div className="text-center mt-5">
       <h1>Login</h1>
-      {store.token && store.token != "" && store.token != undefined ? (
+      {store.token ? (
         "You are logged in with  the following token: " + store.token
       ) : (
         <div>
@@ -94,7 +94,7 @@ export const Login = () => {
         </div>
       )}
       <Link to="/">
-        <span className="btn btn-primary btn-lg" href="#" role="button">
+        <span className="btn btn-secondary btn-lg" href="#" role="button">
           Back home
         </span>
       </Link>

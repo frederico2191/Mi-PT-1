@@ -1,10 +1,23 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+import { mappedFitnessExperience, mappedGoals } from "../utilities";
 
 const TraineeProfileModal = () => {
   const { store, actions } = useContext(Context);
 
   const greenColor = "#198754"; // Bootstrap button success color to match
+
+  const getGoal = () =>
+    mappedGoals.find((el) => el.value === store.givenTrainee?.trainee?.goal)
+      ?.label;
+
+  const getFitnessExperience = () => {
+    const foundExperience = mappedFitnessExperience.find(
+      (el) => el.value === store.givenTrainee?.trainee?.fitness_experience
+    );
+    console.log("foundExperience", foundExperience);
+    return foundExperience?.label;
+  };
 
   /* inline styles to avoid creating extra files for now; 
   Following color scheme from the logo */
@@ -45,27 +58,39 @@ const TraineeProfileModal = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body d-flex flex-column">
-              <div className="row">
-                <div className="col-4"></div>
-                <div className="col-8">
-                  <p>
-                    Name: {store?.givenTrainee?.firstName}{" "}
-                    {store?.givenTrainee?.lastName}
-                  </p>
-                  <p>Age: {store?.givenTrainee?.age}</p>
-                  <p>Email: {store?.givenTrainee?.email}</p>
-                  <p>Weight: {store?.givenTrainee?.weight}</p>
-                  <p>Body Type: {store?.givenTrainee?.trainee?.body_type}</p>
-                  <p>Goal: {store?.givenTrainee?.trainee?.goal}</p>
-                  <p>
-                    Fitness Experience:{" "}
-                    {store?.givenTrainee?.trainee?.fitness_experience}
-                  </p>
-                  <p>About: {store?.givenTrainee?.about}</p>
-                </div>
-              </div>
+            <div className="modal-body d-flex flex-column text-start justify-content-start ms-3">
+              {/* <div className="row"> */}
+              {/* <div className="col-8"> */}
+              <p>
+                <b>Name:</b> {store?.givenTrainee?.firstName}{" "}
+                {store?.givenTrainee?.lastName}
+              </p>
+              <p>
+                <b>Age:</b> {store?.givenTrainee?.age}
+              </p>
+              <p>
+                <b>Email:</b> {store?.givenTrainee?.email}
+              </p>
+              <p>
+                <b>Weight:</b> {store?.givenTrainee?.weight}
+              </p>
+              <p>
+                <b>Body Type:</b>{" "}
+                {store?.givenTrainee?.trainee?.body_type
+                  .charAt(0)
+                  .toUpperCase() +
+                  store?.givenTrainee?.trainee?.body_type.slice(1)}
+              </p>
+              <p>
+                <b>Goal:</b> {getGoal()}
+              </p>
+              <p>
+                <b>Fitness Experience:</b> {getFitnessExperience()}
+              </p>
+              {/* <p>About: {store?.givenTrainee?.about}</p> */}
             </div>
+            {/* </div> */}
+            {/* </div> */}
           </div>
         </div>
       </div>

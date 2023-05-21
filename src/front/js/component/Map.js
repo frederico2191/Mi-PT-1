@@ -1,32 +1,44 @@
-import React from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import React, { useContext } from "react";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import MapWrapper from "./MapWrapper";
+import { Context } from "../store/appContext";
 
-const libraries = ["places"];
-
-const mapContainerStyle = {
+const defaultStyle = {
   width: "80%",
   height: "400px",
 };
 
-const Map = ({ onMapClick, markerPosition, children }) => {
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDDZ4KCljuX_ugUKoGDSsdiswCVE0k_UY8",
-    libraries,
-  });
+const Map = ({
+  mapContainerStyle = defaultStyle,
+  onMapClick,
+  markerPosition,
+  setMarkerPosition,
+  children,
+}) => {
+  const { store } = useContext(Context);
 
-  if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading maps";
+  const cityResultPosition = () => {
+    const coords = {
+      lat: Number(store.searchedCityObject?.latitude),
+      lng: Number(store.searchedCityObject?.longitude),
+    };
+    return store.searchedCityObject ? coords : null;
+  };
 
   return (
-    <GoogleMap
-      mapContainerStyle={mapContainerStyle}
-      zoom={8}
-      center={markerPosition || { lat: 40.7128, lng: -74.006 }}
-      onClick={onMapClick}
-    >
-      {window.google && markerPosition && <Marker position={markerPosition} />}
-      {children}
-    </GoogleMap>
+    <MapWrapper setMarkerPosition={setMarkerPosition}>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={8}
+        center={cityResultPosition() || markerPosition}
+        onClick={onMapClick}
+      >
+        {window.google && markerPosition && (
+          <MarkerF position={markerPosition} />
+        )}
+        {children}
+      </GoogleMap>
+    </MapWrapper>
   );
 };
 

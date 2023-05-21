@@ -181,6 +181,7 @@ def register_class():
     city = request.json.get("city",None)
     lat = request.json.get("lat",None)
     lng = request.json.get("lng",None)
+    address = request.json.get("address",None)
 
 
     print("####4444444 T NAMEEE",trainer_name)
@@ -203,6 +204,7 @@ def register_class():
     class_to_register.lat = lat # mm
     class_to_register.lng = lng # mm
     class_to_register.trainer_name = trainer_name # mm
+    class_to_register.address = address # mm
     
 
     db.session.add(class_to_register)
@@ -276,14 +278,14 @@ def getGivenTrainer(trainer_id):
     data_trainer = trainer.serialize()
     trainer_in_user = User.query.filter_by(id = data_trainer["user_id"]).first()
     data_user = trainer_in_user.serialize()
-    combined_dictionary = {
-    "dataTrainer": data_trainer,
-    "dataUser": data_user
-    }
+    # combined_dictionary = {
+    # "dataTrainer": data_trainer,
+    # "dataUser": data_user
+    # }
     
     # trainers = User.query.filter_by(role = "trainer")
     # data = [activity_per_trainer.serialize() for given_class in activity_per_trainer]
-    return jsonify(combined_dictionary)
+    return jsonify(data_user)
     # return jsonify(data)
 
 @api.route('/trainee/<trainee_id>', methods=['GET']) 
@@ -306,14 +308,14 @@ def deleteClass(activity_id):
     
     return jsonify()
 
-@api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
-@jwt_required()
-def deleteClass(bookedclass_id):
-    booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
-    db.session.delete(booked_class_to_delete)
-    db.session.commit()
+# @api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
+# @jwt_required()
+# def deleteClass(bookedclass_id):
+#     booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
+#     db.session.delete(booked_class_to_delete)
+#     db.session.commit()
     
-    return jsonify()
+#     return jsonify()
 
 
 
@@ -333,9 +335,13 @@ def deleteClass(bookedclass_id):
 @api.route('/activity_per_trainer', methods=['GET']) 
 # @jwt_required()
 def getAllClasses():
-    activities = ActivityPerTrainer.query.all()
-    data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
-    
+    # activities = ActivityPerTrainer.query.all()
+    # data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
+
+    todays_datetime = datetime(datetime.today().year, datetime.today().month, datetime.today().day)
+    upcoming_activities = ActivityPerTrainer.query.filter(ActivityPerTrainer.date >= todays_datetime).all()
+    data = [activity_per_trainer.serialize() for activity_per_trainer in upcoming_activities]
+    # payments = Payment.query.filter(Payment.due_date >= todays_datetime).all()
     # data_future = data.filter_by(activity_per_trainer_date> date.now())
 
     return jsonify(data)
@@ -376,7 +382,7 @@ def book_class():
 
     # activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
     activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
-    print(activity_per_trainer.serialize(),"$$$888888888888888")
+    # print(activity_per_trainer.serialize(),"$$$888888888888888")
     # activity_per_trainer = activity_per_trainer.serialize()
     # aux = ...activities_per_trainer.trainee_name
     activity_per_trainer.trainee_id = trainee_id
@@ -407,6 +413,61 @@ def book_class():
         "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
     }
     return jsonify({"respBody": resp_body}), 200
+
+@api.route('/unbook_class', methods=['PUT'])
+@jwt_required()
+def unbook_class():
+    data = request.get_json()
+    activity_per_trainer_id = data.get('id')
+    trainee_id = data.get('trainee_id')
+    # user_id = data.get('user_id')
+
+    # activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
+    activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
+    # print(activity_per_trainer.serialize(),"$$$888888888888888")
+    # activity_per_trainer = activity_per_trainer.serialize()
+    # aux = ...activities_per_trainer.trainee_name
+    # if not trainee or not activity_per_trainer:
+    #     return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
+    # activity_per_trainer.trainee_id = None if activity_per_trainer.trainee_id is trainee_id else return
+    print("activity_per_trainer?", activity_per_trainer)
+    if activity_per_trainer is None: 
+        return  jsonify({"respBody": None}), 400
+    
+    activity_per_trainer.trainee_id = None 
+    activity_per_trainer.trainee_name = None
+    # activity_per_trainer.trainee_name = [...activities_per_trainer.trainee_name, trainee_name]
+    # activity_per_trainer.trainee_name = trainee_name if activity_per_trainer.trainee_id is None else return
+    # activity_per_trainer.trainee_name = trainee_name
+
+    # trainee = Trainee.query.get(trainee_id)
+
+    # if not trainee or not activity_per_trainer:
+    #     return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
+
+    db.session.commit()
+    resp_body = {
+        "class": ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first().serialize()
+    }
+    return jsonify({"respBody": resp_body}), 200
+    
+    # existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id).first()
+    # if existing_booking:
+    #     return jsonify({'error': 'Class already booked.'}), 400
+
+
+    # # new_booking = BookedClass(
+    # #     date=datetime.now(),
+    # #     activity_per_trainer_id=activity_per_trainer_id,
+    # #     trainer_id=activity_per_trainer.trainer_id,
+    # #     trainee_id=trainee_id,
+    
+    # # db.session.add(activity_per_trainer)
+    # db.session.commit()
+    # resp_body = {
+    #     "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
+    # }
+    # return jsonify({"respBody": resp_body}), 200
 
 
 # @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 

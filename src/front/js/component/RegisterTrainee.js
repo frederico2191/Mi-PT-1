@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
-import { Link, useNavigate } from "react-router-dom";
-import SearchCity from "./SearchCity";
+import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
+import { mappedFitnessExperience, mappedGoals } from "../utilities";
 
-export const RegisterTrainee = () => {
+export const RegisterTrainee = ({ isEdit = false }) => {
   const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,17 +16,53 @@ export const RegisterTrainee = () => {
   const [last_name, setLastName] = useState("");
   const [city, setCity] = useState({});
   const [body_type, setBodyType] = useState("");
-  const [coaching_style, setCoachingStyle] = useState("");
   const [goal, setGoal] = useState("");
   const [fitness_experience, setFitnessExperience] = useState("");
-  const [newUser, setNewUser] = useState({
-    email: null,
-    password: null,
-  });
+
   const navigate = useNavigate();
-  const handleClick = async (event) => {
-    <ConfirmationModal />;
-    event.preventDefault();
+
+  useEffect(() => {
+    if (store.user?.id) {
+      setEmail(store.user?.email);
+      setPassword(store.user?.password);
+      setGender(store.user?.gender);
+      setHeight(store.user?.height);
+      setWeight(store.user?.weight);
+      setAge(store.user?.age);
+      setFirstName(store.user?.firstName);
+      setLastName(store.user?.lastName);
+      setCity(store.user?.city);
+      setBodyType(store.user?.trainee?.body_type);
+      setGoal(store.user?.trainee?.goal);
+      setFitnessExperience(store.user?.trainee?.fitness_experience);
+    }
+  }, [store.user?.id]);
+
+  const updateTrainee = async () => {
+    const updatedUser = await actions.updateTrainee(
+      email,
+      password,
+      gender,
+      age,
+      first_name,
+      last_name,
+      height,
+      weight,
+      body_type,
+      goal,
+      fitness_experience,
+      city.name
+    );
+    if (updatedUser) {
+      navigate("/");
+    } else {
+      setTimeout(() => {
+        alert("unable to update user");
+      }, "100");
+    }
+  };
+
+  const registerTrainee = async () => {
     const registeredUser = await actions.registerTrainee(
       email,
       password,
@@ -50,6 +86,17 @@ export const RegisterTrainee = () => {
         alert("unable to register user");
       }, "100");
     }
+  };
+
+  const handleClick = async (event) => {
+    <ConfirmationModal
+      message="Are you ready to submit your registration?"
+      submitText="Save changes"
+      title="Confirmation"
+    />;
+    event.preventDefault();
+    if (isEdit) return updateTrainee();
+    else return registerTrainee();
   };
 
   return (
@@ -101,6 +148,7 @@ export const RegisterTrainee = () => {
         <select
           className="form-select"
           aria-label="Default select example"
+          value={gender}
           onChange={(e) => {
             e.persist();
             console.log("EVENT", e.target.value);
@@ -115,8 +163,9 @@ export const RegisterTrainee = () => {
           <option value="transgender">Transgender</option>
         </select>
         <select
-          className="form-select "
+          className="form-select mt-3"
           aria-label="Default select example"
+          value={body_type}
           onChange={(e) => {
             e.persist();
             console.log("EVENT experience level", e.target.value);
@@ -129,8 +178,9 @@ export const RegisterTrainee = () => {
           <option value="ectomorph">Ectomorph</option>
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
+          value={goal}
           onChange={(e) => {
             e.persist();
             console.log("EVENT Goal ", e.target.value);
@@ -138,15 +188,14 @@ export const RegisterTrainee = () => {
           }}
         >
           <option value="">Select Your Main Goal</option>
-          <option value="lose_weight">lose_weight</option>
-          <option value="get_toned">get_toned</option>
-          <option value="increas_muscle_mass">increas_muscle_mass</option>
-          <option value="improve_health">improve_health</option>
-          <option value="improve_as_athlete">improve_as_athlete </option>
+          {mappedGoals.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <select
-          className="form-select"
+          className="form-select mt-3"
           aria-label="Default select example"
+          value={fitness_experience}
           onChange={(e) => {
             e.persist();
             console.log("EVENT Fitness Experience", e.target.value);
@@ -154,10 +203,9 @@ export const RegisterTrainee = () => {
           }}
         >
           <option value="">Select Your Fitness Experience</option>
-          <option value="new_to_it"> new_to_it</option>
-          <option value="getting_back">getting_back</option>
-          <option value="currently_working_out">currently_working_out</option>
-          <option value="fitness_enthusiast">fitness_enthusiast</option>
+          {mappedFitnessExperience.map(({ value, label }) => (
+            <option value={value}>{label}</option>
+          ))}
         </select>
         <div className="mb-3">
           <label htmlFor="firstNameInput" className="form-label">
@@ -207,9 +255,20 @@ export const RegisterTrainee = () => {
             onChange={(e) => setWeight(e.target.value)}
           />
         </div>
-        <SearchCity setCity={setCity} city={city} />
-        <button type="submit" className="btn btn-primary">
-          Register
+        <div className="mb-3">
+          <label htmlFor="cityInput1" className="form-label">
+            City
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="cityInput1"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary mt-3">
+          {isEdit ? "Save changes" : "Register"}
         </button>
       </form>
     </div>

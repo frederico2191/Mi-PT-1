@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { Avatar } from "@mui/material";
 import ballet from "../../img/ballet.jpg";
+import { IoMdSearch } from "react-icons/io";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
+
+  const isTrainer = store.user?.user_role == "trainer";
+  const isTrainee = store.user?.user_role == "trainee";
 
   return (
     <nav className="navbar navbar-expand bg-body-tertiary bg-dark container-fluid">
@@ -14,6 +18,13 @@ export const Navbar = () => {
           Mi-PT
         </a>
         <div className="d-flex">
+          <Link to="/search" className="my-auto me-3">
+            <IoMdSearch
+              className="my-auto"
+              style={{ fill: "lightGrey" }}
+              size={30}
+            />
+          </Link>
           <Avatar alt="Profile Pic" src={ballet} />
           <div className="ml-auto">
             {!store.token ? (
@@ -42,19 +53,38 @@ export const Navbar = () => {
                       </a>
                       <ul className="dropdown-menu dropdown-menu-end">
                         <li>
-                          <a className="dropdown-item" href="#">
-                            My Profile
-                          </a>
+                          {isTrainer ? (
+                            <Link
+                              className="dropdown-item"
+                              to={`/trainer/${store.user?.trainer?.id}`}
+                            >
+                              My Profile
+                            </Link>
+                          ) : null}
                         </li>
                         <li>
-                          <a className="dropdown-item" href="#">
-                            Favorites
-                          </a>
+                          <Link className="dropdown-item" to={`${isTrainer ? 'trainer' : 'trainee'}/edit-profile`}>
+                            Edit Profile
+                          </Link>
                         </li>
                         <li>
-                          <a className="dropdown-item" href="#">
-                            Activity
-                          </a>
+                          {isTrainee ? (
+                            <Link
+                              className="dropdown-item"
+                              to="/trainee/upcomingclasses"
+                            >
+                              My Upcoming Classes
+                            </Link>
+                          ) : isTrainer ? (
+                            <Link className="dropdown-item" to="/home/trainer">
+                              My Classes
+                            </Link>
+                          ) : null}
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/">
+                            Home
+                          </Link>
                         </li>
                         <li>
                           <hr className="dropdown-divider" />

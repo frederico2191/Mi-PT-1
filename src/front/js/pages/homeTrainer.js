@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import EventModal from "../component/EventModal";
 import ActivityList from "../component/ActivityList/ActivityList";
 import "../../styles/home.css";
+import ConfirmationModal from "../component/ConfirmationModal";
 
 const homeTrainer = () => {
   const { store, actions } = useContext(Context);
@@ -12,7 +13,11 @@ const homeTrainer = () => {
     setShowModal(!showModal);
   };
 
-  // useEffect(() => {}, []);
+  const deleteClass = async () => {
+    await actions.deleteClass(store.selectedClassId);
+    const closeModal = document.getElementById("btn-close");
+    closeModal?.click();
+  };
 
   return (
     <div className="home-container container text-center">
@@ -31,6 +36,13 @@ const homeTrainer = () => {
           <ActivityList />
         </div>
       </div>
+      <ConfirmationModal
+        id="deleteClass"
+        message="Are you sure you want to delete this class?"
+        submitText="Confirm"
+        title="Delete Class"
+        onConfirm={deleteClass}
+      />
     </div>
   );
 };
