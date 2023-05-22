@@ -200,7 +200,7 @@ def register_class():
     class_to_register.minutes = minutes # mm
     class_to_register.activity_id = name # mm
     class_to_register.trainer_id = trainer_id # mm
-    class_to_register.city = city["name"] if city else None # mm
+    class_to_register.city = city # mm
     class_to_register.lat = lat # mm
     class_to_register.lng = lng # mm
     class_to_register.trainer_name = trainer_name # mm
@@ -211,7 +211,7 @@ def register_class():
     db.session.commit()
     data = class_to_register.serialize()
     
-    return jsonify(data)
+    return jsonify(data),200
 
 
 
@@ -235,7 +235,7 @@ def verify_token():
     serializedUser = user.serialize()
     
 
-    return jsonify(user=serializedUser)
+    return jsonify(user=serializedUser), 200
 
 @api.route('/hello_user', methods=['GET'])
 @jwt_required()
@@ -589,4 +589,51 @@ def edit_trainer(trainer_id):
         "edited_user_trainer": User.query.filter(User.trainer.has(id = trainer_id)).first().serialize(),
     }
     return jsonify({"respBody": resp_body}), 200
+
+@api.route('/edit/class/<class_id>', methods=['PUT'])
+@jwt_required()
+def edit_class(class_id):
+
+    class_to_edit = ActivityPerTrainer.query.filter_by(id = class_id).first()
+    if class_to_edit is None: 
+        return  jsonify({"respBody": None}), 400
+    
+    serialized_class_to_edit = class_to_edit.serialize()
+    
+    name = request.json.get("name",None)
+    description = request.json.get("description",None)
+    duration = request.json.get("duration",None)
+    price = request.json.get("price",None)
+    eventDate = request.json.get("eventDate",None)
+    hour = request.json.get("hour",None)
+    minutes = request.json.get("minutes",None)
+    city = request.json.get("city",None)
+    lat = request.json.get("lat",None)
+    lng = request.json.get("lng",None)
+    address = request.json.get("address",None)
+    datetime_object = parser.parse(eventDate) if eventDate else None
+
+    activity = Activity.query.filter_by(name=name).first()
+    serialized_activity = activity.serialize() if activity else None
+
+    print("serialized_activity", serialized_activity)
+    print("serialized_class_to_edit", serialized_class_to_edit)
+
+    class_to_edit.description= description
+    class_to_edit.duration= duration
+    class_to_edit.price= price
+    class_to_edit.date= datetime_object #dt.parse(eventDate) # datetime
+    class_to_edit.hour= hour # HH
+    class_to_edit.minutes = minutes # mm
+    class_to_edit.activity_id = serialized_activity["id"] if serialized_activity else serialized_class_to_edit["activity_id"]
+    class_to_edit.city = city # mm
+    class_to_edit.lat = lat # mm
+    class_to_edit.lng = lng # mm
+    class_to_edit.address = address # mm
+
+    db.session.commit()
+    data = class_to_edit.serialize()
+    
+    return jsonify(data),200
+
 

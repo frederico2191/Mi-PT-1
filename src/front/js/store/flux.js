@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
@@ -15,8 +17,16 @@ const getState = ({ getStore, getActions, setStore }) => {
       searchedCityName: "",
       searchedCityObject: null,
       selectedClassId: "",
+      isEventModalOpen: false,
     },
     actions: {
+      setEventModalOpen: () => {
+        console.log("hello?");
+        setStore({ isEventModalOpen: true });
+      },
+      setEventModalClosed: () => {
+        setStore({ isEventModalOpen: false });
+      },
       setProcessedResults: (filteredEvents) => {
         setStore({ processedResults: filteredEvents });
       },
@@ -26,11 +36,14 @@ const getState = ({ getStore, getActions, setStore }) => {
       setSearchedCityObject: (city) => {
         setStore({ searchedCityObject: city });
       },
-      setselectedClassId: (selectedClassId) => {
+      setSelectedClassId: (selectedClassId) => {
         setStore({ selectedClassId: selectedClassId });
       },
       resetSelectedClassId: () => {
         setStore({ selectedClassId: "" });
+      },
+      resetGivenClass: () => {
+        setStore({ givenClass: null });
       },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
@@ -539,6 +552,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           setStore({ allTypesActivities: data });
 
+          // await getActions().verify();
           return true;
         } catch (error) {
           console.error(
@@ -681,19 +695,24 @@ const getState = ({ getStore, getActions, setStore }) => {
         description,
         duration,
         price,
-        date,
-        trainerId,
+        eventDate: eventDateFromProps,
         city,
-        trainerName,
         location,
       }) => {
         const store = getStore();
-        const eventDate = date?.toISOString();
-        const hour = date?.hour();
-        const minutes = date?.minute();
+        const finalDate =
+          typeof eventDateFromProps === "string"
+            ? dayjs(eventDateFromProps)
+            : eventDateFromProps;
+        const eventDate = finalDate?.toISOString();
+        const hour = finalDate?.hour();
+        const minutes = finalDate?.minute();
         const lat = location?.lat;
         const lng = location?.lng;
         const address = location?.address;
+        const finalName = store.allTypesActivities.find(
+          (el) => el.id === name
+        )?.name;
 
         try {
           const resp = await fetch(
@@ -705,18 +724,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                 Authorization: "Bearer " + localStorage.getItem("token"),
               },
               body: JSON.stringify({
-                name,
+                name: finalName,
                 description,
                 duration,
                 price,
                 eventDate,
                 hour,
                 minutes,
-                trainerId,
                 city,
                 lat,
                 lng,
-                trainerName,
                 address,
               }),
             }

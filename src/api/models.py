@@ -152,6 +152,7 @@ class ActivityPerTrainer(db.Model):
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
+            "activity_id": activity.id,
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
@@ -175,7 +176,7 @@ class Activity(db.Model):
     
     def serialize(self):
         
-        return {"name": self.name, "activitiesPerTrainer":self.activities_per_trainer}
+        return {"name": self.name, "id": self.id, "activitiesPerTrainer": self.activities_per_trainer}
 
 
 

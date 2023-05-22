@@ -7,13 +7,12 @@ import LocationPicker2 from "./LocationPicker2";
 import "./EventModal.css";
 import dayjs from "dayjs";
 
-const EventModal = ({ id, submitText, title, onConfirm }) => {
+const EventModal = ({ id, submitText, title, isEdit }) => {
   const { store, actions } = useContext(Context);
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [date, setDate] = useState("");
   const [city, setCity] = useState("");
   const [location, setLocation] = useState({
     lat: "",
@@ -23,29 +22,43 @@ const EventModal = ({ id, submitText, title, onConfirm }) => {
   const [eventDate, setEventDate] = useState(null);
 
   useEffect(() => {
-    if (store.selectedClassId) {
-      const foundClass = store.user.activities.find(
-        (el) => el.id == store.selectedClassId
-      );
-      setDescription(foundClass?.description);
-      setDuration(foundClass?.duration);
-      setName(foundClass?.name);
-      setPrice(foundClass?.price);
-      setDate(foundClass?.date);
-      setCity(foundClass?.city);
-      setLocation(foundClass?.location);
-      setEventDate(foundClass?.eventDate);
-    }
-    return () => {
-      actions.resetSelectedClassId();
-    };
-  }, [store.selectedClassId]);
+    (async () => {
+      if (!isEdit) {
+        setDescription("");
+        setDuration("");
+        setName("");
+        setPrice("");
+        setCity("");
+        setLocation({});
+        setEventDate(null);
+        return;
+      }
+      if (!store.givenClass?.id)
+        await actions.getGivenClass({ id: store.selectedClassId });
+      if (store.givenClass?.id) {
+        setDescription(store.givenClass?.description);
+        setDuration(store.givenClass?.duration);
+        setName(store.givenClass?.activity_id);
+        setPrice(store.givenClass?.price);
+        setCity(store.givenClass?.city || "");
+        setLocation({
+          address: store.givenClass?.address,
+          lat: store.givenClass?.lat,
+          lng: store.givenClass?.lng,
+        });
+        setEventDate(store.givenClass?.date);
+      }
+    })();
+  }, [store.selectedClassId, store.givenClass?.id, store.isEventModalOpen]);
 
   useEffect(() => {
     actions.getAllTypesActivities();
   }, []);
 
   const registerClass = async () => {
+    const trainerId = store.user?.["trainer"].id;
+    const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
+
     const registeredClass = await actions.registerClass(
       name,
       description,
@@ -60,7 +73,7 @@ const EventModal = ({ id, submitText, title, onConfirm }) => {
 
     if (registeredClass) {
       alert("Class registered successfully!");
-      document.getElementById("btn-close")?.click();
+      document.getElementById("btn-close-add")?.click();
     } else {
       setTimeout(() => {
         alert("unable to register class");
@@ -69,36 +82,43 @@ const EventModal = ({ id, submitText, title, onConfirm }) => {
   };
 
   const editClass = async () => {
-    const registeredClass = await actions.editClass({
+    const updatedClass = await actions.editClass({
       classId: store.selectedClassId,
       name,
       description,
       duration,
       price,
       eventDate,
-      trainerId,
       city,
-      trainerName,
       location,
     });
 
-    if (registeredClass) {
-      alert("Class registered successfully!");
-      document.getElementById("btn-close")?.click();
+    if (updatedClass) {
+      alert("Class updated successfully!");
+      const closeEl = document.getElementById("btn-close-edit");
+      closeEl?.click();
     } else {
       setTimeout(() => {
-        alert("unable to register class");
+        alert("unable to update class");
       }, "100");
     }
   };
 
   const handleClick = async (event) => {
     event.preventDefault();
-    const trainerId = store.user?.["trainer"].id;
-    const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
-
-    if (isEdit) return editClass();
-    else return registerClass();
+    if (isEdit) {
+      await editClass();
+      actions.resetSelectedClassId();
+      actions.resetGivenClass();
+      actions.setEventModalClosed();
+      return;
+    } else {
+      await registerClass();
+      actions.resetSelectedClassId();
+      actions.resetGivenClass();
+      actions.setEventModalClosed();
+      return;
+    }
   };
 
   return (
@@ -119,7 +139,9 @@ const EventModal = ({ id, submitText, title, onConfirm }) => {
             </h1>
             <button
               type="button"
+              id={`btn-close-${isEdit ? "edit" : "add"}`}
               className="btn-close"
+              onClick={() => actions.setEventModalClosed()}
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
@@ -202,11 +224,7 @@ const EventModal = ({ id, submitText, title, onConfirm }) => {
 
               <div className="mt-4">
                 <label className="form-label">Date</label>
-                <DatePicker
-                  setEventDate={setEventDate}
-                  eventDate={eventDate}
-                  value={date ? dayjs(date) : null}
-                />
+                <DatePicker setEventDate={setEventDate} eventDate={eventDate} />
               </div>
               <div className="map-container">
                 <LocationPicker2

@@ -29,6 +29,7 @@ const homeTrainer = () => {
             className="btn btn-success"
             data-bs-toggle="modal"
             data-bs-target="#addClass"
+            onClick={() => actions.setEventModalOpen()}
           >
             + ADD
           </button>
@@ -36,12 +37,14 @@ const homeTrainer = () => {
             id="addClass"
             title="Create a New Class"
             submitText="Launch Class"
+            isEdit={false}
             // onConfirm={onConfirm}
           />
           <EventModal
             id="editClass"
             title="Edit Class"
             submitText="Save Changes"
+            isEdit
             // onConfirm={onConfirm}
           />
         </div>

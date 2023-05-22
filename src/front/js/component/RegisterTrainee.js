@@ -124,19 +124,22 @@ export const RegisterTrainee = ({ isEdit = false }) => {
             We'll never share your email with anyone else.
           </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
-            Password
-          </label>
-          <input
-            required
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        {!isEdit && (
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
+              Password
+            </label>
+            <input
+              required
+              type="password"
+              autoComplete="off"
+              className="form-control"
+              id="exampleInputPassword1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        )}
         <div className="mb-3">
           <label htmlFor="ageInput" className="form-label">
             Age

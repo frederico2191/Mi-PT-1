@@ -60,7 +60,7 @@ const TraineeActivityItem = ({ activity }) => {
             data-bs-toggle="modal"
             data-bs-target="#unbookClass"
             size={20}
-            onClick={() => actions.setselectedClassId(activity.id)}
+            onClick={() => actions.setSelectedClassId(activity.id)}
           />
         </div>
       </div>

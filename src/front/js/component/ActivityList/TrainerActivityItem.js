@@ -52,13 +52,17 @@ const TrainerActivityItem = ({ activity }) => {
             role="button"
             className="mx-3"
             size={20}
-            onClick={() => actions.setselectedClassId(activity.id)}
+            onClick={async () => {
+              actions.setEventModalOpen();
+              actions.setSelectedClassId(activity.id);
+              await actions.getGivenClass({ id: activity.id });
+            }}
             data-bs-toggle="modal"
             data-bs-target="#editClass"
           />
           <TfiTrash
             role="button"
-            onClick={() => actions.setselectedClassId(activity.id)}
+            onClick={() => actions.setSelectedClassId(activity.id)}
             size={20}
             data-bs-toggle="modal"
             data-bs-target="#deleteClass"
