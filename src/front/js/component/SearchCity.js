@@ -56,6 +56,7 @@ const SearchCity = ({ city, setCity }) => {
         type="text"
         className="form-control event__input"
         id="city"
+        value={city} //confirm search is ok about thjis
         onChange={handleType}
       />
       {/* <button

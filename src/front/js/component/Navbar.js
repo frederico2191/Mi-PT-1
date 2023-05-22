@@ -4,6 +4,7 @@ import { Context } from "../store/appContext";
 import { Avatar } from "@mui/material";
 import ballet from "../../img/ballet.jpg";
 import { IoMdSearch } from "react-icons/io";
+import { FaUserEdit } from "react-icons/fa";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -63,8 +64,14 @@ export const Navbar = () => {
                           ) : null}
                         </li>
                         <li>
-                          <Link className="dropdown-item" to={`${isTrainer ? 'trainer' : 'trainee'}/edit-profile`}>
-                            Edit Profile
+                          <Link
+                            className="dropdown-item"
+                            to={`${
+                              isTrainer ? "trainer" : "trainee"
+                            }/edit-profile`}
+                          >
+                            Edit Profile   
+                            <FaUserEdit size={15} />
                           </Link>
                         </li>
                         <li>

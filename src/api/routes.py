@@ -469,12 +469,124 @@ def unbook_class():
     # }
     # return jsonify({"respBody": resp_body}), 200
 
+@api.route('/edit/trainee/<trainee_id>', methods=['PUT'])
+@jwt_required()
+def edit_trainee(trainee_id):
+    trainee = Trainee.query.filter_by(id = trainee_id).first()
+    if trainee is None: 
+        return  jsonify({"respBody": None}), 400
+    trainee_to_edit = trainee.serialize()
+    user = User.query.filter_by(id=trainee_to_edit["user_id"]).first()
+    if user is None: 
+        return  jsonify({"respBody": None}), 400
+    
+    email = request.json.get("email",None)
+    gender = request.json.get("gender",None)
+    city = request.json.get("city",None)
+    age = request.json.get("age",None)
+    fitness_experience = request.json.get("fitness_experience",None)
+    goal = request.json.get("goal",None)
+    body_type = request.json.get("body_type",None)
+    first_name = request.json.get("first_name",None)
+    last_name = request.json.get("last_name",None)
+    height = request.json.get("height",None)
+    weight = request.json.get("weight",None)
 
-# @api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
-# @jwt_required()
-# def getGivenClass(activity_per_trainer_id):
-#     activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
 
-#     data = activity_per_trainer.serialize()
-   
-#     return jsonify(data)
+
+    user.email= email
+    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option-gender"}), 404
+    user.gender= gender
+    user.age= int(age)
+    user.city= city
+    user.first_name= first_name
+    user.last_name= last_name
+    user.height= height
+    user.weight= weight
+
+    db.session.commit()
+
+
+    trainee.email = email
+    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option-gender"}), 404
+    trainee.gender = gender
+    # if fitness_experience not in possible_fitness_experiences: return jsonify({"msg": "The back-end won't accept this altered option-fitness exp."}), 404
+    trainee.fitness_experience = fitness_experience
+    # if goal not in possible_goals: return jsonify({"msg": "The back-end won't accept this altered option-goal"}), 404
+    trainee.goal = goal
+    trainee.city = city
+    # if body_type not in possible_body_types: return jsonify({"msg": "The back-end won't accept this altered option-body_type"}), 404
+    trainee.body_type = body_type
+
+
+    db.session.commit()
+    resp_body = {
+        "edited_user_trainee": User.query.filter(User.trainee.has(id = trainee_id)).first().serialize(),
+    }
+    return jsonify({"respBody": resp_body}), 200
+
+
+
+@api.route('/edit/trainer/<trainer_id>', methods=['PUT'])
+@jwt_required()
+def edit_trainer(trainer_id):
+    trainer = Trainer.query.filter_by(id = trainer_id).first()
+    if trainer is None: 
+        return  jsonify({"respBody": None}), 400
+    trainer_to_edit = trainer.serialize()
+    user = User.query.filter_by(id=trainer_to_edit["user_id"]).first()
+    if user is None: 
+        return  jsonify({"respBody": None}), 400
+    user_to_edit = user.serialize()
+
+    print(trainer_to_edit, "555trainer_to_edit")
+    print(user_to_edit, "555user_to_edit")
+    
+    data = request.get_json()
+    email = request.json.get("email",None)
+    gender = request.json.get("gender",None)
+    about = request.json.get("about",None)
+    experience_level = request.json.get("experience_level",None)
+    city = request.json.get("city",None)
+    specialty = request.json.get("specialty",None)
+    coaching_style = request.json.get("coaching_style",None)
+    age = request.json.get("age",None)
+    first_name = request.json.get("first_name",None)
+    last_name = request.json.get("last_name",None)
+    height = request.json.get("height",None)
+    weight = request.json.get("weight",None)
+
+
+    user.email = email
+    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option-gender"}), 404
+    user.gender = gender
+    user.age = int(age)
+    user.city = city
+    user.first_name = first_name
+    user.last_name = last_name
+    user.height = height
+    user.weight = weight
+
+    db.session.commit()
+
+    trainer.email = email
+    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option - gender"}), 404
+    trainer.gender = gender
+    trainer.about = about
+    # if experience_level not in possible_experience_levels: return jsonify({"msg": "The back-end won't accept this altered option- exp level"}), 404
+    trainer.experience_level = experience_level
+    trainer.approved = None
+    trainer.city = city
+    # if specialty not in possible_specialties: return jsonify({"msg": "The back-end won't accept this altered option-specialty"}), 404
+    trainer.specialty = specialty
+    # if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
+    trainer.coaching_style = coaching_style
+
+
+
+    db.session.commit()
+    resp_body = {
+        "edited_user_trainer": User.query.filter(User.trainer.has(id = trainer_id)).first().serialize(),
+    }
+    return jsonify({"respBody": resp_body}), 200
+

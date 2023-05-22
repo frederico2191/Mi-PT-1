@@ -31,15 +31,20 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       setAge(store.user?.age);
       setFirstName(store.user?.firstName);
       setLastName(store.user?.lastName);
-      setCity(store.user?.city);
-      setBodyType(store.user?.trainee?.body_type);
-      setGoal(store.user?.trainee?.goal);
-      setFitnessExperience(store.user?.trainee?.fitness_experience);
+      setCity(store.user?.city || "");
+      setBodyType(store.user?.trainee?.body_type || "");
+      setGoal(store.user?.trainee?.goal || "");
+      console.log(
+        "store.user?.trainee?.fitness_experience",
+        store.user?.trainee?.fitness_experience
+      );
+      setFitnessExperience(store.user?.trainee?.fitness_experience || "");
     }
   }, [store.user?.id]);
 
   const updateTrainee = async () => {
-    const updatedUser = await actions.updateTrainee(
+    const updatedUser = await actions.editTrainee({
+      traineeId: localStorage.getItem("traineeId"),
       email,
       password,
       gender,
@@ -51,8 +56,8 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       body_type,
       goal,
       fitness_experience,
-      city.name
-    );
+      city,
+    });
     if (updatedUser) {
       navigate("/");
     } else {
@@ -189,7 +194,9 @@ export const RegisterTrainee = ({ isEdit = false }) => {
         >
           <option value="">Select Your Main Goal</option>
           {mappedGoals.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <select
@@ -204,7 +211,9 @@ export const RegisterTrainee = ({ isEdit = false }) => {
         >
           <option value="">Select Your Fitness Experience</option>
           {mappedFitnessExperience.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <div className="mb-3">

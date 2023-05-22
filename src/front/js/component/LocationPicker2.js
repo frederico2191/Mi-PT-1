@@ -37,7 +37,9 @@ const LocationPicker2 = ({ setLocation, location }) => {
   }, [window.google, navigator.geolocation, store.processedResults]);
 
   const handleChange = (e) => {
-    setLocation({ ...location, [e.target.name]: e.target.value });
+    console.log(e.target.value, "insidle handle change loc picker 2");
+    // setLocation({ ...location, [e.target.name]: e.target.value });
+    setLocation({ ...location, address: e.target.value });
   };
 
   // const { isLoaded, loadError } = useLoadScript({
@@ -86,6 +88,8 @@ const LocationPicker2 = ({ setLocation, location }) => {
               type="text"
               id="search-box"
               placeholder=" "
+              value={location?.address || ""}
+              onChange={handleChange}
               style={{
                 paddingLeft: "15px",
                 width: "100%",

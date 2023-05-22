@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
+import { stepperClasses } from "@mui/material";
 
 export const RegisterTrainer = ({ isEdit = false }) => {
   const { store, actions } = useContext(Context);
@@ -31,7 +32,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       setGender(store.user?.gender);
       setAbout(store.user?.trainer?.about);
       setExperienceLevel(store.user?.trainer?.experience_level);
-      setCity(store.user?.city);
+      setCity(store.user?.city || "");
       setSpecialty(store.user?.trainer?.specialty);
       setCoachingStyle(store.user?.trainer?.coaching_style);
       setAge(store.user?.age);
@@ -43,8 +44,8 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   }, [store.user?.id]);
 
   const updateTrainer = async () => {
-    const updatedUser = await actions.updateTrainer(
-      // TO DO CREATE UPDATE TRAINER
+    const updatedUser = await actions.editTrainer({
+      trainerId: localStorage.getItem("trainerId"),
       email,
       password,
       gender,
@@ -57,8 +58,8 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       last_name,
       height,
       weight,
-      city.name
-    );
+      city,
+    });
     if (updatedUser) {
       navigate("/");
     } else {

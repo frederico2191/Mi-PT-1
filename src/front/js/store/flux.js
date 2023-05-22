@@ -11,22 +11,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       allClasses: [],
       user: null,
       allTypesActivities: null,
-      demo: [
-        {
-          title: "FIRST",
-          background: "white",
-          initial: "white",
-        },
-        {
-          title: "SECOND",
-          background: "white",
-          initial: "white",
-        },
-      ],
       processedResults: [],
       searchedCityName: "",
       searchedCityObject: null,
-      selectedClassId: null,
+      selectedClassId: "",
     },
     actions: {
       setProcessedResults: (filteredEvents) => {
@@ -39,7 +27,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ searchedCityObject: city });
       },
       setselectedClassId: (selectedClassId) => {
-        setStore({ selectedClassId });
+        setStore({ selectedClassId: selectedClassId });
+      },
+      resetSelectedClassId: () => {
+        setStore({ selectedClassId: "" });
       },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
@@ -492,10 +483,16 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          localStorage.setItem("userRole", data["user"].user_role);
+          const userRole = data["user"].user_role;
+          localStorage.setItem("userRole", userRole);
           localStorage.setItem("userName", data["user"].firstName);
           localStorage.setItem("userId", data["user"].id);
           setStore({ user: data["user"] });
+          if (userRole == "trainer") {
+            localStorage.setItem("trainerId", data["user"].trainer.id);
+          } else if (userRole == "trainee") {
+            localStorage.setItem("traineeId", data["user"].trainee.id);
+          }
           return true;
         } catch (error) {
           console.error("Invalid email or password format", error);
@@ -507,6 +504,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("userRole");
         localStorage.removeItem("userName");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("trainerId");
         console.log("logging out");
         setStore({ token: null });
       },
@@ -591,50 +590,149 @@ const getState = ({ getStore, getActions, setStore }) => {
         await getActions().verify();
         return data;
       },
+      editTrainee: async ({
+        traineeId,
+        email,
+        gender,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight,
+        body_type,
+        goal,
+        fitness_experience,
+        city,
+      }) => {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/edit/trainee/${traineeId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              traineeId,
+              email,
+              gender,
+              age,
+              first_name,
+              last_name,
+              height,
+              weight,
+              body_type,
+              goal,
+              fitness_experience,
+              city,
+            }),
+          }
+        );
+        const data = await response.json();
+        await getActions().verify();
+        return data;
+      },
+      editTrainer: async ({
+        trainerId,
+        email,
+        gender,
+        about,
+        experience_level,
+        specialty,
+        coaching_style,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight,
+        city,
+      }) => {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/edit/trainer/${trainerId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              gender,
+              about,
+              experience_level,
+              specialty,
+              coaching_style,
+              age,
+              first_name,
+              last_name,
+              height,
+              weight,
+              city,
+            }),
+          }
+        );
+        const data = await response.json();
+        await getActions().verify();
+        return data;
+      },
+      editClass: async ({
+        classId,
+        name,
+        description,
+        duration,
+        price,
+        date,
+        trainerId,
+        city,
+        trainerName,
+        location,
+      }) => {
+        const store = getStore();
+        const eventDate = date?.toISOString();
+        const hour = date?.hour();
+        const minutes = date?.minute();
+        const lat = location?.lat;
+        const lng = location?.lng;
+        const address = location?.address;
 
-      // const handleSubmit = async (e) => {
-      //   e.preventDefault();
-      //   const eventWithTime = {
-      //     ...eventDate,
-      //     time: `${eventDate.hour}:${eventDate.minutes}`,
-      //   };
-
-      //   try {
-      //     const response = await axios.post('/api/events', eventWithTime);
-      //     console.log('Event saved with ID:', response.data.id);
-      //     setEvents([...events, { ...eventWithTime, id: response.data.id }]);
-      //     setShowModal(false);
-      //   } catch (error) {
-      //     console.error('Error adding event:', error);
-      //   }
-      // };
-
-      // getFavorites: async () => {
-      //   const store = getStore();
-      //   try {
-      //     const resp = await fetch(
-      //       process.env.BACKEND_URL + "/api/favorites",
-
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //         },
-      //       }
-      //     );
-      //     //   const resp = await fetch(
-      //     //     process.env.BACKEND_URL + "/api/hello",
-      //     //     opts
-      //     //   );
-      //     const data = await resp.json();
-      //     setStore({ favorites: data.favorites });
-      //     return true;
-      //   } catch (error) {
-      //     console.error(
-      //       "There was an error on favorites fetch!!! It was caught by flux.js",
-      //       error
-      //     );
-      //   }
-      // },
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/api/edit/class/${classId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              body: JSON.stringify({
+                name,
+                description,
+                duration,
+                price,
+                eventDate,
+                hour,
+                minutes,
+                trainerId,
+                city,
+                lat,
+                lng,
+                trainerName,
+                address,
+              }),
+            }
+          );
+          const data = await resp.json();
+          await getActions().verify();
+          console.log(data, "new class edited after register fetch");
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on class edit fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
+        }
+      },
     },
   };
 };

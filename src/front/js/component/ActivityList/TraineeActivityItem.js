@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
+import { CiEdit } from "react-icons/ci";
 import "./ActivityItem.css";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -47,6 +48,13 @@ const TraineeActivityItem = ({ activity }) => {
           </Link>
         </div>
         <div className="d-flex justify-content-end col-4">
+          <CiEdit
+            role="button"
+            // data-bs-toggle="modal"
+            // data-bs-target="#unbookClass"
+            size={20}
+            // onClick={() => actions.setselectedClassId(activity.id)}
+          />
           <TfiTrash
             role="button"
             data-bs-toggle="modal"

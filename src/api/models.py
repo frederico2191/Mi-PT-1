@@ -90,7 +90,7 @@ class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     approved = db.Column(db.Boolean(), nullable=True)
-    about = db.Column(db.String(250), nullable=True)
+    about = db.Column(db.String(1000), nullable=True)
     experience_level = db.Column(db.String(250), nullable=True)
     bank_account = db.Column(db.String(250), nullable=True)
     city = db.Column(db.String(250), nullable=True)
