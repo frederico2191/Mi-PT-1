@@ -21,7 +21,11 @@ const CardClass3 = ({ givenClass }) => {
         onMouseLeave={() => setHovered(false)}
       >
         <div className="card-image__gradient" />
-        <img src={imageURL} alt="test" className="card-class3__image" />
+        <img
+          src={givenClass.profile_image_url}
+          alt="test"
+          className="card-class3__image"
+        />
         <div className="card-class3__info">
           <div className="h-100 d-flex flex-column justify-content-end align-items-center">
             {hovered && (

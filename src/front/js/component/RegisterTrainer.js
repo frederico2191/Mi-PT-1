@@ -5,6 +5,7 @@ import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 import { stepperClasses } from "@mui/material";
+import UploadImages from "../pages/UploadImages";
 
 export const RegisterTrainer = ({ isEdit = false }) => {
   const { store, actions } = useContext(Context);
@@ -22,6 +23,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   const [last_name, setLastName] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [file, setFile] = useState(null);
 
   const navigate = useNavigate();
 
@@ -40,6 +42,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       setLastName(store.user?.lastName);
       setWeight(store.user?.weight);
       setHeight(store.user?.height);
+      // setFile(store.user?.image)
     }
   }, [store.user?.id]);
 
@@ -70,6 +73,9 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   };
 
   const registerTrainer = async () => {
+    await actions.uploadImage(file);
+    const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
+
     const registeredUser = await actions.registerTrainer(
       email,
       password,
@@ -83,10 +89,12 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       last_name,
       height,
       weight,
-      city.name
+      city.name,
+      uploadedProfileImageUrl
     );
     if (registeredUser) {
       navigate("/login");
+      console.log(file, "FILE Image registerUSER submition trainer, useEffect");
     } else {
       setEmail("");
       setPassword("");
@@ -103,6 +111,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
     //   title="Confirmation"
     // />;
     event.preventDefault();
+    console.log(file, "FILE Image handleCLIKC trainer, useEffect");
     if (isEdit) return updateTrainer();
     else return registerTrainer();
   };
@@ -205,7 +214,9 @@ export const RegisterTrainer = ({ isEdit = false }) => {
         >
           <option value="">Select Your Coaching Style</option>
           {mappedCoachingStyle.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <select
@@ -220,7 +231,9 @@ export const RegisterTrainer = ({ isEdit = false }) => {
         >
           <option value="">Select You Specialty</option>
           {mappedSpecialty.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <div className="mb-3">
@@ -296,6 +309,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
+        <UploadImages file={file} setFile={setFile} />
         <button type="submit" className="btn btn-primary mt-3">
           {isEdit ? "Save changes" : "Register"}
         </button>

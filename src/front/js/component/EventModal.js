@@ -58,6 +58,7 @@ const EventModal = ({ id, submitText, title, isEdit }) => {
   const registerClass = async () => {
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
+    const trainerProfileImageUrl = store.user?.["trainer"].profile_image_url;
 
     const registeredClass = await actions.registerClass(
       name,
@@ -68,7 +69,8 @@ const EventModal = ({ id, submitText, title, isEdit }) => {
       trainerId,
       city,
       trainerName,
-      location
+      location,
+      trainerProfileImageUrl
     );
 
     if (registeredClass) {

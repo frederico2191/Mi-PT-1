@@ -18,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       searchedCityObject: null,
       selectedClassId: "",
       isEventModalOpen: false,
+      uploadedProfileImageUrl: "",
     },
     actions: {
       setEventModalOpen: () => {
@@ -272,7 +273,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name,
         height,
         weight,
-        city
+        city,
+        uploadedProfileImageUrl
       ) => {
         const store = getStore();
         try {
@@ -298,6 +300,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 height,
                 weight,
                 city,
+                uploadedProfileImageUrl,
               }),
             }
           );
@@ -378,7 +381,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         trainerId,
         city,
         trainerName,
-        location
+        location,
+        trainerProfileImageUrl
       ) => {
         const store = getStore();
         // console.log("date in flux 2", date?.toDate());
@@ -414,6 +418,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 lng,
                 trainerName,
                 address,
+                trainerProfileImageUrl,
               }),
             }
           );
@@ -747,6 +752,27 @@ const getState = ({ getStore, getActions, setStore }) => {
             "There was an error on class edit fetch!!! It was caught by flux.js",
             error
           );
+          return false;
+        }
+      },
+      uploadImage: async (file) => {
+        let body = new FormData();
+        body.append("profile_image", file[0]);
+        const opts = {
+          method: "POST",
+          body,
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/upload",
+            opts
+          );
+          const data = await resp.json();
+          setStore({ uploadedProfileImageUrl: data.profile_image_url });
+          return data, true;
+        } catch (error) {
+          console.error("An error occurred fetching the image", error);
+
           return false;
         }
       },

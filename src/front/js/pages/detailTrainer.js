@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
-import Card from "../component/Card";
-import ballet from "../../img/ballet.jpg";
 import "./detail.css";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 
-export const DetailTrainer = (props) => {
+export const DetailTrainer = () => {
   console.log("hello");
   const { store, actions } = useContext(Context);
   const { pathname } = useLocation();
@@ -55,8 +52,8 @@ export const DetailTrainer = (props) => {
               </div>
               <div className="col-6">
                 <img
-                  src={ballet}
-                  alt="ballet"
+                  src={store.givenTrainer.trainer?.profile_image_url}
+                  alt="profile_image_url"
                   className="object-fit-contain detail-image col-12"
                 />
               </div>

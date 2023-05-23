@@ -8,6 +8,8 @@ from flask_jwt_extended import jwt_required
 from .models import db, User, Trainer, ActivityPerTrainer, Trainee, Activity, BookedClass
 from datetime import datetime
 from dateutil import parser
+import cloudinary
+import cloudinary.uploader
 
 api = Blueprint('api', __name__)
 
@@ -55,10 +57,12 @@ def register_trainer():
     last_name = request.json.get("last_name",None)
     height = request.json.get("height",None)
     weight = request.json.get("weight",None)
+    profile_image_url = request.json.get("uploadedProfileImageUrl",None)
 
     dbEmail = User.query.filter_by(email = email).first()
     if dbEmail:
         return jsonify({"msg": "User already exists!"}), 401
+    
 
     user_to_register = User()
     user_to_register.email= email
@@ -90,6 +94,7 @@ def register_trainer():
     trainer_to_register.specialty = specialty
     if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
     trainer_to_register.coaching_style = coaching_style
+    trainer_to_register.profile_image_url= profile_image_url
     trainer_to_register.user_id = data["id"]
 
     db.session.add(trainer_to_register)
@@ -182,6 +187,7 @@ def register_class():
     lat = request.json.get("lat",None)
     lng = request.json.get("lng",None)
     address = request.json.get("address",None)
+    profile_image_url = request.json.get("trainerProfileImageUrl",None)
 
 
     print("####4444444 T NAMEEE",trainer_name)
@@ -205,6 +211,7 @@ def register_class():
     class_to_register.lng = lng # mm
     class_to_register.trainer_name = trainer_name # mm
     class_to_register.address = address # mm
+    class_to_register.trainer_profile_image_url = profile_image_url # mm
     
 
     db.session.add(class_to_register)
@@ -635,5 +642,16 @@ def edit_class(class_id):
     data = class_to_edit.serialize()
     
     return jsonify(data),200
+
+
+
+@api.route('/upload', methods=['POST'])
+def handle_upload():
+
+    data= cloudinary.uploader.upload(request.files['profile_image'])
+    # cloudinary.uploader.upload(request.files['profile_image'], public_id=f'trainers_profile_image_folder/',width=450, height=450 )
+    profile_image_url=data['secure_url']
+    return jsonify({"profile_image_url" : profile_image_url}),200
+
 
 

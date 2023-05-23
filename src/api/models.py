@@ -96,6 +96,8 @@ class Trainer(db.Model):
     city = db.Column(db.String(250), nullable=True)
     specialty = db.Column(db.String(250), nullable=True)
     coaching_style = db.Column(db.String(250), nullable=True)
+    profile_image_url = db.Column(db.String(250), nullable=True)
+
 
     # user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -113,7 +115,8 @@ class Trainer(db.Model):
             "bank_account": self.bank_account,
             "specialty": self.specialty,
             "coaching_style": self.coaching_style,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "profile_image_url": self.profile_image_url
         }
 
 
@@ -135,6 +138,7 @@ class ActivityPerTrainer(db.Model):
     address = db.Column(db.String(1000), nullable=True)
     trainer_name = db.Column(db.String(250), nullable=True)
     trainee_name = db.Column(db.String(250), nullable=True)
+    trainer_profile_image_url = db.Column(db.String(250), nullable=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) 
@@ -159,6 +163,8 @@ class ActivityPerTrainer(db.Model):
             "address": self.address,
             "trainerName":self.trainer_name,
             "traineeName":self.trainee_name,
+            "profile_image_url": self.trainer_profile_image_url
+            
         }
 
 class Activity(db.Model):
