@@ -1,5 +1,6 @@
 .activity {
-  width: 550px;
+  max-width: 700px;
+  min-width: 350px;
   height: 100%;
   margin-bottom: 1rem;
   border-radius: 5px;
@@ -24,4 +25,12 @@
 
 .activity__section {
   width: 33%;
+}
+
+.activity__no-trainer {
+  width: 120px;
+}
+
+.activity__date {
+  white-space: nowrap;
 }

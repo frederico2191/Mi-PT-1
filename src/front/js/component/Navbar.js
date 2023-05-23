@@ -49,7 +49,6 @@ export const Navbar = () => {
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
                       >
-                        {console.log("store.user", store.user)}
                         {store.user?.firstName}
                       </a>
                       <ul className="dropdown-menu dropdown-menu-end">

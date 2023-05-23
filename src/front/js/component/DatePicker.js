@@ -7,11 +7,7 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 
 const DatePicker = ({ eventDate, setEventDate }) => {
-  //   const defaultValue = Date.now();
-  //   const [date, setDate] = useState(null);
-
   const handleChange = (newValue) => {
-    console.log(" METHODS AVAILABLE IN PROTOTYP 777777", newValue);
     setEventDate(newValue);
   };
 

@@ -15,8 +15,6 @@ const NoResults = () => (
 const SearchResults = ({ filteredEvents, searchPerformed }) => {
   const { store } = useContext(Context);
 
-  console.log("filteredEvents", filteredEvents);
-
   if (!filteredEvents?.length && searchPerformed) return <NoResults />;
   return (
     <div>

@@ -15,7 +15,6 @@ const TraineeProfileModal = () => {
     const foundExperience = mappedFitnessExperience.find(
       (el) => el.value === store.givenTrainee?.trainee?.fitness_experience
     );
-    console.log("foundExperience", foundExperience);
     return foundExperience?.label;
   };
 

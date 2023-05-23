@@ -22,7 +22,6 @@ const getState = ({ getStore, getActions, setStore }) => {
     },
     actions: {
       setEventModalOpen: () => {
-        console.log("hello?");
         setStore({ isEventModalOpen: true });
       },
       setEventModalClosed: () => {
@@ -56,7 +55,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getMessage: async () => {
         const store = getStore();
-        console.log(store.token, "I am store.token inside hello_user API ");
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -146,8 +144,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenTrainer: async (id) => {
         const store = getStore();
-        console.log(id, "trainerId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -171,8 +167,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenTrainee: async (id) => {
         const store = getStore();
-        console.log(id, "traineeId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -196,8 +190,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenClass: async ({ id }) => {
         const store = getStore();
-        console.log(id, "trainerId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -209,7 +201,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          console.log("DATA!!!", data);
           setStore({ givenClass: data });
 
           return true;
@@ -223,7 +214,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       register: async (email, password, gender) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
             method: "POST",
             headers: {
@@ -278,7 +268,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       ) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/trainer",
             {
@@ -306,14 +295,11 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           if (resp.status === 200) {
             const data = await resp.json();
-            console.log(data, "new user registered after register fetch");
+            console.log(data, "new trainer registered after register fetch");
             return true;
           } else return false;
         } catch (error) {
-          console.error(
-            "There was an error on register fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on register trainer fetch", error);
           return false;
         }
       },
@@ -333,7 +319,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       ) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/trainee",
             {
@@ -358,16 +343,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(
-            data,
-            "new user (trainee) registered after register fetch"
-          );
+          console.log(data, "new trainee registered after register fetch");
           return true;
         } catch (error) {
-          console.error(
-            "There was an error on register trainee fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on register trainee fetch", error);
           return false;
         }
       },
@@ -385,17 +364,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         trainerProfileImageUrl
       ) => {
         const store = getStore();
-        // console.log("date in flux 2", date?.toDate());
         const eventDate = date?.toISOString();
         const hour = date?.hour();
         const minutes = date?.minute();
         const lat = location?.lat;
         const lng = location?.lng;
         const address = location?.address;
-        console.log("hello", { eventDate, hour, minutes });
 
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/class",
             {
@@ -427,17 +403,13 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log(data, "new class registered after register fetch");
           return true;
         } catch (error) {
-          console.error(
-            "There was an error on class register fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on class register fetch", error);
           return false;
         }
       },
       deleteClass: async (id) => {
         const store = getStore();
         try {
-          console.log("in try deleting class###", id, "ID");
           const resp = await fetch(
             process.env.BACKEND_URL + `/api/activity/${id}`,
             {
@@ -449,7 +421,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(data, "Class sucessufully deleted !");
+          console.log(data, "Class sucessfully deleted !");
           await getActions().verify();
           return true;
         } catch (error) {
@@ -478,7 +450,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          // console.log("DATA INSIDE FETCH %%%%%%%%%%%%%%%%%%%%", data);
           localStorage.setItem("token", data.access_token);
           setStore({ token: data.access_token });
           await getActions().verify();
@@ -524,8 +495,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.removeItem("userName");
         localStorage.removeItem("userId");
         localStorage.removeItem("trainerId");
-        console.log("logging out");
         setStore({ token: null });
+        setStore({ user: null });
       },
       changeColor: (index, color) => {
         //get the store
@@ -665,6 +636,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         height,
         weight,
         city,
+        uploadedProfileImageUrl,
       }) => {
         const response = await fetch(
           `${process.env.BACKEND_URL}/api/edit/trainer/${trainerId}`,
@@ -687,6 +659,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               height,
               weight,
               city,
+              uploadedProfileImageUrl,
             }),
           }
         );

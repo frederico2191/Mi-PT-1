@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
-import ballet from "../../img/ballet.jpg";
 import "./detail.css";
 import dayjs from "dayjs";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 import ConfirmationModal from "../component/ConfirmationModal";
+
+const fallbackImageUrl =
+  "https://media.freemalaysiatoday.com/wp-content/uploads/2022/12/Nick-Bollettieri-Twitter.jpg";
 
 const TrainerSection = () => {
   const { store, actions } = useContext(Context);
@@ -21,7 +23,7 @@ const TrainerSection = () => {
     )?.label;
 
   return (
-    <div className="class__trainer-section mx-1 mt-5">
+    <div className="class__trainer-section mx-2 mt-5">
       <div className="me-4">
         <Link to={`/trainer/${store.givenTrainer?.id}`}>
           <h3>
@@ -43,8 +45,8 @@ const TrainerSection = () => {
         </p>
       </div>
       <img
-        src={ballet}
-        alt="ballet"
+        src={store.givenClass?.profile_image_url || fallbackImageUrl}
+        alt="trainer's profile image"
         className="object-fit-contain class__trainer-image"
       />
     </div>
@@ -76,18 +78,21 @@ const ClassSection = ({ classId }) => {
         title="Book Class"
         onConfirm={handleBookClass}
       />
-      <div className="class__class-section">
+      <div className="mx-2 class__class-section">
         <p>
           <b>DATE</b> &bull; {dayjs(store.givenClass?.date).format("lll")}
         </p>
         <p>
-          <b>DURATION</b> &bull; {store.givenClass?.duration}
+          <b>DURATION</b> &bull; {store.givenClass?.duration} min
+        </p>
+        <p>
+          <b>CITY</b> &bull; {store.givenClass?.city}
         </p>
         <p>
           <b>ADDRESS</b> &bull; {store.givenClass?.address}
         </p>
         <p>
-          <b>PRICE</b> &bull; {store.givenClass?.price}
+          <b>PRICE</b> &bull; {store.givenClass?.price} €
         </p>
         <p>
           <b>DESCRIPTION</b> &bull; {store.givenClass?.description}
@@ -116,12 +121,8 @@ export const DetailClass = () => {
       await actions.getGivenClass({ id });
       const trainerId = store.givenClass?.trainer_id;
       await actions.getGivenTrainer(trainerId);
-      console.log(store.givenClass, "givenClass of detailClass page !!!");
-      console.log(store.givenTrainer, "givenTrainer of detailClass page !!!");
     })();
   }, [id]);
-
-  console.log("store.givenClass", store.givenClass);
 
   return (
     <div className="detail-container">

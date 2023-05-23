@@ -24,3 +24,8 @@
   scroll-snap-type: x mandatory;
   flex-direction: row;
 }
+
+.cover-image-container {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}

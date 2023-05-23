@@ -14,7 +14,7 @@ export const RegisterTrainee = ({ isEdit = false }) => {
   const [age, setAge] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-  const [city, setCity] = useState({});
+  const [city, setCity] = useState("");
   const [body_type, setBodyType] = useState("");
   const [goal, setGoal] = useState("");
   const [fitness_experience, setFitnessExperience] = useState("");
@@ -34,10 +34,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       setCity(store.user?.city || "");
       setBodyType(store.user?.trainee?.body_type || "");
       setGoal(store.user?.trainee?.goal || "");
-      console.log(
-        "store.user?.trainee?.fitness_experience",
-        store.user?.trainee?.fitness_experience
-      );
       setFitnessExperience(store.user?.trainee?.fitness_experience || "");
     }
   }, [store.user?.id]);
@@ -105,7 +101,7 @@ export const RegisterTrainee = ({ isEdit = false }) => {
   };
 
   return (
-    <div className="container-fluid" style={{ width: "25rem" }}>
+    <div className="container-fluid mt-4" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
@@ -159,7 +155,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={gender}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT", e.target.value);
             setGender(e.target.value);
           }}
         >
@@ -176,7 +171,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={body_type}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT experience level", e.target.value);
             setBodyType(e.target.value);
           }}
         >
@@ -191,7 +185,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={goal}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT Goal ", e.target.value);
             setGoal(e.target.value);
           }}
         >
@@ -208,7 +201,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={fitness_experience}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT Fitness Experience", e.target.value);
             setFitnessExperience(e.target.value);
           }}
         >

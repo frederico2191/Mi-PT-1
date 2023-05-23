@@ -59,6 +59,10 @@ const EventModal = ({ id, submitText, title, isEdit }) => {
     const trainerId = store.user?.["trainer"].id;
     const trainerName = `${store.user?.firstName} ${store.user?.lastName}`;
     const trainerProfileImageUrl = store.user?.["trainer"].profile_image_url;
+    console.log(
+      "url inside the store of the registerClass",
+      trainerProfileImageUrl
+    );
 
     const registeredClass = await actions.registerClass(
       name,
@@ -237,7 +241,7 @@ const EventModal = ({ id, submitText, title, isEdit }) => {
 
               <div className="modal-footer">
                 <button
-                  id="btn-close"
+                  // id="btn-close"
                   type="button"
                   className="btn btn-secondary"
                   data-bs-dismiss="modal"

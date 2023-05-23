@@ -4,20 +4,25 @@ import { Context } from "../store/appContext";
 import "./detail.css";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
 
+const fallbackImageUrl =
+  "https://media.freemalaysiatoday.com/wp-content/uploads/2022/12/Nick-Bollettieri-Twitter.jpg";
+
 export const DetailTrainer = () => {
-  console.log("hello");
   const { store, actions } = useContext(Context);
   const { pathname } = useLocation();
   const [, type, id] = pathname.split("/");
 
   useEffect(() => {
     actions.getGivenTrainer(id);
-    console.log(store, "givenTrainer of Detailtrainers page !!!");
-    console.log(
-      store.givenTrainer,
-      "givenTrainer USERDATA of Detailtrainer page !!!"
-    );
   }, []);
+
+  const getImageUrl = () => {
+    if (!store.givenTrainer.trainer?.profile_image_url) return fallbackImageUrl;
+    const url = store.givenTrainer.trainer?.profile_image_url.split("/upload/");
+    const findFace = "/upload/c_thumb,g_face,h_500,w_600/".concat(url[1]);
+    const finalUrl = [url[0], findFace].join("");
+    return finalUrl;
+  };
 
   const getSpecialty = () =>
     mappedSpecialty.find(
@@ -36,12 +41,12 @@ export const DetailTrainer = () => {
           <div className="row">
             <div className="row">
               <h2 className="col-12 text-start">
-                {store.givenTrainer.firstName} {store.givenTrainer.lastName}
+                {store.givenTrainer?.firstName} {store.givenTrainer.lastName}
               </h2>
             </div>
             <div className="row">
               <div className="col-6 text-start mb-3">
-                {store.givenTrainer.city}
+                {store.givenTrainer?.city}
               </div>
             </div>
           </div>
@@ -52,9 +57,10 @@ export const DetailTrainer = () => {
               </div>
               <div className="col-6">
                 <img
-                  src={store.givenTrainer.trainer?.profile_image_url}
+                  src={getImageUrl()}
                   alt="profile_image_url"
                   className="object-fit-contain detail-image col-12"
+                  // className="img-fluid col-12"
                 />
               </div>
             </div>
@@ -80,7 +86,7 @@ export const DetailTrainer = () => {
               <h4 className="detail__section-title">{getCoachingStyle()}</h4>
             </div>
             <Link to="/" className="detail__button-back">
-              <span className="btn btn-secondary  btn-lg" role="button">
+              <span className="btn btn-secondary btn-lg" role="button">
                 Back home
               </span>
             </Link>

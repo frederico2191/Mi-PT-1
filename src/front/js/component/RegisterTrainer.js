@@ -15,7 +15,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState("");
   const [experience_level, setExperienceLevel] = useState("");
-  const [city, setCity] = useState({});
+  const [city, setCity] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [coaching_style, setCoachingStyle] = useState("");
   const [age, setAge] = useState("");
@@ -47,6 +47,8 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   }, [store.user?.id]);
 
   const updateTrainer = async () => {
+    file && (await actions.uploadImage(file));
+    const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
     const updatedUser = await actions.editTrainer({
       trainerId: localStorage.getItem("trainerId"),
       email,
@@ -62,6 +64,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       height,
       weight,
       city,
+      uploadedProfileImageUrl,
     });
     if (updatedUser) {
       navigate("/");
@@ -73,7 +76,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   };
 
   const registerTrainer = async () => {
-    await actions.uploadImage(file);
+    file && (await actions.uploadImage(file));
     const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
 
     const registeredUser = await actions.registerTrainer(
@@ -94,7 +97,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
     );
     if (registeredUser) {
       navigate("/login");
-      console.log(file, "FILE Image registerUSER submition trainer, useEffect");
     } else {
       setEmail("");
       setPassword("");
@@ -111,13 +113,12 @@ export const RegisterTrainer = ({ isEdit = false }) => {
     //   title="Confirmation"
     // />;
     event.preventDefault();
-    console.log(file, "FILE Image handleCLIKC trainer, useEffect");
     if (isEdit) return updateTrainer();
     else return registerTrainer();
   };
 
   return (
-    <div className="container-fluid" style={{ width: "25rem" }}>
+    <div className="container-fluid mt-4" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
@@ -158,7 +159,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={gender}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT", e.target.value);
             setGender(e.target.value);
           }}
         >
@@ -181,7 +181,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             value={about}
             onChange={(e) => {
               e.persist();
-              console.log("EVENT TExt about", e.target.value);
               setAbout(e.target.value);
             }}
           ></textarea>
@@ -192,7 +191,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={experience_level}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT experience level", e.target.value);
             setExperienceLevel(e.target.value);
           }}
         >
@@ -208,7 +206,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={coaching_style}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT COACHING STYLE", e.target.value);
             setCoachingStyle(e.target.value);
           }}
         >
@@ -225,7 +222,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={specialty}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT trainer's specialty", e.target.value);
             setSpecialty(e.target.value);
           }}
         >
@@ -309,6 +305,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
+        {/* {!isEdit && <UploadImages file={file} setFile={setFile} />} */}
         <UploadImages file={file} setFile={setFile} />
         <button type="submit" className="btn btn-primary mt-3">
           {isEdit ? "Save changes" : "Register"}

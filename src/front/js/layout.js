@@ -39,7 +39,7 @@ const Layout = () => {
         >
           <ScrollToTop>
             <Navbar />
-            <div className="mx-sm-0 mx-md-2 mx-lg-3 fw-light min-vh-100 mb-5">
+            <div className="mx-sm-1 mx-md-2 mx-lg-3 fw-light min-vh-100 mb-5">
               <Routes>
                 <Route element={<Home />} path="/" />
                 <Route element={<Register />} path="/register" />

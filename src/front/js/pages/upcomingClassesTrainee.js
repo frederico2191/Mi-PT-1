@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import ActivityList from "../component/ActivityList/ActivityList";
 import { Context } from "../store/appContext";
 import ConfirmationModal from "../component/ConfirmationModal";
+import "../../styles/home.css";
 
 const upcomingClassesTrainee = () => {
   const { store, actions } = useContext(Context);
@@ -13,7 +14,7 @@ const upcomingClassesTrainee = () => {
   };
 
   return (
-    <>
+    <div className="mx-auto home-container container text-center">
       <h1 className="mt-5 mb-4">My upcoming classes 🫶🏽</h1>
       <ActivityList />
       <ConfirmationModal
@@ -23,7 +24,7 @@ const upcomingClassesTrainee = () => {
         title="Unbook Class"
         onConfirm={unbookClass}
       />
-    </>
+    </div>
   );
 };
 

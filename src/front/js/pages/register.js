@@ -1,7 +1,4 @@
 import React, { useContext, useState } from "react";
-import { Context } from "../store/appContext";
-import { Link, useNavigate } from "react-router-dom";
-
 import { RegisterTrainer } from "../component/RegisterTrainer";
 import { RegisterTrainee } from "../component/RegisterTrainee";
 
@@ -29,6 +26,8 @@ export const Register = () => {
       >
         Trainee
       </button>
+      <h1 className="fst-italic">{trainer && "Trainer"}</h1>
+      <h1 className="fst-italic">{trainee && "Trainee"}</h1>
       {trainer && <RegisterTrainer />}
       {trainee && <RegisterTrainee />}
     </div>

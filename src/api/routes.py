@@ -86,13 +86,13 @@ def register_trainer():
     if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option - gender"}), 404
     trainer_to_register.gender = gender
     trainer_to_register.about = about
-    if experience_level not in possible_experience_levels: return jsonify({"msg": "The back-end won't accept this altered option- exp level"}), 404
+    # if experience_level not in possible_experience_levels: return jsonify({"msg": "The back-end won't accept this altered option- exp level"}), 404
     trainer_to_register.experience_level = experience_level
     trainer_to_register.approved = None
     trainer_to_register.city = city
-    if specialty not in possible_specialties: return jsonify({"msg": "The back-end won't accept this altered option-specialty"}), 404
+    # if specialty not in possible_specialties: return jsonify({"msg": "The back-end won't accept this altered option-specialty"}), 404
     trainer_to_register.specialty = specialty
-    if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
+    # if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
     trainer_to_register.coaching_style = coaching_style
     trainer_to_register.profile_image_url= profile_image_url
     trainer_to_register.user_id = data["id"]
@@ -562,6 +562,7 @@ def edit_trainer(trainer_id):
     last_name = request.json.get("last_name",None)
     height = request.json.get("height",None)
     weight = request.json.get("weight",None)
+    profile_image_url = request.json.get("uploadedProfileImageUrl",None)
 
 
     user.email = email
@@ -588,6 +589,7 @@ def edit_trainer(trainer_id):
     trainer.specialty = specialty
     # if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
     trainer.coaching_style = coaching_style
+    trainer.profile_image_url= profile_image_url
 
 
 

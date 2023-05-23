@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const CardClass3 = ({ givenClass }) => {
   const [hovered, setHovered] = useState(false);
 
-  const imageURL =
+  const fallbackImageUrl =
     "https://media.freemalaysiatoday.com/wp-content/uploads/2022/12/Nick-Bollettieri-Twitter.jpg";
 
   return (
@@ -22,7 +22,7 @@ const CardClass3 = ({ givenClass }) => {
       >
         <div className="card-image__gradient" />
         <img
-          src={givenClass.profile_image_url}
+          src={givenClass.profile_image_url || fallbackImageUrl}
           alt="test"
           className="card-class3__image"
         />
@@ -32,12 +32,8 @@ const CardClass3 = ({ givenClass }) => {
               <>
                 <Link to={`/activity_per_trainer/${givenClass.id}`}>
                   <div className="card-class3__button">View Details</div>
-                  {/* <button className="btn btn-outline-primary">
-                  Check the class
-                </button> */}
                 </Link>
                 <p className="card-class3__time-address">
-                  {/* {console.log("papagay", dayjs(givenClass.date).format("LL"))} */}
                   {dayjs(givenClass.date).format("lll")}
                 </p>
               </>

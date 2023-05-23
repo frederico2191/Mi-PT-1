@@ -22,7 +22,7 @@ const TrainerActivityItem = ({ activity }) => {
     >
       <div className="d-flex flex-row align-items-center justify-content-between">
         {activity.traineeName ? (
-          <div className="col-4 d-flex flex-row align-items-center activity__trainee-name justify-self-start">
+          <div className="col-4 d-flex flex-row align-items-center justify-self-start">
             <div
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -34,14 +34,14 @@ const TrainerActivityItem = ({ activity }) => {
             <div className="activity-separator" />
           </div>
         ) : (
-          <div className="w-5 col-4" />
+          <div className="col-4 activity__no-trainer"></div>
         )}
-        <div className="col-4">
+        <div className="col-4 ">
           <Link
-            className="text-reset text-decoration-none"
+            className="text-reset text-decoration-none d-flex flex-column"
             to={`/activity_per_trainer/${activity.id}`}
           >
-            {dayjs(activity.date).format("lll")}{" "}
+            <span className="">{dayjs(activity.date).format("lll")} </span>
             <span className="badge rounded-pill bg-info">
               {activity.duration}min
             </span>
