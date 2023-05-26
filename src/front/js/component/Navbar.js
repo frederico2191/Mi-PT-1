@@ -12,10 +12,19 @@ export const Navbar = () => {
   const isTrainer = store.user?.user_role == "trainer";
   const isTrainee = store.user?.user_role == "trainee";
 
+  const getImageUrl = () => {
+    const profileImage = store.user?.trainer?.profile_image_url;
+    if (!profileImage) return "";
+    const url = profileImage.split("/upload/");
+    const findFace = "/upload/c_thumb,g_face,h_500,w_600/".concat(url[1]);
+    const finalUrl = [url[0], findFace].join("");
+    return finalUrl;
+  };
+
   return (
     <nav className="navbar navbar-expand bg-body-tertiary bg-dark container-fluid">
       <div className="container-fluid d-flex ">
-        <a className="navbar-brand" href={process.env.BASENAME}>
+        <a className="navbar-brand text-white" href={process.env.BASENAME}>
           Mi-PT
         </a>
         <div className="d-flex">
@@ -26,7 +35,9 @@ export const Navbar = () => {
               size={30}
             />
           </Link>
-          <Avatar alt="Profile Pic" src={ballet} />
+          {store.user?.trainer?.profile_image_url && (
+            <Avatar alt="Profile Pic" src={getImageUrl()} />
+          )}
           <div className="ml-auto">
             {!store.token ? (
               <div>
@@ -43,7 +54,7 @@ export const Navbar = () => {
                   <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item dropdown">
                       <a
-                        className="nav-link dropdown-toggle"
+                        className="nav-link dropdown-toggle text-white"
                         href="#"
                         role="button"
                         data-bs-toggle="dropdown"

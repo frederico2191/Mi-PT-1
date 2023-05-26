@@ -25,7 +25,7 @@ const TrainerSection = () => {
   return (
     <div className="class__trainer-section mx-2 mt-5">
       <div className="me-4">
-        <Link to={`/trainer/${store.givenTrainer?.id}`}>
+        <Link to={`/trainer/${store.givenTrainer?.trainer?.id}`}>
           <h3>
             {store.givenTrainer?.firstName} {store.givenTrainer?.lastName}
           </h3>
@@ -58,9 +58,9 @@ const ClassSection = ({ classId }) => {
   const navigate = useNavigate();
 
   const isTrainee = store.user?.user_role == "trainee";
+  const isAvailable = store.user?.givenClass?.trainee_id == null;
 
   const handleBookClass = async () => {
-    // $("#exampleModal").modal("hide");
     const traineeId = store.user?.trainee?.id;
     const traineeName = store.user?.firstName;
     await actions.bookClass({ id: classId, traineeId, traineeName });
@@ -98,7 +98,7 @@ const ClassSection = ({ classId }) => {
           <b>DESCRIPTION</b> &bull; {store.givenClass?.description}
         </p>
       </div>
-      {isTrainee ? (
+      {isTrainee && isAvailable ? (
         <button
           className="btn btn-primary mt-3"
           data-bs-toggle="modal"

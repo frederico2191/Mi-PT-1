@@ -9,18 +9,21 @@
 .activity-separator {
   min-height: 27px;
   width: 1px;
-  background-color: rgb(69, 69, 69);
+  background-color: white;
   height: max-content;
   margin-right: 2rem;
   margin-left: 2rem;
 }
 
 .activity--booked {
-  background-color: rgb(242, 199, 199);
+  background-color: rgb(25, 135, 83);
+  color: white;
 }
 
 .activity--available {
-  background-color: rgb(202, 242, 199);
+  /* background-color: rgb(202, 242, 199); */
+  border-style: solid;
+  border-color: rgb(25, 135, 83);
 }
 
 .activity__section {

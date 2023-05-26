@@ -42,7 +42,7 @@ const TrainerActivityItem = ({ activity }) => {
             to={`/activity_per_trainer/${activity.id}`}
           >
             <span className="">{dayjs(activity.date).format("lll")} </span>
-            <span className="badge rounded-pill bg-info">
+            <span className="badge rounded-pill bg-warning">
               {activity.duration}min
             </span>
           </Link>

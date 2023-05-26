@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as React from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
@@ -7,6 +7,7 @@ import coverImage from "../../img/coverImage.jpeg";
 
 export const Home = () => {
   const { store, actions } = useContext(Context);
+  const [isHovered, setIsHovered] = useState(false);
   const user = store.user;
 
   useEffect(() => {
@@ -21,11 +22,21 @@ export const Home = () => {
 
   return (
     <div>
-      <div className="text-center mt-3 mb-3 mx-2">
-        <h1 className="fs-1 fw-600">Welcome to Mi-PT</h1>
-      </div>
       <div className="cover-image-container mb-3">
         <img className="img-fluid" src={coverImage} />
+        <div
+          className={`img__overlay img__overlay--${isHovered ? "on" : "off"}`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <h1
+            className={`fs-1 fw-600 img__overlay-text img__overlay-text--${
+              isHovered ? "on" : "off"
+            }`}
+          >
+            Welcome to Mi-PT
+          </h1>
+        </div>
       </div>
       <div className="text-center mt-4 mb-4 mx-2">
         <p className="fs-5">

@@ -14,6 +14,48 @@
 .home-container {
   max-width: 700px;
   margin: auto;
+  overflow-x: hidden;
+  background: #00000000;
+}
+
+.img--hovered {
+  background: #00000057;
+}
+
+.img__overlay {
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  top: 0;
+}
+
+.img__overlay--off {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.img__overlay--on {
+  background-color: rgba(0, 0, 0, 0.474);
+}
+
+.img__overlay-text {
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  color: white;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-style: italic;
+}
+
+.img__overlay-text--on {
+  opacity: 1;
+}
+
+.img__overlay-text--off {
+  opacity: 0;
 }
 
 .horizontal-scroller {
@@ -26,6 +68,9 @@
 }
 
 .cover-image-container {
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  position: relative;
+  width: 105%;
+  height: 100%;
 }

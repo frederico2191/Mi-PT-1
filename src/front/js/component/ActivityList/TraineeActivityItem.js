@@ -44,7 +44,7 @@ const TraineeActivityItem = ({ activity }) => {
             <span className="activity__date">
               {dayjs(activity.date).format("lll")}{" "}
             </span>
-            <span className="badge bg-info rounded-pill">
+            <span className="badge bg-warning rounded-pill">
               {activity.duration}min
             </span>
           </Link>

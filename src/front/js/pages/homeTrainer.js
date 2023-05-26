@@ -38,14 +38,12 @@ const homeTrainer = () => {
             title="Create a New Class"
             submitText="Launch Class"
             isEdit={false}
-            // onConfirm={onConfirm}
           />
           <EventModal
             id="editClass"
             title="Edit Class"
             submitText="Save Changes"
             isEdit
-            // onConfirm={onConfirm}
           />
         </div>
       </div>
