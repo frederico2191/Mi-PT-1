@@ -5,13 +5,13 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from .models import db, User, Trainer, ActivityPerTrainer, Trainee, Activity, BookedClass
+from .models import db, User, Trainer, ActivityPerTrainer, Trainee, Activity
 from datetime import datetime
 from dateutil import parser
 import cloudinary
 import cloudinary.uploader
 
-from routes.activity import register_class_route
+from .routesRefactored.activity_routes import register_activity_route
 
 api = Blueprint('api', __name__)
 
