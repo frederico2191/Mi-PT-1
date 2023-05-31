@@ -11,6 +11,8 @@ from dateutil import parser
 import cloudinary
 import cloudinary.uploader
 
+from routes.activity import register_class_route
+
 api = Blueprint('api', __name__)
 
 possible_genders=["male", "female", "non-binary", "intersex", "transgender", ""]
@@ -169,6 +171,12 @@ def register_trainee():
     return jsonify(new_trainee)
 
 
+# @api.route('/register/class', methods=['POST'])
+# @jwt_required()
+# def register_class_route(request):
+#     return jsonify(data),200
+
+    
 @api.route('/register/class', methods=['POST'])
 @jwt_required()
 def register_class():
@@ -188,32 +196,24 @@ def register_class():
     lng = request.json.get("lng",None)
     address = request.json.get("address",None)
     profile_image_url = request.json.get("trainerProfileImageUrl",None)
-
-
-    print("####4444444 T NAMEEE",trainer_name)
     datetime_object = parser.parse(eventDate) if eventDate else None
-    # datetime_object = datetime.strptime(eventDate.split(".")[0].replace("T"," "), '%y-%m-%d %H:%M:%S')
-
-
-
 
     class_to_register = ActivityPerTrainer()
     class_to_register.description= description
     class_to_register.duration= duration
     class_to_register.price= price
-    class_to_register.date= datetime_object #dt.parse(eventDate) # datetime
-    class_to_register.hour= hour # HH
-    class_to_register.minutes = minutes # mm
-    class_to_register.activity_id = name # mm
-    class_to_register.trainer_id = trainer_id # mm
-    class_to_register.city = city # mm
-    class_to_register.lat = lat # mm
-    class_to_register.lng = lng # mm
-    class_to_register.trainer_name = trainer_name # mm
-    class_to_register.address = address # mm
-    class_to_register.trainer_profile_image_url = profile_image_url # mm
+    class_to_register.date= datetime_object
+    class_to_register.hour= hour 
+    class_to_register.minutes = minutes 
+    class_to_register.activity_id = name 
+    class_to_register.trainer_id = trainer_id
+    class_to_register.city = city
+    class_to_register.lat = lat
+    class_to_register.lng = lng
+    class_to_register.trainer_name = trainer_name
+    class_to_register.address = address
+    class_to_register.trainer_profile_image_url = profile_image_url
     
-
     db.session.add(class_to_register)
     db.session.commit()
     data = class_to_register.serialize()
@@ -244,14 +244,14 @@ def verify_token():
 
     return jsonify(user=serializedUser), 200
 
-@api.route('/hello_user', methods=['GET'])
-@jwt_required()
-def get_hello():
-    email_provided = get_jwt_identity()
-    helloDictionary = {
-    "message": "Welcome " + email_provided 
-    }
-    return jsonify(helloDictionary)
+# @api.route('/hello_user', methods=['GET'])
+# @jwt_required()
+# def get_hello():
+#     email_provided = get_jwt_identity()
+#     helloDictionary = {
+#     "message": "Welcome " + email_provided 
+#     }
+#     return jsonify(helloDictionary)
 
 @api.route('/get_user', methods=['GET'])
 @jwt_required()

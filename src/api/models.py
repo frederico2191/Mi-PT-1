@@ -1,7 +1,23 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from .modelsRefactored.ActivityCategoryModel import ActivityCategoryModel
+from .modelsRefactored.ActivityModel import ActivityModel
+from .modelsRefactored.TraineeModel import TraineeModel
+from .modelsRefactored.TrainerModel import TrainerModel
+from .modelsRefactored.UserModel import UserModel
+
+# import sys
+# sys.path.append( '/workspace/Mi-PT-1/src/api/models/UserModel.py' )
+# import UserModel
 
 db = SQLAlchemy()
+
+# ActivityCategoryModel = ActivityCategoryModel()
+# ActivityModel = ActivityModel()
+# TraineeModel = TraineeModel()
+# TrainerModel = TrainerModel()
+# UserModel = UserModel()
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,11 +75,10 @@ class User(db.Model):
             "trainer": self.trainer.serialize() if self.trainer else None,
             "trainee": self.trainee.serialize() if self.trainee else None,
         }
-
-atendencies = db.Table('atendencies',
-    db.Column('activity_per_trainer_id', db.Integer, db.ForeignKey('activity_per_trainer.id'), primary_key=True),
-    db.Column('trainee_id', db.Integer, db.ForeignKey('trainee.id'), primary_key=True)
-)
+# atendencies = db.Table('atendencies',
+#     db.Column('activity_per_trainer_id', db.Integer, db.ForeignKey('activity_per_trainer.id'), primary_key=True),
+#     db.Column('trainee_id', db.Integer, db.ForeignKey('trainee.id'), primary_key=True)
+# )
 
 class Trainee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,7 +89,7 @@ class Trainee(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
+    # atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
 
     def serialize(self):
         return {
@@ -118,7 +133,6 @@ class Trainer(db.Model):
             "user_id": self.user_id,
             "profile_image_url": self.profile_image_url
         }
-
 
 class ActivityPerTrainer(db.Model):
 # class Activity(db.Model):
@@ -187,32 +201,32 @@ class Activity(db.Model):
 
 
 
-class BookedClass(db.Model):
-# class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(250), nullable=True)
-    # location = db.Column(db.String(250), nullable=True) # WE can probably retrieve this from  activity_per_trariner
+# class BookedClass(db.Model):
+# # class Event(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     date = db.Column(db.String(250), nullable=True)
+#     # location = db.Column(db.String(250), nullable=True) # WE can probably retrieve this from  activity_per_trariner
 
-    activity_per_trainer_id = db.Column(db.Integer, db.ForeignKey('activity_per_trainer.id'))
-    activity_per_trainer = db.relationship(ActivityPerTrainer)
+#     activity_per_trainer_id = db.Column(db.Integer, db.ForeignKey('activity_per_trainer.id'))
+#     activity_per_trainer = db.relationship(ActivityPerTrainer)
 
-    trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
-    trainer = db.relationship(Trainer)
+#     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
+#     trainer = db.relationship(Trainer)
 
-    trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
-    trainee = db.relationship(Trainee)
+#     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id'))
+#     trainee = db.relationship(Trainee)
 
-    def serialize(self):
-        activity_per_trainer = ActivityPerTrainer.query.get(self.activity_per_trainer_id)
-        trainer = Trainer.query.get(self.trainer_id)
-        trainee = Trainee.query.get(self.trainee_id)
+#     def serialize(self):
+#         activity_per_trainer = ActivityPerTrainer.query.get(self.activity_per_trainer_id)
+#         trainer = Trainer.query.get(self.trainer_id)
+#         trainee = Trainee.query.get(self.trainee_id)
 
-        return {
-            "id": self.id,
-            "date": self.date,
-            "activity_per_trainer": activity_per_trainer.serialize() if activity_per_trainer else None,
-            "trainer": trainer.serialize() if trainer else None,
-            "trainee": trainee.serialize() if trainee else None,}
+#         return {
+#             "id": self.id,
+#             "date": self.date,
+#             "activity_per_trainer": activity_per_trainer.serialize() if activity_per_trainer else None,
+#             "trainer": trainer.serialize() if trainer else None,
+#             "trainee": trainee.serialize() if trainee else None,}
 
 
 
