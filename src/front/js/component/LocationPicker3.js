@@ -13,7 +13,7 @@ const center = {
 
 const onLoad = (ref) => (this.searchBox = ref);
 
-const onPlacesChanged = () => console.log(this.searchBox.getPlaces());
+// const onPlacesChanged = () => console.log(this.searchBox.getPlaces());
 
 <ScriptLoaded>
   <GoogleMap
@@ -22,7 +22,8 @@ const onPlacesChanged = () => console.log(this.searchBox.getPlaces());
     zoom={2.5}
     center={center}
   >
-    <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+    {/* <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}> */}
+    <StandaloneSearchBox onLoad={onLoad}>
       <input
         type="text"
         placeholder="Customized your placeholder"

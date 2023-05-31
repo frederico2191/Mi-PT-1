@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
+import { CiEdit } from "react-icons/ci";
 import "./ActivityItem.css";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -21,7 +22,7 @@ const TrainerActivityItem = ({ activity }) => {
     >
       <div className="d-flex flex-row align-items-center justify-content-between">
         {activity.traineeName ? (
-          <div className="col-4 d-flex flex-row align-items-center activity__trainee-name justify-self-start">
+          <div className="col-4 d-flex flex-row align-items-center justify-self-start">
             <div
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -33,23 +34,35 @@ const TrainerActivityItem = ({ activity }) => {
             <div className="activity-separator" />
           </div>
         ) : (
-          <div className="w-5 col-4" />
+          <div className="col-4 activity__no-trainer"></div>
         )}
-        <div className="col-4">
+        <div className="col-4 ">
           <Link
-            className="text-reset text-decoration-none"
+            className="text-reset text-decoration-none d-flex flex-column"
             to={`/activity_per_trainer/${activity.id}`}
           >
-            {dayjs(activity.date).format("lll")}{" "}
-            <span className="badge rounded-pill bg-info">
+            <span className="">{dayjs(activity.date).format("lll")} </span>
+            <span className="badge rounded-pill bg-warning">
               {activity.duration}min
             </span>
           </Link>
         </div>
         <div className="d-flex justify-content-end col-4">
+          <CiEdit
+            role="button"
+            className="mx-3"
+            size={20}
+            onClick={async () => {
+              actions.setEventModalOpen();
+              actions.setSelectedClassId(activity.id);
+              await actions.getGivenClass({ id: activity.id });
+            }}
+            data-bs-toggle="modal"
+            data-bs-target="#editClass"
+          />
           <TfiTrash
             role="button"
-            onClick={() => actions.setselectedClassId(activity.id)}
+            onClick={() => actions.setSelectedClassId(activity.id)}
             size={20}
             data-bs-toggle="modal"
             data-bs-target="#deleteClass"

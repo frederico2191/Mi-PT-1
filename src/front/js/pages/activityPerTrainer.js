@@ -8,7 +8,7 @@ const ActivityPerTrainer = () => {
   const [, type, id] = pathname.split("/");
 
   useEffect(() => {
-    actions.getGivenClass(id);
+    actions.getGivenClass({ id });
   }, []);
 
   return <div>ActivityPerTrainer</div>;

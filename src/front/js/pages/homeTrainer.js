@@ -24,7 +24,27 @@ const homeTrainer = () => {
       <div className="row justify-content-between my-5 ">
         <h2 className="col-4 ">My Classes</h2>
         <div className="col-3 align-self-center">
-          <EventModal />
+          <button
+            type="button"
+            className="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#addClass"
+            onClick={() => actions.setEventModalOpen()}
+          >
+            + ADD
+          </button>
+          <EventModal
+            id="addClass"
+            title="Create a New Class"
+            submitText="Launch Class"
+            isEdit={false}
+          />
+          <EventModal
+            id="editClass"
+            title="Edit Class"
+            submitText="Save Changes"
+            isEdit
+          />
         </div>
       </div>
       <div className="row justify-content-start fs-3 text ms-3 my-3">

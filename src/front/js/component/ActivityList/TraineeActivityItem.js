@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../../store/appContext";
 import { TfiTrash } from "react-icons/tfi";
+import { CiEdit } from "react-icons/ci";
 import "./ActivityItem.css";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -35,13 +36,15 @@ const TraineeActivityItem = ({ activity }) => {
         ) : (
           <div className="w-5 col-4" />
         )}
-        <div className="col-4">
+        <div className="col-4 activity__date">
           <Link
-            className="text-reset text-decoration-none"
+            className="text-reset text-decoration-none d-flex flex-column"
             to={`/activity_per_trainer/${activity.id}`}
           >
-            {dayjs(activity.date).format("lll")}{" "}
-            <span className="badge bg-info rounded-pill">
+            <span className="activity__date">
+              {dayjs(activity.date).format("lll")}{" "}
+            </span>
+            <span className="badge bg-warning rounded-pill">
               {activity.duration}min
             </span>
           </Link>
@@ -52,7 +55,7 @@ const TraineeActivityItem = ({ activity }) => {
             data-bs-toggle="modal"
             data-bs-target="#unbookClass"
             size={20}
-            onClick={() => actions.setselectedClassId(activity.id)}
+            onClick={() => actions.setSelectedClassId(activity.id)}
           />
         </div>
       </div>

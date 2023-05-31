@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import SearchCity from "./SearchCity";
 import ConfirmationModal from "./ConfirmationModal";
 import { mappedCoachingStyle, mappedSpecialty } from "../utilities";
+import { stepperClasses } from "@mui/material";
+import UploadImages from "../pages/UploadImages";
 
 export const RegisterTrainer = ({ isEdit = false }) => {
   const { store, actions } = useContext(Context);
@@ -13,7 +15,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState("");
   const [experience_level, setExperienceLevel] = useState("");
-  const [city, setCity] = useState({});
+  const [city, setCity] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [coaching_style, setCoachingStyle] = useState("");
   const [age, setAge] = useState("");
@@ -21,6 +23,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   const [last_name, setLastName] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [file, setFile] = useState(null);
 
   const navigate = useNavigate();
 
@@ -31,7 +34,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       setGender(store.user?.gender);
       setAbout(store.user?.trainer?.about);
       setExperienceLevel(store.user?.trainer?.experience_level);
-      setCity(store.user?.city);
+      setCity(store.user?.city || "");
       setSpecialty(store.user?.trainer?.specialty);
       setCoachingStyle(store.user?.trainer?.coaching_style);
       setAge(store.user?.age);
@@ -39,12 +42,15 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       setLastName(store.user?.lastName);
       setWeight(store.user?.weight);
       setHeight(store.user?.height);
+      // setFile(store.user?.image)
     }
   }, [store.user?.id]);
 
   const updateTrainer = async () => {
-    const updatedUser = await actions.updateTrainer(
-      // TO DO CREATE UPDATE TRAINER
+    file && (await actions.uploadImage(file));
+    const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
+    const updatedUser = await actions.editTrainer({
+      trainerId: localStorage.getItem("trainerId"),
       email,
       password,
       gender,
@@ -57,8 +63,9 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       last_name,
       height,
       weight,
-      city.name
-    );
+      city,
+      uploadedProfileImageUrl,
+    });
     if (updatedUser) {
       navigate("/");
     } else {
@@ -69,6 +76,9 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   };
 
   const registerTrainer = async () => {
+    file && (await actions.uploadImage(file));
+    const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
+
     const registeredUser = await actions.registerTrainer(
       email,
       password,
@@ -82,7 +92,8 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       last_name,
       height,
       weight,
-      city.name
+      city.name,
+      uploadedProfileImageUrl
     );
     if (registeredUser) {
       navigate("/login");
@@ -107,7 +118,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   };
 
   return (
-    <div className="container-fluid" style={{ width: "25rem" }}>
+    <div className="container-fluid mt-4" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
@@ -126,26 +137,28 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             We'll never share your email with anyone else.
           </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
-            Password
-          </label>
-          <input
-            required
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        {!isEdit && (
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
+              Password
+            </label>
+            <input
+              required
+              type="password"
+              autoComplete="off"
+              className="form-control"
+              id="exampleInputPassword1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        )}
         <select
           className="form-select"
           aria-label="Default select example"
           value={gender}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT", e.target.value);
             setGender(e.target.value);
           }}
         >
@@ -168,7 +181,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             value={about}
             onChange={(e) => {
               e.persist();
-              console.log("EVENT TExt about", e.target.value);
               setAbout(e.target.value);
             }}
           ></textarea>
@@ -179,7 +191,6 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={experience_level}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT experience level", e.target.value);
             setExperienceLevel(e.target.value);
           }}
         >
@@ -195,13 +206,14 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={coaching_style}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT COACHING STYLE", e.target.value);
             setCoachingStyle(e.target.value);
           }}
         >
           <option value="">Select Your Coaching Style</option>
           {mappedCoachingStyle.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <select
@@ -210,13 +222,14 @@ export const RegisterTrainer = ({ isEdit = false }) => {
           value={specialty}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT trainer's specialty", e.target.value);
             setSpecialty(e.target.value);
           }}
         >
           <option value="">Select You Specialty</option>
           {mappedSpecialty.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <div className="mb-3">
@@ -292,6 +305,8 @@ export const RegisterTrainer = ({ isEdit = false }) => {
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
+        {/* {!isEdit && <UploadImages file={file} setFile={setFile} />} */}
+        <UploadImages file={file} setFile={setFile} />
         <button type="submit" className="btn btn-primary mt-3">
           {isEdit ? "Save changes" : "Register"}
         </button>

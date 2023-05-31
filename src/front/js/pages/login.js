@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
+import "./login.css";
 
 import "../../styles/home.css";
 
@@ -47,52 +48,31 @@ export const Login = () => {
 
   return (
     <div className="text-center mt-5">
-      <h1>Login</h1>
-      {store.token ? (
-        "You are logged in with  the following token: " + store.token
-      ) : (
-        <div>
-          <input
-            type="text"
-            placeholder="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-          {error && <span>{error}</span>}
+      <h1 className="mb-2 fst-italic">Login</h1>
+      <div className="login-container">
+        <input
+          className="login-input"
+          type="text"
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></input>
+        {error && <span>{error}</span>}
 
-          {/* {error ? (
-            <div
-              className="toast"
-              role="alert"
-              aria-live="assertive"
-              aria-atomic="true"
-            >
-              <div className="toast-header">
-                <strong className="me-auto">Bootstrap</strong>
-                <small>11 mins ago</small>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="toast"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="toast-body">
-                Hello, world! This is a toast message.
-              </div>
-            </div>
-          ) : (
-            <span>no error</span>
-          )} */}
-          <button onClick={handleClick}>Login</button>
-        </div>
-      )}
+        <button
+          className="btn btn-primary w-100 login-submit"
+          onClick={handleClick}
+        >
+          Login
+        </button>
+      </div>
       <Link to="/">
         <span className="btn btn-secondary btn-lg" href="#" role="button">
           Back home

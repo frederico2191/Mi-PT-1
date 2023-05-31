@@ -36,9 +36,9 @@ const Search = () => {
     let foundCity;
     let distance = searchDistance;
 
-    if (store.searchedCityName) {
+    if (store.searchedCityName != "") {
       const result = await actions.searchCity(store.searchedCityName);
-      if (!result?.length) setCity();
+      if (!result?.length) setCity("");
       foundCity = result[0];
       actions.setSearchedCityObject(foundCity);
       setCity(foundCity);
@@ -72,7 +72,6 @@ const Search = () => {
         lat: givenClass.lat,
         lng: givenClass.lng,
       });
-      // console.log(givenClass, "Given CLASS inside the handle search");
       return { ...givenClass, distanceInKm: distanceInKm.toFixed(2) };
     });
 
@@ -85,6 +84,7 @@ const Search = () => {
   const handleType = (event) => {
     event.preventDefault();
     actions.setSearchedCityName(event.target.value);
+    console.log(event.target.value, "search set searched city name");
   };
 
   const mapStyle = {
@@ -141,6 +141,8 @@ const Search = () => {
         className="search-input"
         placeholder="City"
         id="city"
+        // value={city}
+        value={store.searchedCityName}
         onChange={handleType}
       />
       <button onClick={handleSearch} className="btn btn-primary mb-5">

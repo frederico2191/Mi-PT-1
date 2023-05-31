@@ -90,12 +90,14 @@ class Trainer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     approved = db.Column(db.Boolean(), nullable=True)
-    about = db.Column(db.String(250), nullable=True)
+    about = db.Column(db.String(10000), nullable=True)
     experience_level = db.Column(db.String(250), nullable=True)
     bank_account = db.Column(db.String(250), nullable=True)
     city = db.Column(db.String(250), nullable=True)
     specialty = db.Column(db.String(250), nullable=True)
     coaching_style = db.Column(db.String(250), nullable=True)
+    profile_image_url = db.Column(db.String(250), nullable=True)
+
 
     # user = db.relationship('User', backref='trainer', lazy=True) #ENUM !!! 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -113,14 +115,15 @@ class Trainer(db.Model):
             "bank_account": self.bank_account,
             "specialty": self.specialty,
             "coaching_style": self.coaching_style,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "profile_image_url": self.profile_image_url
         }
 
 
 class ActivityPerTrainer(db.Model):
 # class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(250), nullable=True)
+    description = db.Column(db.String(10000), nullable=True)
     # name = db.Column(db.String(250), nullable=True)
     duration = db.Column(db.String(250), nullable=True)
     location_range = db.Column(db.String(250), nullable=True)
@@ -135,6 +138,7 @@ class ActivityPerTrainer(db.Model):
     address = db.Column(db.String(1000), nullable=True)
     trainer_name = db.Column(db.String(250), nullable=True)
     trainee_name = db.Column(db.String(250), nullable=True)
+    trainer_profile_image_url = db.Column(db.String(250), nullable=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainer.id'))
     trainee_id = db.Column(db.Integer, db.ForeignKey('trainee.id')) 
@@ -152,12 +156,15 @@ class ActivityPerTrainer(db.Model):
             "hour": self.hour,
             "minutes": self.minutes,
             "name": activity.name,
+            "activity_id": activity.id,
             "city": self.city,
             "lat": self.lat,
             "lng": self.lng,
             "address": self.address,
             "trainerName":self.trainer_name,
             "traineeName":self.trainee_name,
+            "profile_image_url": self.trainer_profile_image_url
+            
         }
 
 class Activity(db.Model):
@@ -175,7 +182,7 @@ class Activity(db.Model):
     
     def serialize(self):
         
-        return {"name": self.name, "activitiesPerTrainer":self.activities_per_trainer}
+        return {"name": self.name, "id": self.id, "activitiesPerTrainer": self.activities_per_trainer}
 
 
 

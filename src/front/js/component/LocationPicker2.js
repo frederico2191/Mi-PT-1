@@ -6,7 +6,6 @@ import { StandaloneSearchBox, useLoadScript } from "@react-google-maps/api";
 import "./LocationPicker2.css";
 
 const libraries = ["places"];
-
 const LocationPicker2 = ({ setLocation, location }) => {
   const { store, actions } = useContext(Context);
   const [searchBox, setSearchBox] = useState(null);
@@ -16,20 +15,13 @@ const LocationPicker2 = ({ setLocation, location }) => {
   });
 
   useEffect(() => {
-    console.log("hello geolocation");
-    console.log("navigator", navigator);
-    console.log("navigator.geolocation", navigator.geolocation);
     if (navigator.geolocation) {
-      console.log("here inside");
       navigator.geolocation.getCurrentPosition((position) => {
-        console.log("position?", position);
         const marker = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        console.log("marker?", marker);
         setMarkerPosition(marker);
-        console.log("I am current position marker position inside map", marker);
       });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -37,24 +29,14 @@ const LocationPicker2 = ({ setLocation, location }) => {
   }, [window.google, navigator.geolocation, store.processedResults]);
 
   const handleChange = (e) => {
-    setLocation({ ...location, [e.target.name]: e.target.value });
+    setLocation({ ...location, address: e.target.value });
   };
-
-  // const { isLoaded, loadError } = useLoadScript({
-  //   // googleMapsApiKey: "AIzaSyBh1vaimejxuAf2sgR69gQsq0MxWMOrOrc",
-  //   googleMapsApiKey: "AIzaSyDDZ4KCljuX_ugUKoGDSsdiswCVE0k_UY8",
-  //   libraries,
-  // });
-
   const onMapClick = (e) => {
-    // setMarkerPosition({ lat: e.latLng.lat(), lng: e.latLng.lng() });
     setLocation({ ...location, lat: e.latLng.lat(), lng: e.latLng.lng() });
   };
-
   const onSearchBoxLoad = (ref) => {
     setSearchBox(ref);
   };
-
   const onPlacesChanged = () => {
     if (searchBox) {
       const place = searchBox.getPlaces()[0];
@@ -86,6 +68,8 @@ const LocationPicker2 = ({ setLocation, location }) => {
               type="text"
               id="search-box"
               placeholder=" "
+              value={location?.address || ""}
+              onChange={handleChange}
               style={{
                 paddingLeft: "15px",
                 width: "100%",

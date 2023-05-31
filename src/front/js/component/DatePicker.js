@@ -7,11 +7,7 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 
 const DatePicker = ({ eventDate, setEventDate }) => {
-  //   const defaultValue = Date.now();
-  //   const [date, setDate] = useState(null);
-
   const handleChange = (newValue) => {
-    console.log(" METHODS AVAILABLE IN PROTOTYP 777777", newValue);
     setEventDate(newValue);
   };
 
@@ -20,8 +16,7 @@ const DatePicker = ({ eventDate, setEventDate }) => {
       <MobileDateTimePicker
         id="date_picker"
         className="w-100 mb-4"
-        defaultValue={eventDate && dayjs(eventDate)}
-        value={eventDate}
+        value={eventDate && dayjs(eventDate)}
         onChange={handleChange}
       />
     </LocalizationProvider>

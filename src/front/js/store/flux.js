@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
@@ -11,24 +13,20 @@ const getState = ({ getStore, getActions, setStore }) => {
       allClasses: [],
       user: null,
       allTypesActivities: null,
-      demo: [
-        {
-          title: "FIRST",
-          background: "white",
-          initial: "white",
-        },
-        {
-          title: "SECOND",
-          background: "white",
-          initial: "white",
-        },
-      ],
       processedResults: [],
       searchedCityName: "",
       searchedCityObject: null,
-      selectedClassId: null,
+      selectedClassId: "",
+      isEventModalOpen: false,
+      uploadedProfileImageUrl: "",
     },
     actions: {
+      setEventModalOpen: () => {
+        setStore({ isEventModalOpen: true });
+      },
+      setEventModalClosed: () => {
+        setStore({ isEventModalOpen: false });
+      },
       setProcessedResults: (filteredEvents) => {
         setStore({ processedResults: filteredEvents });
       },
@@ -38,8 +36,14 @@ const getState = ({ getStore, getActions, setStore }) => {
       setSearchedCityObject: (city) => {
         setStore({ searchedCityObject: city });
       },
-      setselectedClassId: (selectedClassId) => {
-        setStore({ selectedClassId });
+      setSelectedClassId: (selectedClassId) => {
+        setStore({ selectedClassId: selectedClassId });
+      },
+      resetSelectedClassId: () => {
+        setStore({ selectedClassId: "" });
+      },
+      resetGivenClass: () => {
+        setStore({ givenClass: null });
       },
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
@@ -51,7 +55,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getMessage: async () => {
         const store = getStore();
-        console.log(store.token, "I am store.token inside hello_user API ");
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -141,8 +144,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenTrainer: async (id) => {
         const store = getStore();
-        console.log(id, "trainerId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -166,8 +167,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenTrainee: async (id) => {
         const store = getStore();
-        console.log(id, "traineeId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -191,8 +190,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       getGivenClass: async ({ id }) => {
         const store = getStore();
-        console.log(id, "trainerId INSIDE FLUX!!!!!");
-
         const opts = {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -204,7 +201,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          console.log("DATA!!!", data);
           setStore({ givenClass: data });
 
           return true;
@@ -218,7 +214,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       register: async (email, password, gender) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
             method: "POST",
             headers: {
@@ -268,11 +263,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         last_name,
         height,
         weight,
-        city
+        city,
+        uploadedProfileImageUrl
       ) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/trainer",
             {
@@ -294,19 +289,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                 height,
                 weight,
                 city,
+                uploadedProfileImageUrl,
               }),
             }
           );
           if (resp.status === 200) {
             const data = await resp.json();
-            console.log(data, "new user registered after register fetch");
+            console.log(data, "new trainer registered after register fetch");
             return true;
           } else return false;
         } catch (error) {
-          console.error(
-            "There was an error on register fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on register trainer fetch", error);
           return false;
         }
       },
@@ -326,7 +319,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       ) => {
         const store = getStore();
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/trainee",
             {
@@ -351,16 +343,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(
-            data,
-            "new user (trainee) registered after register fetch"
-          );
+          console.log(data, "new trainee registered after register fetch");
           return true;
         } catch (error) {
-          console.error(
-            "There was an error on register trainee fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on register trainee fetch", error);
           return false;
         }
       },
@@ -374,20 +360,18 @@ const getState = ({ getStore, getActions, setStore }) => {
         trainerId,
         city,
         trainerName,
-        location
+        location,
+        trainerProfileImageUrl
       ) => {
         const store = getStore();
-        // console.log("date in flux 2", date?.toDate());
         const eventDate = date?.toISOString();
         const hour = date?.hour();
         const minutes = date?.minute();
         const lat = location?.lat;
         const lng = location?.lng;
         const address = location?.address;
-        console.log("hello", { eventDate, hour, minutes });
 
         try {
-          console.log("in try");
           const resp = await fetch(
             process.env.BACKEND_URL + "/api/register/class",
             {
@@ -410,6 +394,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 lng,
                 trainerName,
                 address,
+                trainerProfileImageUrl,
               }),
             }
           );
@@ -418,17 +403,13 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log(data, "new class registered after register fetch");
           return true;
         } catch (error) {
-          console.error(
-            "There was an error on class register fetch!!! It was caught by flux.js",
-            error
-          );
+          console.error("There was an error on class register fetch", error);
           return false;
         }
       },
       deleteClass: async (id) => {
         const store = getStore();
         try {
-          console.log("in try deleting class###", id, "ID");
           const resp = await fetch(
             process.env.BACKEND_URL + `/api/activity/${id}`,
             {
@@ -440,7 +421,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           );
           const data = await resp.json();
-          console.log(data, "Class sucessufully deleted !");
+          console.log(data, "Class sucessfully deleted !");
           await getActions().verify();
           return true;
         } catch (error) {
@@ -469,7 +450,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          // console.log("DATA INSIDE FETCH %%%%%%%%%%%%%%%%%%%%", data);
           localStorage.setItem("token", data.access_token);
           setStore({ token: data.access_token });
           await getActions().verify();
@@ -492,10 +472,16 @@ const getState = ({ getStore, getActions, setStore }) => {
             opts
           );
           const data = await resp.json();
-          localStorage.setItem("userRole", data["user"].user_role);
+          const userRole = data["user"].user_role;
+          localStorage.setItem("userRole", userRole);
           localStorage.setItem("userName", data["user"].firstName);
           localStorage.setItem("userId", data["user"].id);
           setStore({ user: data["user"] });
+          if (userRole == "trainer") {
+            localStorage.setItem("trainerId", data["user"].trainer.id);
+          } else if (userRole == "trainee") {
+            localStorage.setItem("traineeId", data["user"].trainee.id);
+          }
           return true;
         } catch (error) {
           console.error("Invalid email or password format", error);
@@ -507,8 +493,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("userRole");
         localStorage.removeItem("userName");
-        console.log("logging out");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("trainerId");
         setStore({ token: null });
+        setStore({ user: null });
       },
       changeColor: (index, color) => {
         //get the store
@@ -540,6 +528,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           setStore({ allTypesActivities: data });
 
+          // await getActions().verify();
           return true;
         } catch (error) {
           console.error(
@@ -591,50 +580,175 @@ const getState = ({ getStore, getActions, setStore }) => {
         await getActions().verify();
         return data;
       },
+      editTrainee: async ({
+        traineeId,
+        email,
+        gender,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight,
+        body_type,
+        goal,
+        fitness_experience,
+        city,
+      }) => {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/edit/trainee/${traineeId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              traineeId,
+              email,
+              gender,
+              age,
+              first_name,
+              last_name,
+              height,
+              weight,
+              body_type,
+              goal,
+              fitness_experience,
+              city,
+            }),
+          }
+        );
+        const data = await response.json();
+        await getActions().verify();
+        return data;
+      },
+      editTrainer: async ({
+        trainerId,
+        email,
+        gender,
+        about,
+        experience_level,
+        specialty,
+        coaching_style,
+        age,
+        first_name,
+        last_name,
+        height,
+        weight,
+        city,
+        uploadedProfileImageUrl,
+      }) => {
+        const response = await fetch(
+          `${process.env.BACKEND_URL}/api/edit/trainer/${trainerId}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              gender,
+              about,
+              experience_level,
+              specialty,
+              coaching_style,
+              age,
+              first_name,
+              last_name,
+              height,
+              weight,
+              city,
+              uploadedProfileImageUrl,
+            }),
+          }
+        );
+        const data = await response.json();
+        await getActions().verify();
+        return data;
+      },
+      editClass: async ({
+        classId,
+        name,
+        description,
+        duration,
+        price,
+        eventDate: eventDateFromProps,
+        city,
+        location,
+      }) => {
+        const store = getStore();
+        const finalDate =
+          typeof eventDateFromProps === "string"
+            ? dayjs(eventDateFromProps)
+            : eventDateFromProps;
+        const eventDate = finalDate?.toISOString();
+        const hour = finalDate?.hour();
+        const minutes = finalDate?.minute();
+        const lat = location?.lat;
+        const lng = location?.lng;
+        const address = location?.address;
+        const finalName = store.allTypesActivities.find(
+          (el) => el.id === name
+        )?.name;
 
-      // const handleSubmit = async (e) => {
-      //   e.preventDefault();
-      //   const eventWithTime = {
-      //     ...eventDate,
-      //     time: `${eventDate.hour}:${eventDate.minutes}`,
-      //   };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/api/edit/class/${classId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              body: JSON.stringify({
+                name: finalName,
+                description,
+                duration,
+                price,
+                eventDate,
+                hour,
+                minutes,
+                city,
+                lat,
+                lng,
+                address,
+              }),
+            }
+          );
+          const data = await resp.json();
+          await getActions().verify();
+          console.log(data, "new class edited after register fetch");
+          return true;
+        } catch (error) {
+          console.error(
+            "There was an error on class edit fetch!!! It was caught by flux.js",
+            error
+          );
+          return false;
+        }
+      },
+      uploadImage: async (file) => {
+        let body = new FormData();
+        body.append("profile_image", file[0]);
+        const opts = {
+          method: "POST",
+          body,
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + "/api/upload",
+            opts
+          );
+          const data = await resp.json();
+          setStore({ uploadedProfileImageUrl: data.profile_image_url });
+          return data, true;
+        } catch (error) {
+          console.error("An error occurred fetching the image", error);
 
-      //   try {
-      //     const response = await axios.post('/api/events', eventWithTime);
-      //     console.log('Event saved with ID:', response.data.id);
-      //     setEvents([...events, { ...eventWithTime, id: response.data.id }]);
-      //     setShowModal(false);
-      //   } catch (error) {
-      //     console.error('Error adding event:', error);
-      //   }
-      // };
-
-      // getFavorites: async () => {
-      //   const store = getStore();
-      //   try {
-      //     const resp = await fetch(
-      //       process.env.BACKEND_URL + "/api/favorites",
-
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //         },
-      //       }
-      //     );
-      //     //   const resp = await fetch(
-      //     //     process.env.BACKEND_URL + "/api/hello",
-      //     //     opts
-      //     //   );
-      //     const data = await resp.json();
-      //     setStore({ favorites: data.favorites });
-      //     return true;
-      //   } catch (error) {
-      //     console.error(
-      //       "There was an error on favorites fetch!!! It was caught by flux.js",
-      //       error
-      //     );
-      //   }
-      // },
+          return false;
+        }
+      },
     },
   };
 };

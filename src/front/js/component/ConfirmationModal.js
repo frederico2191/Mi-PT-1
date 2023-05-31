@@ -9,6 +9,7 @@ const ConfirmationModal = ({ id, message, submitText, title, onConfirm }) => {
             <h5 className="modal-title">{title}</h5>
             <button
               type="button"
+              id="btn-close"
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"

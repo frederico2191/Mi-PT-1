@@ -14,7 +14,7 @@ export const RegisterTrainee = ({ isEdit = false }) => {
   const [age, setAge] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-  const [city, setCity] = useState({});
+  const [city, setCity] = useState("");
   const [body_type, setBodyType] = useState("");
   const [goal, setGoal] = useState("");
   const [fitness_experience, setFitnessExperience] = useState("");
@@ -31,15 +31,16 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       setAge(store.user?.age);
       setFirstName(store.user?.firstName);
       setLastName(store.user?.lastName);
-      setCity(store.user?.city);
-      setBodyType(store.user?.trainee?.body_type);
-      setGoal(store.user?.trainee?.goal);
-      setFitnessExperience(store.user?.trainee?.fitness_experience);
+      setCity(store.user?.city || "");
+      setBodyType(store.user?.trainee?.body_type || "");
+      setGoal(store.user?.trainee?.goal || "");
+      setFitnessExperience(store.user?.trainee?.fitness_experience || "");
     }
   }, [store.user?.id]);
 
   const updateTrainee = async () => {
-    const updatedUser = await actions.updateTrainee(
+    const updatedUser = await actions.editTrainee({
+      traineeId: localStorage.getItem("traineeId"),
       email,
       password,
       gender,
@@ -51,8 +52,8 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       body_type,
       goal,
       fitness_experience,
-      city.name
-    );
+      city,
+    });
     if (updatedUser) {
       navigate("/");
     } else {
@@ -100,7 +101,7 @@ export const RegisterTrainee = ({ isEdit = false }) => {
   };
 
   return (
-    <div className="container-fluid" style={{ width: "25rem" }}>
+    <div className="container-fluid mt-4" style={{ width: "25rem" }}>
       <form onSubmit={handleClick}>
         <div className="mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
@@ -119,19 +120,22 @@ export const RegisterTrainee = ({ isEdit = false }) => {
             We'll never share your email with anyone else.
           </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="exampleInputPassword1" className="form-label">
-            Password
-          </label>
-          <input
-            required
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        {!isEdit && (
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">
+              Password
+            </label>
+            <input
+              required
+              type="password"
+              autoComplete="off"
+              className="form-control"
+              id="exampleInputPassword1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        )}
         <div className="mb-3">
           <label htmlFor="ageInput" className="form-label">
             Age
@@ -151,7 +155,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={gender}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT", e.target.value);
             setGender(e.target.value);
           }}
         >
@@ -168,7 +171,6 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={body_type}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT experience level", e.target.value);
             setBodyType(e.target.value);
           }}
         >
@@ -183,13 +185,14 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={goal}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT Goal ", e.target.value);
             setGoal(e.target.value);
           }}
         >
           <option value="">Select Your Main Goal</option>
           {mappedGoals.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <select
@@ -198,13 +201,14 @@ export const RegisterTrainee = ({ isEdit = false }) => {
           value={fitness_experience}
           onChange={(e) => {
             e.persist();
-            console.log("EVENT Fitness Experience", e.target.value);
             setFitnessExperience(e.target.value);
           }}
         >
           <option value="">Select Your Fitness Experience</option>
           {mappedFitnessExperience.map(({ value, label }) => (
-            <option value={value}>{label}</option>
+            <option key={value} value={value}>
+              {label}
+            </option>
           ))}
         </select>
         <div className="mb-3">
