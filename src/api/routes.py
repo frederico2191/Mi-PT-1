@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint, json, make_response
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
@@ -12,6 +12,7 @@ import cloudinary
 import cloudinary.uploader
 
 from .routesRefactored.activity_routes import register_activity_route
+from .services import activity_services as act
 
 api = Blueprint('api', __name__)
 
@@ -21,30 +22,14 @@ possible_fitness_experiences=["new_to_it", "getting_back", "currently_working_ou
 possible_goals=[ "lose_weight","get_toned", "increas_muscle_mass","improve_health", "improve_as_athlete",""]
 possible_specialties=["running_performance", "functional_training", "postpartum_training","weight_loss","strength_development","metabolic_conditioning","injury_reduction","sports_performance","flexibility","metabolic_conditioning", ""]
 possible_coaching_styles=["supportive", "laid_back", "results_oriented","motivating","high_energy", "calm", ""]
-# possible_indoor_outdoor_remote=["indoor", "outdoor", "remote"]
 possible_experience_levels=["expert", "beginner", "professional", "medium", ""]
 
 
 
-# @api.route('/register', methods=['POST'])
-# def register_user():
-#     email = request.json.get("email",None)
-#     password = request.json.get("password",None)
-#     dbEmail = User.query.filter_by(email = email).first()
-#     if dbEmail:
-#         return jsonify({"msg": "User already exists!"}), 401
-
-#     user_to_register = User()
-#     user_to_register.email= email
-#     user_to_register.password= password
-#     db.session.add(user_to_register)
-#     db.session.commit()
-#     data = user_to_register.serialize()
-    
-#     return jsonify(data)
 
 @api.route('/register/trainer', methods=['POST'])
 def register_trainer():
+
     email = request.json.get("email",None)
     password = request.json.get("password",None)
     gender = request.json.get("gender",None)
@@ -169,56 +154,67 @@ def register_trainee():
     # # db.session.commit()
     
     return jsonify(new_trainee)
-
-
-# @api.route('/register/class', methods=['POST'])
-# @jwt_required()
-# def register_class_route(request):
-#     return jsonify(data),200
-
     
-@api.route('/register/class', methods=['POST'])
+@api.route('/register/activity', methods=['POST'])
 @jwt_required()
 def register_class():
-    
-    name = request.json.get("name",None)
-    description = request.json.get("description",None)
-    duration = request.json.get("duration",None)
-    price = request.json.get("price",None)
-    eventDate = request.json.get("eventDate",None)
-    hour = request.json.get("hour",None)
-    minutes = request.json.get("minutes",None)
-    city = request.json.get("city",None)
-    trainer_id = request.json.get("trainerId",None)
-    trainer_name = request.json.get("trainerName",None)
-    city = request.json.get("city",None)
-    lat = request.json.get("lat",None)
-    lng = request.json.get("lng",None)
-    address = request.json.get("address",None)
-    profile_image_url = request.json.get("trainerProfileImageUrl",None)
-    datetime_object = parser.parse(eventDate) if eventDate else None
+    data = request.json
+    # data = json.loads(request.data)
+    new_class = act.register_activity_services(data)
 
-    class_to_register = ActivityPerTrainer()
-    class_to_register.description= description
-    class_to_register.duration= duration
-    class_to_register.price= price
-    class_to_register.date= datetime_object
-    class_to_register.hour= hour 
-    class_to_register.minutes = minutes 
-    class_to_register.activity_id = name 
-    class_to_register.trainer_id = trainer_id
-    class_to_register.city = city
-    class_to_register.lat = lat
-    class_to_register.lng = lng
-    class_to_register.trainer_name = trainer_name
-    class_to_register.address = address
-    class_to_register.trainer_profile_image_url = profile_image_url
+    return make_response(jsonify(new_class), 200)
+
+@api.route('/all_activities', methods=['GET'])
+def get_all_activities():
+    all_activities = act.get_all_activities_services()
+    return make_response(jsonify(all_activities), 200)
+
+
+@api.route('/activity/<activity_id>', methods=['GET']) 
+def get_given_activity(activity_id):
+    data = act.get_given_activity_services(activity_id)
+    return make_response(jsonify(data), 200)
+
     
-    db.session.add(class_to_register)
-    db.session.commit()
-    data = class_to_register.serialize()
+
+@api.route('/edit/activity/<activity_id>', methods=['PUT'])
+@jwt_required()
+def edit_activity(activity_id):
+    data=request.json
+    print("333", data)
+    edited_class = act.update_activity_services(data,activity_id)
     
-    return jsonify(data),200
+    # return jsonify(edited_class)
+    return make_response(jsonify(edited_class), 200)
+
+
+@api.route('/activity/<activity_id>', methods=['DELETE']) 
+@jwt_required()
+def deleteClass(activity_id):
+    delete_class = act.delete_activity_services(activity_id)
+    return jsonify(delete_class),200
+
+
+@api.route('/book_class', methods=['PUT'])
+@jwt_required()
+def book_class():
+    data = request.json
+    booked_class = act.book_class_services(data)
+    return jsonify(booked_class),200
+    # return make_response(jsonify(classes), 200)
+
+
+
+@api.route('/unbook_class', methods=['PUT'])
+@jwt_required()
+def unbook_class():
+    data = request.json
+    unbooked_class = act.unbook_class_services(data)
+    return jsonify({"respBody": unbooked_class}), 200
+
+
+    
+
 
 
 
@@ -244,14 +240,11 @@ def verify_token():
 
     return jsonify(user=serializedUser), 200
 
-# @api.route('/hello_user', methods=['GET'])
+@api.route('/byebye', methods=['GET'])
 # @jwt_required()
-# def get_hello():
-#     email_provided = get_jwt_identity()
-#     helloDictionary = {
-#     "message": "Welcome " + email_provided 
-#     }
-#     return jsonify(helloDictionary)
+def thing():
+    body = act.think()
+    return body
 
 @api.route('/get_user', methods=['GET'])
 @jwt_required()
@@ -306,175 +299,9 @@ def getGivenTrainee(trainee_id):
 
     return jsonify(data_user)
 
-@api.route('/activity/<activity_id>', methods=['DELETE']) 
-@jwt_required()
-def deleteClass(activity_id):
-    activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).first()
-    db.session.delete(activity_to_delete)
-    db.session.commit()
-    
-    return jsonify()
-
-# @api.route('/bookedclass/<bookedclass_id>', methods=['DELETE']) 
-# @jwt_required()
-# def deleteClass(bookedclass_id):
-#     booked_class_to_delete= BookedClass.query.filter_by(id = bookedclass_id).first()
-#     db.session.delete(booked_class_to_delete)
-#     db.session.commit()
-    
-#     return jsonify()
 
 
 
-# For all the available classes from all the trainers! All activity per trainer table.
-# @api.route('/activity_per_trainer/<trainer_id>', methods=['GET']) 
-# @jwt_required()
-# def getAllClasses(trainer_id):
-#     activities = ActivityPerTrainer.query.filter_by(trainer_id= trainer_id)
-#     print(activities, "activitieshuyjuy fsdanjfsnda")
-#     # trainers = User.query.filter_by(role = "trainer")
-#     data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
-#     # data = activity_per_trainer.serialize()
-#     return jsonify(data)
-
-
-# For all the available classes from all the trainers! All activity per trainer table.
-@api.route('/activity_per_trainer', methods=['GET']) 
-# @jwt_required()
-def getAllClasses():
-    # activities = ActivityPerTrainer.query.all()
-    # data = [activity_per_trainer.serialize() for activity_per_trainer in activities]
-
-    todays_datetime = datetime(datetime.today().year, datetime.today().month, datetime.today().day)
-    upcoming_activities = ActivityPerTrainer.query.filter(ActivityPerTrainer.date >= todays_datetime).all()
-    data = [activity_per_trainer.serialize() for activity_per_trainer in upcoming_activities]
-    # payments = Payment.query.filter(Payment.due_date >= todays_datetime).all()
-    # data_future = data.filter_by(activity_per_trainer_date> date.now())
-
-    return jsonify(data)
-
-
-
-@api.route('/classes', methods=['GET'])
-@jwt_required()
-def get_classes():
-    # Query the database for all ActivityPerTrainer instances
-    classes = ActivityPerTrainer.query.all()
-
-    # Serialize the data for the response
-    classes_data = [c.serialize() for c in classes]
-
-    # Return the data as JSON
-    return jsonify(classes_data), 200
-
-
-# # For one individual class, that can be booked.
-@api.route('/activity_per_trainer/<activity_per_trainer_id>', methods=['GET']) 
-@jwt_required()
-def getGivenClass(activity_per_trainer_id):
-    activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
-
-    data = activity_per_trainer.serialize()
-   
-    return jsonify(data)
-
-@api.route('/book_class', methods=['PUT'])
-@jwt_required()
-def book_class():
-    data = request.get_json()
-    activity_per_trainer_id = data.get('id')
-    trainee_id = data.get('trainee_id')
-    trainee_name = data.get('trainee_name')
-    # user_id = data.get('user_id')
-
-    # activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
-    activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
-    # print(activity_per_trainer.serialize(),"$$$888888888888888")
-    # activity_per_trainer = activity_per_trainer.serialize()
-    # aux = ...activities_per_trainer.trainee_name
-    activity_per_trainer.trainee_id = trainee_id
-    # activity_per_trainer.trainee_name = [...activities_per_trainer.trainee_name, trainee_name]
-    # activity_per_trainer.trainee_name = trainee_name if activity_per_trainer.trainee_id is None else return
-    activity_per_trainer.trainee_name = trainee_name
-
-    # trainee = Trainee.query.get(trainee_id)
-
-    # if not trainee or not activity_per_trainer:
-    #     return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
-
-    
-    existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id).first()
-    if existing_booking:
-        return jsonify({'error': 'Class already booked.'}), 400
-
-
-    # new_booking = BookedClass(
-    #     date=datetime.now(),
-    #     activity_per_trainer_id=activity_per_trainer_id,
-    #     trainer_id=activity_per_trainer.trainer_id,
-    #     trainee_id=trainee_id,
-    
-    # db.session.add(activity_per_trainer)
-    db.session.commit()
-    resp_body = {
-        "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
-    }
-    return jsonify({"respBody": resp_body}), 200
-
-@api.route('/unbook_class', methods=['PUT'])
-@jwt_required()
-def unbook_class():
-    data = request.get_json()
-    activity_per_trainer_id = data.get('id')
-    trainee_id = data.get('trainee_id')
-    # user_id = data.get('user_id')
-
-    # activity_per_trainer = ActivityPerTrainer.query.get(activity_per_trainer_id)
-    activity_per_trainer = ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first()
-    # print(activity_per_trainer.serialize(),"$$$888888888888888")
-    # activity_per_trainer = activity_per_trainer.serialize()
-    # aux = ...activities_per_trainer.trainee_name
-    # if not trainee or not activity_per_trainer:
-    #     return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
-    # activity_per_trainer.trainee_id = None if activity_per_trainer.trainee_id is trainee_id else return
-    print("activity_per_trainer?", activity_per_trainer)
-    if activity_per_trainer is None: 
-        return  jsonify({"respBody": None}), 400
-    
-    activity_per_trainer.trainee_id = None 
-    activity_per_trainer.trainee_name = None
-    # activity_per_trainer.trainee_name = [...activities_per_trainer.trainee_name, trainee_name]
-    # activity_per_trainer.trainee_name = trainee_name if activity_per_trainer.trainee_id is None else return
-    # activity_per_trainer.trainee_name = trainee_name
-
-    # trainee = Trainee.query.get(trainee_id)
-
-    # if not trainee or not activity_per_trainer:
-    #     return jsonify({'error': 'Invalid trainee or activity_per_trainer ID.'}), 400
-
-    db.session.commit()
-    resp_body = {
-        "class": ActivityPerTrainer.query.filter_by(id = activity_per_trainer_id).first().serialize()
-    }
-    return jsonify({"respBody": resp_body}), 200
-    
-    # existing_booking = BookedClass.query.filter_by(activity_per_trainer_id=activity_per_trainer_id).first()
-    # if existing_booking:
-    #     return jsonify({'error': 'Class already booked.'}), 400
-
-
-    # # new_booking = BookedClass(
-    # #     date=datetime.now(),
-    # #     activity_per_trainer_id=activity_per_trainer_id,
-    # #     trainer_id=activity_per_trainer.trainer_id,
-    # #     trainee_id=trainee_id,
-    
-    # # db.session.add(activity_per_trainer)
-    # db.session.commit()
-    # resp_body = {
-    #     "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
-    # }
-    # return jsonify({"respBody": resp_body}), 200
 
 @api.route('/edit/trainee/<trainee_id>', methods=['PUT'])
 @jwt_required()
@@ -598,53 +425,6 @@ def edit_trainer(trainer_id):
         "edited_user_trainer": User.query.filter(User.trainer.has(id = trainer_id)).first().serialize(),
     }
     return jsonify({"respBody": resp_body}), 200
-
-@api.route('/edit/class/<class_id>', methods=['PUT'])
-@jwt_required()
-def edit_class(class_id):
-
-    class_to_edit = ActivityPerTrainer.query.filter_by(id = class_id).first()
-    if class_to_edit is None: 
-        return  jsonify({"respBody": None}), 400
-    
-    serialized_class_to_edit = class_to_edit.serialize()
-    
-    name = request.json.get("name",None)
-    description = request.json.get("description",None)
-    duration = request.json.get("duration",None)
-    price = request.json.get("price",None)
-    eventDate = request.json.get("eventDate",None)
-    hour = request.json.get("hour",None)
-    minutes = request.json.get("minutes",None)
-    city = request.json.get("city",None)
-    lat = request.json.get("lat",None)
-    lng = request.json.get("lng",None)
-    address = request.json.get("address",None)
-    datetime_object = parser.parse(eventDate) if eventDate else None
-
-    activity = Activity.query.filter_by(name=name).first()
-    serialized_activity = activity.serialize() if activity else None
-
-    print("serialized_activity", serialized_activity)
-    print("serialized_class_to_edit", serialized_class_to_edit)
-
-    class_to_edit.description= description
-    class_to_edit.duration= duration
-    class_to_edit.price= price
-    class_to_edit.date= datetime_object #dt.parse(eventDate) # datetime
-    class_to_edit.hour= hour # HH
-    class_to_edit.minutes = minutes # mm
-    class_to_edit.activity_id = serialized_activity["id"] if serialized_activity else serialized_class_to_edit["activity_id"]
-    class_to_edit.city = city # mm
-    class_to_edit.lat = lat # mm
-    class_to_edit.lng = lng # mm
-    class_to_edit.address = address # mm
-
-    db.session.commit()
-    data = class_to_edit.serialize()
-    
-    return jsonify(data),200
-
 
 
 @api.route('/upload', methods=['POST'])

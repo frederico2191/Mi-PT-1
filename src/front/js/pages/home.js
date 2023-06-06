@@ -13,8 +13,7 @@ export const Home = () => {
   useEffect(() => {
     (async () => {
       if (store.token && store.token != "" && store.token != undefined)
-        await actions.getMessage();
-      await actions.getAllTypesActivities();
+        await actions.getAllTypesActivities();
 
       await actions.getAllClasses();
     })();
@@ -50,7 +49,7 @@ export const Home = () => {
           {store.allTypesActivities?.map((x) => {
             const activityClasses = store.allClasses?.filter(
               (givenClass) =>
-                !givenClass.trainee_id && givenClass.name == x.name
+                !givenClass?.trainee_id && givenClass?.name == x.name
             );
             return (
               <div key={x.id}>

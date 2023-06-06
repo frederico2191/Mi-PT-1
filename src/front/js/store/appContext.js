@@ -22,7 +22,7 @@ const injectContext = (PassedComponent) => {
     );
 
     useEffect(() => {
-      state.actions.getMessage(), state.actions.syncTokenFromLocalStore();
+      state.actions.syncTokenFromLocalStore();
       state.actions.verify();
       // state.actions.activity per trainer functino of fetch
     }, [state.store]);

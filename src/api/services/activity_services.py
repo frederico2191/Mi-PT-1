@@ -1,25 +1,28 @@
-from ..repositories.ActivityRepository import ActivityRepository
-from ..models import ActivityModel, ActivityCategoryModel
+from flask import jsonify
+from dateutil import parser
+from ..models import db, ActivityPerTrainer, User
+from datetime import datetime
+from dateutil import parser
 
-def register_activity_services(request):
-    name = request.json.get("name",None)
-    description = request.json.get("description",None)
-    duration = request.json.get("duration",None)
-    price = request.json.get("price",None)
-    eventDate = request.json.get("eventDate",None)
-    hour = request.json.get("hour",None)
-    minutes = request.json.get("minutes",None)
-    city = request.json.get("city",None)
-    trainer_id = request.json.get("trainerId",None)
-    trainer_name = request.json.get("trainerName",None)
-    city = request.json.get("city",None)
-    lat = request.json.get("lat",None)
-    lng = request.json.get("lng",None)
-    address = request.json.get("address",None)
-    profile_image_url = request.json.get("trainerProfileImageUrl",None)
+
+def register_activity_services(data):
+    name = data["name"]
+    description = data["description"]
+    duration = data["duration"]
+    address = data["address"]
+    price = data["price"]
+    eventDate = data["eventDate"]
+    hour = data["hour"]
+    minutes = data["minutes"]
+    city = data["city"]
+    trainer_id = data["trainerId"]
+    trainer_name = data["trainerName"]
+    lat = data["lat"]
+    lng = data["lng"]
+    profile_image_url = data["trainerProfileImageUrl"]
     datetime_object = parser.parse(eventDate) if eventDate else None
 
-    activity_to_register = ActivityModel()
+    activity_to_register = ActivityPerTrainer()
     activity_to_register.description= description
     activity_to_register.duration= duration
     activity_to_register.price= price
@@ -34,102 +37,108 @@ def register_activity_services(request):
     activity_to_register.trainer_name = trainer_name
     activity_to_register.address = address
     activity_to_register.trainer_profile_image_url = profile_image_url
-
-    activity_repository = ActivityRepository()
-    # ActivityRepository().add(activity_to_register)
-    activity_repository.save(activity_to_register)
-    # db.session.commit()
-    data = activity_to_register.serialize()
-
-    return data,200
-
+    body = activity_to_register.serialize()
+   
+    db.session.add(activity_to_register)
+    db.session.commit()
+    return body
 
 def get_given_activity_services(activity_id):
-    # ActivityRepository.get(self, activity_id)
-    activity = ActivityModel.query.filter_by(id = activity_id).first()
-
+    activity = ActivityPerTrainer.query.get(activity_id)
     data = activity.serialize()
    
-    return jsonify(data)
+    return data
 
-def get_all_activity_services():
-    ActivityRepository.get(self, activity_id)
-    activities = ActivityModel.query.filter_by(id = activity_id).first()
+def get_all_activities_services():
+    todays_datetime = datetime(datetime.today().year, datetime.today().month, datetime.today().day)
+    upcoming_activities = ActivityPerTrainer.query.filter(ActivityPerTrainer.date >= todays_datetime).all()
+    data = [activity_per_trainer.serialize() for activity_per_trainer in upcoming_activities]
 
-    data = activities.serialize()
+    if data is None:
+        return "Error in services", 400
    
-    return jsonify(data)
+    return data
 
-def update_activity_services(activity_id):
-    activity_to_update = ActivityModel.query.filter_by(id = activity_id).first()
+def update_activity_services(data,activity_id):
+    print(data,"345 inside update services")
+    name = data["name"]
+    activity_category_id = data["activityCategoryId"]
+    description = data["description"]
+    duration = data["duration"]
+    address = data["address"]
+    price = data["price"]
+    eventDate = data["eventDate"]
+    hour = data["hour"]
+    minutes = data["minutes"]
+    city = data["city"]
+    lat = data["lat"]
+    lng = data["lng"]
+    datetime_object = parser.parse(eventDate) if eventDate else None
+    activity_to_update = ActivityPerTrainer.query.get(activity_id)
     if activity_to_update is None: 
-        return  jsonify({"respBody": None}), 400
+        return  None
     
     serialized_activity_to_update = activity_to_update.serialize()
-    name = request.json.get("name",None)
-    description = request.json.get("description",None)
-    duration = request.json.get("duration",None)
-    price = request.json.get("price",None)
-    eventDate = request.json.get("eventDate",None)
-    hour = request.json.get("hour",None)
-    minutes = request.json.get("minutes",None)
-    city = request.json.get("city",None)
-    lat = request.json.get("lat",None)
-    lng = request.json.get("lng",None)
-    address = request.json.get("address",None)
-    datetime_object = parser.parse(eventDate) if eventDate else None
-
-    activity_category = ActivityCategoryModel.query.filter_by(name=name).first()
+    activity_category = ActivityPerTrainer.query.get(activity_category_id)
     serialized_activity_category = activity_category.serialize() if activity_category else None
-
-
     activity_to_update.description= description
     activity_to_update.duration= duration
     activity_to_update.price= price
     activity_to_update.date= datetime_object 
     activity_to_update.hour= hour 
     activity_to_update.minutes = minutes
-    activity_to_update.activity_id = serialized_activity["id"] if serialized_activity else serialized_activity_to_update["activity_id"]
+    activity_to_update.activity_id = serialized_activity_category["id"] if serialized_activity_category else serialized_activity_to_update["activity_id"]
     activity_to_update.city = city 
     activity_to_update.lat = lat 
     activity_to_update.lng = lng 
     activity_to_update.address = address 
+    data = activity_to_update.serialize()
+    db.session.add(activity_to_update)
+    db.session.commit()
 
-    return ActivityRepository.update(self, activity_id, activity_to_update)
+    return data
 
-def book_class_services():
-    data = request.get_json()
-    activity_id = data.get('id')
-    trainee_id = data.get('trainee_id')
-    trainee_name = data.get('trainee_name')
 
-    activity = ActivityModel.query.filter_by(id = activity_id).first()
+def delete_activity_services(activity_id):
+    activity_to_delete= ActivityPerTrainer.query.get(activity_id)
+    if activity_to_delete is None: 
+        return  None
+    db.session.delete(activity_to_delete)
+    db.session.commit()
+    body = "Class Sucessfully Deleted"
+    return body
+
+
+def book_class_services(data):
+    print("inside 2424")
+    activity_id = data['activity_id']
+    trainee_id = data['trainee_id']
+    trainee_name = data['trainee_name']
+
+    activity = ActivityPerTrainer.query.get(activity_id)
+    print("activity  543", activity)
+    serialized_activity = activity.serialize() if activity else None
+
+
     activity.trainee_id = trainee_id
     activity.trainee_name = trainee_name
 
     db.session.commit()
     resp_body = {
-        "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name,
-    }
-    return ActivityRepository.update(self, activity_id, {data:activity})
+        "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name, }
+    return resp_body
 
-def unbook_class_services():
-    data = request.get_json()
-    activity_id = data.get('id')
-    trainee_id = data.get('trainee_id')
-    activity = ActivityPerTrainer.query.filter_by(id = activity_id).first()
+def unbook_class_services(data):
+    activity_id = data['activity_id']
+    activity = ActivityPerTrainer.query.get(activity_id)
     if activity is None: 
-        return  jsonify({"respBody": None}), 400
+        return  {"resp_body": None}
     
     activity.trainee_id = None 
     activity.trainee_name = None
     db.session.commit()
     resp_body = {
-        "class": ActivityPerTrainer.query.filter_by(id = activity_id).first().serialize()
+        "activity_unbooked": ActivityPerTrainer.query.get(activity_id).serialize()
     }
-    return jsonify({"respBody": resp_body}), 200
+    return resp_body
     
-
-def delete_activity_services(activity_id):
-    activity_to_delete= ActivityPerTrainer.query.filter_by(id = activity_id).first()
-    return ActivityRepository.delete(self, activity_to_delete)

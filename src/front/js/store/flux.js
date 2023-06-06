@@ -53,28 +53,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         //   setStore({ token: token });
         // }
       },
-      getMessage: async () => {
-        const store = getStore();
-        const opts = {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        };
-        try {
-          const resp = await fetch(
-            process.env.BACKEND_URL + "/api/hello_user",
-            opts
-          );
-          const data = await resp.json();
-          setStore({ message: data.message });
-          return true;
-        } catch (error) {
-          console.error(
-            "There was an error welcome message fectch!!! It was caught by flux.js",
-            error
-          );
-        }
-      },
 
       fetchActivityPerTrainer: async (activity_per_trainer_id) => {
         const store = getStore();
@@ -128,7 +106,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(
-            process.env.BACKEND_URL + "/api/activity_per_trainer",
+            process.env.BACKEND_URL + "/api/all_activities",
             opts
           );
           const data = await resp.json();
@@ -197,7 +175,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(
-            process.env.BACKEND_URL + "/api/activity_per_trainer/" + id,
+            process.env.BACKEND_URL + "/api/activity/" + id,
             opts
           );
           const data = await resp.json();
@@ -373,7 +351,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         try {
           const resp = await fetch(
-            process.env.BACKEND_URL + "/api/register/class",
+            process.env.BACKEND_URL + "/api/register/activity",
             {
               method: "POST",
               headers: {
@@ -400,7 +378,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
           const data = await resp.json();
           await getActions().verify();
-          console.log(data, "new class registered after register fetch");
+          console.log(data, "New class registered after register fetch");
           return true;
         } catch (error) {
           console.error("There was an error on class register fetch", error);
@@ -495,6 +473,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.removeItem("userName");
         localStorage.removeItem("userId");
         localStorage.removeItem("trainerId");
+        localStorage.removeItem("traineeId");
         setStore({ token: null });
         setStore({ user: null });
       },
@@ -548,7 +527,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                id,
+                activity_id: id,
                 trainee_id: traineeId,
                 trainee_name: traineeName,
               }),
@@ -562,7 +541,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           window.alert("There was an error booking this class.");
         }
       },
-      unbookClass: async (id) => {
+      unbookClass: async (activity_id) => {
         const response = await fetch(
           `${process.env.BACKEND_URL}/api/unbook_class`,
           {
@@ -572,7 +551,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              id,
+              activity_id,
             }),
           }
         );
@@ -668,7 +647,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         return data;
       },
       editClass: async ({
-        classId,
+        activityId,
         name,
         description,
         duration,
@@ -691,10 +670,13 @@ const getState = ({ getStore, getActions, setStore }) => {
         const finalName = store.allTypesActivities.find(
           (el) => el.id === name
         )?.name;
+        const finalId = store.allTypesActivities.find(
+          (el) => el.id === name
+        )?.id;
 
         try {
           const resp = await fetch(
-            process.env.BACKEND_URL + `/api/edit/class/${classId}`,
+            process.env.BACKEND_URL + `/api/edit/activity/${activityId}`,
             {
               method: "PUT",
               headers: {
@@ -703,6 +685,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               },
               body: JSON.stringify({
                 name: finalName,
+                activityCategoryId: finalId,
                 description,
                 duration,
                 price,
