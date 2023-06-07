@@ -89,7 +89,7 @@ const EventModal = ({ id, submitText, title, isEdit }) => {
 
   const editClass = async () => {
     const updatedClass = await actions.editClass({
-      classId: store.selectedClassId,
+      activityId: store.selectedClassId,
       name,
       description,
       duration,
