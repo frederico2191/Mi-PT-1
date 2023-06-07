@@ -60,7 +60,6 @@ def get_all_activities_services():
     return data
 
 def update_activity_services(data,activity_id):
-    print(data,"345 inside update services")
     name = data["name"]
     activity_category_id = data["activityCategoryId"]
     description = data["description"]
@@ -110,19 +109,13 @@ def delete_activity_services(activity_id):
 
 
 def book_class_services(data):
-    print("inside 2424")
     activity_id = data['activity_id']
     trainee_id = data['trainee_id']
     trainee_name = data['trainee_name']
-
     activity = ActivityPerTrainer.query.get(activity_id)
-    print("activity  543", activity)
     serialized_activity = activity.serialize() if activity else None
-
-
     activity.trainee_id = trainee_id
     activity.trainee_name = trainee_name
-
     db.session.commit()
     resp_body = {
         "trainee_name": User.query.filter(User.trainee.has(id = trainee_id)).first().first_name, }

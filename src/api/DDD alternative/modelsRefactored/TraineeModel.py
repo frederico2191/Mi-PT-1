@@ -11,7 +11,6 @@ class TraineeModel(db.Model):
     city = db.Column(db.String(250), nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    # atendencies = db.relationship('ActivityPerTrainer', secondary=atendencies, lazy='subquery',backref=db.backref('trainees', lazy=True))
 
     def serialize(self):
         return {

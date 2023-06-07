@@ -1,9 +1,7 @@
-from repositories.ActivityRepository import ActivityRepository
-from .models import ActivityCategoryModel
+from ..models import Activity
 
 def get_all_activity_category_services():
-    allActivityCategories = ActivityCategoryModel.query.all()
-    
-    data = [{"name": activity.name, "id": activity.id} for activity in allTypesActivities]
+    allActivityCategories = Activity.query.all()
+    data = [{"name": activity.name, "id": activity.id} for activity in allActivityCategories]
 
-    return jsonify(data)
+    return data

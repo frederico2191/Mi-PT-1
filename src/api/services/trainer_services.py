@@ -1,30 +1,29 @@
-from repositories.TrainerRepository import TrainerRepository
-from repositories.UserRepository import UserRepository
-from .models import TrainerModel, UserModel
+from ..models import User,Trainer,db
 
-def register_trainer():
-    email = request.json.get("email",None)
-    password = request.json.get("password",None)
-    gender = request.json.get("gender",None)
-    about = request.json.get("about",None)
-    experience_level = request.json.get("experience_level",None)
-    approved = request.json.get("approved",None)
-    city = request.json.get("city",None)
-    specialty = request.json.get("specialty",None)
-    coaching_style = request.json.get("coaching_style",None)
-    age = request.json.get("age",None)
-    first_name = request.json.get("first_name",None)
-    last_name = request.json.get("last_name",None)
-    height = request.json.get("height",None)
-    weight = request.json.get("weight",None)
-    profile_image_url = request.json.get("uploadedProfileImageUrl",None)
 
-    dbEmail = UserModel.query.filter_by(email = email).first()
+def register_trainer_services():
+    email = data["email"]
+    password = data["password"]
+    gender = data["gender"]
+    about = data["about"]
+    experience_level = data["experience_level"]
+    approved = data["approved"]
+    city = data["city"]
+    specialty = data["specialty"]
+    coaching_style = data["coaching_style"]
+    age = data["age"]
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    height = data["height"]
+    weight = data["weight"]
+    profile_image_url = data["uploadedProfileImageUrl"]
+
+    dbEmail = User.query.filter_by(email = email).first()
     if dbEmail:
         return jsonify({"msg": "User already exists!"}), 401
     
 
-    user_to_register = UserModel()
+    user_to_register = User()
     user_to_register.email= email
     user_to_register.password= password
     user_to_register.gender= gender
@@ -36,11 +35,11 @@ def register_trainer():
     user_to_register.weight= weight
     user_to_register.user_role= "trainer"
 
-    user_repository = UserRepository()
-    user_repository.save(user_to_register)
-    data = user_to_register.serialize()
+    db.session.add(user_to_register)
+    db.session.commit()
+    user_data = user_to_register.serialize()
 
-    trainer_to_register = TrainerModel()
+    trainer_to_register = Trainer()
     trainer_to_register.email = email
     trainer_to_register.password = password
     trainer_to_register.gender = gender
@@ -50,86 +49,76 @@ def register_trainer():
     trainer_to_register.city = city
     trainer_to_register.specialty = specialty
     trainer_to_register.coaching_style = coaching_style
-    trainer_to_register.profile_image_url= profile_image_url
+    if profile_image_url: trainer_to_register.profile_image_url= profile_image_url
     trainer_to_register.user_id = data["id"]
 
-    trainer_repository = TrainerRepository()
-    trainer_repository.save(trainer_to_register)
-    new_trainer = trainer_to_register.serialize()
+    db.session.add(trainer_to_register)
+    db.session.commit()
+    new_trainee = trainer_to_register.serialize()
     
-    return jsonify(new_trainer)
-
+    return new_trainer
 
 
 def get_given_trainer_services(trainer_id):
-    trainer = TrainerModel.query.filter_by(id = trainerid).first()
-    data = trainer.serialize() if trainee else None
-    trainer_in_user = UserModel.query.filter_by(id = data["user_id"]).first()
+    trainer = Trainer.query.filter_by(id = trainer_id).first()
+    data = trainer.serialize() if trainer else None
+    trainer_in_user = User.query.filter_by(id = data["user_id"]).first()
     data_user = trainer_in_user.serialize() if trainer_in_user else None
+    return data_user
+    
     
     return jsonify(data_user)
 
-@api.route('/edit/trainer/<trainer_id>', methods=['PUT'])
-@jwt_required()
-def edit_trainer(trainer_id):
-    trainer = TrainerModel.query.filter_by(id = trainer_id).first()
+    return jsonify(data_user)
+
+def edit_trainer_services(data,trainer_id):
+    trainer = Trainer.query.filter_by(id = trainer_id).first()
     if trainer is None: 
         return  jsonify({"respBody": None}), 400
-    trainer_to_edit = trainer.serialize()
-    user = UserModel.query.filter_by(id=trainer_to_edit["user_id"]).first()
+    trainer_to_update = trainer.serialize()
+    user = User.query.filter_by(id=trainer_to_update["user_id"]).first()
     if user is None: 
         return  jsonify({"respBody": None}), 400
     user_to_edit = user.serialize()
+
     
-    data = request.get_json()
-    email = request.json.get("email",None)
-    gender = request.json.get("gender",None)
-    about = request.json.get("about",None)
-    experience_level = request.json.get("experience_level",None)
-    city = request.json.get("city",None)
-    specialty = request.json.get("specialty",None)
-    coaching_style = request.json.get("coaching_style",None)
-    age = request.json.get("age",None)
-    first_name = request.json.get("first_name",None)
-    last_name = request.json.get("last_name",None)
-    height = request.json.get("height",None)
-    weight = request.json.get("weight",None)
-    profile_image_url = request.json.get("uploadedProfileImageUrl",None)
+    email = data["email"]
+    gender = data["gender"]
+    about = data["about"]
+    experience_level = data["experience_level"]
+    city = data["city"]
+    specialty = data["specialty"]
+    coaching_style = data["coaching_style"]
+    age = data["age"]
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    height = data["height"]
+    weight = data["weight"]
+    profile_image_url = data["uploadedProfileImageUrl"] or trainer_to_update["profile_image_url"]
 
-    user_to_update.email= email
-    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option-gender"}), 404
-    user_to_update.gender= gender
-    user_to_update.age= int(age)
-    user_to_update.city= city
-    user_to_update.first_name= first_name
-    user_to_update.last_name= last_name
-    user_to_update.height= height
-    user_to_update.weight= weight
+    user.email= email
+    user.gender= gender
+    user.age= int(age)
+    user.city= city
+    user.first_name= first_name
+    user.last_name= last_name
+    user.height= height
+    user.weight= weight
 
-    user_repository = UserRepository()
-    user_repository.save(user_to_update)
-    data = user_to_update.serialize()
+    db.session.commit()
 
-    trainer_to_update.email = email
-    if gender not in possible_genders: return jsonify({"msg": "The back-end won't accept this altered option - gender"}), 404
-    trainer_to_update.gender = gender
-    trainer_to_update.about = about
-    # if experience_level not in possible_experience_levels: return jsonify({"msg": "The back-end won't accept this altered option- exp level"}), 404
-    trainer_to_update.experience_level = experience_level
-    trainer_to_update.approved = None
-    trainer_to_update.city = city
-    # if specialty not in possible_specialties: return jsonify({"msg": "The back-end won't accept this altered option-specialty"}), 404
-    trainer_to_update.specialty = specialty
-    # if coaching_style not in possible_coaching_styles: return jsonify({"msg": "The back-end won't accept this altered option- coaching style"}), 404
-    trainer_to_update.coaching_style = coaching_style
-    trainer_to_update.profile_image_url= profile_image_url
+    trainer.email = email
+    trainer.gender = gender
+    trainer.about = about
+    trainer.experience_level = experience_level
+    trainer.approved = None
+    trainer.city = city
+    trainer.specialty = specialty
+    trainer.coaching_style = coaching_style
+    trainer.profile_image_url = profile_image_url
 
-    trainer_repository = TrainerRepository()
-    trainer_repository.update(trainer_id, {data:trainer_to_update})
-   
+    db.session.commit()
 
-    resp_body = {
-        "edited_user_trainer": UserModel.query.filter(User.trainer.has(id = trainer_id)).first().serialize(),
-    }
-    return jsonify({"respBody": resp_body}), 200
+    return User.query.filter(User.trainer.has(id = trainer_id)).first().serialize(),
+
 
