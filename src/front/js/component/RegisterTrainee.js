@@ -64,7 +64,7 @@ export const RegisterTrainee = ({ isEdit = false }) => {
   };
 
   const registerTrainee = async () => {
-    const registeredUser = await actions.registerTrainee(
+    const registeredUser = await actions.registerTrainee({
       email,
       password,
       gender,
@@ -76,8 +76,8 @@ export const RegisterTrainee = ({ isEdit = false }) => {
       body_type,
       goal,
       fitness_experience,
-      city.name
-    );
+      city,
+    });
     if (registeredUser) {
       navigate("/login");
     } else {

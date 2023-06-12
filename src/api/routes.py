@@ -80,6 +80,7 @@ def get_all_types_activities():
 @api.route('/register/trainee', methods=['POST'])
 def register_trainee():
    data = request.json
+   print("888 data", data)
    new_trainee = trainee_services.register_trainee_services(data)
    return jsonify(new_trainee), 200
 
@@ -98,7 +99,7 @@ def edit_trainee(trainee_id):
 @api.route('/register/trainer', methods=['POST'])
 def register_trainer():
     data = request.json
-    new_trainer = trainer_services.register_trainee_services(data)
+    new_trainer = trainer_services.register_trainer_services(data)
     return jsonify(new_trainer)
 
 @api.route('/trainer/<trainer_id>', methods=['GET']) 
