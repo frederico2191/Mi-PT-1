@@ -34,7 +34,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       setGender(store.user?.gender);
       setAbout(store.user?.trainer?.about);
       setExperienceLevel(store.user?.trainer?.experience_level);
-      setCity(store.user?.city || "");
+      setCity(store.user?.city);
       setSpecialty(store.user?.trainer?.specialty);
       setCoachingStyle(store.user?.trainer?.coaching_style);
       setAge(store.user?.age);
@@ -78,8 +78,7 @@ export const RegisterTrainer = ({ isEdit = false }) => {
   const registerTrainer = async () => {
     file && (await actions.uploadImage(file));
     const uploadedProfileImageUrl = store.uploadedProfileImageUrl;
-
-    const registeredUser = await actions.registerTrainer(
+    const registeredUser = await actions.registerTrainer({
       email,
       password,
       gender,
@@ -92,9 +91,10 @@ export const RegisterTrainer = ({ isEdit = false }) => {
       last_name,
       height,
       weight,
-      city.name,
-      uploadedProfileImageUrl
-    );
+      city,
+      uploadedProfileImageUrl,
+    });
+
     if (registeredUser) {
       navigate("/login");
     } else {

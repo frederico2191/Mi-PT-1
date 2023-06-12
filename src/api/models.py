@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+# from sqlalchemy_utils import PasswordType
+# import passlib
 
 db = SQLAlchemy()
 
@@ -8,6 +10,18 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(250), nullable=False)
+    # password = db.Column(db.LargeBinary(1137), nullable=False)
+    # db.String(250), nullable=False)
+    # password = db.Column(
+    #     PasswordType(
+    #     schemes=[
+    #         'pbkdf2_sha512',
+    #         'md5_crypt'
+    #     ],
+    #     deprecated=['md5_crypt'],
+    #     max_length=1137, nullable=False
+    # )
+    # )
     age = db.Column(db.Integer, nullable=True)
     city = db.Column(db.String(250), nullable=True)
     first_name = db.Column(db.String(250), nullable=True)
@@ -24,7 +38,6 @@ class User(db.Model):
         return self.first_name
 
     def serialize(self):
-        print(self.trainer, "$$$$$$$$")
         if (self.user_role == "trainer"): 
             trainer = Trainer.query.filter_by(user_id = self.id).first()
             serializedTrainer = trainer.serialize() if trainer else None

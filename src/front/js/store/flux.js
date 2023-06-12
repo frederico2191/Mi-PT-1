@@ -228,7 +228,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("City not found FLUX", name, error);
         }
       },
-      registerTrainer: async (
+      registerTrainer: async ({
         email,
         password,
         gender,
@@ -242,8 +242,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         height,
         weight,
         city,
-        uploadedProfileImageUrl
-      ) => {
+        uploadedProfileImageUrl,
+      }) => {
         const store = getStore();
         try {
           const resp = await fetch(
@@ -281,7 +281,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return false;
         }
       },
-      registerTrainee: async (
+      registerTrainee: async ({
         email,
         password,
         gender,
@@ -293,8 +293,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         body_type,
         goal,
         fitness_experience,
-        city
-      ) => {
+        city,
+      }) => {
         const store = getStore();
         try {
           const resp = await fetch(

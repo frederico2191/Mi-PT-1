@@ -1,8 +1,10 @@
 from ..models import User,Trainee,db
+from flask_bcrypt import generate_password_hash
+import bcrypt
 
 def register_trainee_services(data):
     email = data["email"]
-    password = data["password"]
+    password = data["password"].encode("utf-8")
     gender = data["gender"]
     city = data["city"]
     age = data["age"]
@@ -16,10 +18,13 @@ def register_trainee_services(data):
     dbEmail = User.query.filter_by(email = email).first()
     if dbEmail:
         return jsonify({"msg": "User already exists!"}), 401
+    
+    pw_hash = generate_password_hash(password, 10)
+    pw_hash_string = pw_hash.decode("utf-8")
 
     user_to_register = User()
     user_to_register.email= email
-    user_to_register.password= password
+    user_to_register.password= pw_hash_string
     user_to_register.gender= gender
     user_to_register.age= int(age)
     user_to_register.city= city
@@ -33,10 +38,7 @@ def register_trainee_services(data):
     db.session.commit()
     user_data = user_to_register.serialize()
 
-    trainee_to_register = TraineeModel()
-    trainee_to_register.email = email
-    trainee_to_register.password = password
-    trainee_to_register.gender = gender
+    trainee_to_register = Trainee()
     trainee_to_register.fitness_experience = fitness_experience
     trainee_to_register.goal = goal
     trainee_to_register.city = city
@@ -46,7 +48,7 @@ def register_trainee_services(data):
     db.session.add(trainee_to_register)
     db.session.commit()
     new_trainee = trainee_to_register.serialize()
-    return jsonify(new_trainee)
+    return new_trainee
 
 
 def get_given_trainee_services(trainee_id):
@@ -97,7 +99,7 @@ def edit_trainee_services(data,trainee_id):
 
     db.session.commit()
    
-    return UserModel.query.filter(User.trainee.has(id = trainee_id)).first().serialize()
+    return User.query.filter(User.trainee.has(id = trainee_id)).first().serialize()
 
 
 

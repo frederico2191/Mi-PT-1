@@ -20,6 +20,10 @@ flask-admin = "*"
 typing-extensions = "*"
 flask-jwt-extended = "*"
 python-dateutil = "*"
+bcrypt = "*"
+flask-bcrypt = "*"
+sqlalchemy-utils = "*"
+passlib = "*"
 
 [requires]
 python_version = "3.10"
